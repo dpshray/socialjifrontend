@@ -1,0 +1,32 @@
+import {type ClassValue, clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
+}
+
+export function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
+    let timeout: NodeJS.Timeout | null = null
+
+    return (...args: Parameters<T>) => {
+        if (timeout) clearTimeout(timeout)
+        timeout = setTimeout(() => func(...args), wait)
+    }
+}
+
+export function formatDate(date: Date): string {
+    return new Intl.DateTimeFormat("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+    }).format(date)
+}
+
+export function formatCompactNumber(value: number): string {
+    if (isNaN(value)) return '0'
+    return new Intl.NumberFormat('en-US', {
+        notation: 'compact',
+        compactDisplay: 'short',
+        maximumFractionDigits: 1,
+    }).format(value)
+}
