@@ -4,7 +4,6 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {LineChart} from "@/components/chart/chart";
 import Image from "next/image";
 import React, {useMemo, useState} from "react";
-import {Plus} from "lucide-react";
 import {Card, CardContent} from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 import {VertCard} from "@/components/card/card";
@@ -45,7 +44,8 @@ const BrandCard: React.FC<BrandCardProps> = ({
             tabIndex={0}
             className={cn(
                 "max-w-xs w-full mx-auto flex flex-col rounded-lg p-4 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-lg ring-1 ring-gray-200 dark:ring-gray-700 transition-colors",
-                className
+                className,
+                ""
             )}
         >
             <header className="flex items-center justify-between mb-4">
@@ -82,6 +82,7 @@ const BrandCard: React.FC<BrandCardProps> = ({
                 className="bg-navyBlue"
                 type="button"
                 {...buttonProps}
+                disabled
             >
                 {buttonText}
             </Button>
@@ -185,14 +186,11 @@ export default function BrandDashboard() {
 
             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Card className="w-full md:max-w-lg mx-auto border border-[#BE50C8]">
-                    <CardContent className="p-6">
+                    <CardContent className="p-4">
                         <div className="flex items-center justify-between pb-4">
-                            <h2 className="text-lg font-semibold text-gray-700">Latest</h2>
-                            <Button className="bg-gradient-to-r from-[#C5A2E3] to-[#C5A2E3] text-white rounded-lg"
-                                    aria-label="Add Influencers">
-                                <Plus className="w-4 h-4 "/>
-                                Add Influencers
-                            </Button>
+                            <h2 className="text-lg font-semibold text-gray-700">
+                                Latest Influencers
+                            </h2>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="min-w-full text-sm">

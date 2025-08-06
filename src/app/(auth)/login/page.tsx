@@ -98,22 +98,22 @@ export default function LoginPage() {
                         </Button>
                     </form>
 
-                    <div className="my-6 flex items-center gap-3">
-                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1" />
-                        <span className="text-xs text-gray-400 dark:text-gray-500">OR</span>
-                        <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1" />
-                    </div>
+                    {/*<div className="my-6 flex items-center gap-3">*/}
+                    {/*    <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1" />*/}
+                    {/*    <span className="text-xs text-gray-400 dark:text-gray-500">OR</span>*/}
+                    {/*    <div className="h-px bg-gray-200 dark:bg-gray-700 flex-1" />*/}
+                    {/*</div>*/}
 
-                    <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full flex items-center justify-center gap-2"
-                        onClick={handleGoogleLogin}
-                        aria-label="Login with Google"
-                    >
-                        <Image src="/googleIcon.png" alt="Google" width={20} height={20} />
-                        <span className="text-sm text-muted-foreground">Sign in with Google</span>
-                    </Button>
+                    {/*<Button*/}
+                    {/*    type="button"*/}
+                    {/*    variant="outline"*/}
+                    {/*    className="w-full flex items-center justify-center gap-2"*/}
+                    {/*    onClick={handleGoogleLogin}*/}
+                    {/*    aria-label="Login with Google"*/}
+                    {/*>*/}
+                    {/*    <Image src="/googleIcon.png" alt="Google" width={20} height={20} />*/}
+                    {/*    <span className="text-sm text-muted-foreground">Sign in with Google</span>*/}
+                    {/*</Button>*/}
 
                     <p className="text-sm text-center text-muted-foreground mt-6">
                         Don’t have an account?{' '}

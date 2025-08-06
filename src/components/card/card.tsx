@@ -147,13 +147,14 @@ export const VertCard: FC<VertCardProps> = ({
                 </h2>
             </CardContent>
 
-            <Button
-                variant="outline"
-                className="flex items-center gap-1 py-3 px-3 rounded-lg border-white bg-transparent text-white hover:bg-white/10 w-fit"
-            >
-                Check Projects
-                <ChevronDown className="w-4 h-4"/>
-            </Button>
+            {/*<Button*/}
+            {/*    variant="outline"*/}
+            {/*    className="flex items-center gap-1 py-3 px-3 rounded-lg border-white bg-transparent text-white hover:bg-white/10 w-fit"*/}
+            {/*    */}
+            {/*>*/}
+            {/*    Check Projects*/}
+            {/*    <ChevronDown className="w-4 h-4"/>*/}
+            {/*</Button>*/}
         </Card>
     </TooltipProvider>
 );
