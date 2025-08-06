@@ -1,14 +1,13 @@
 "use client"
 
 import {useEffect, useState} from "react"
-import {Badge} from "@/components/ui/badge"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Search} from "lucide-react"
 import InfluencerInsightsCard, {type InfluencerInsight} from "@/components/card/influencer/influencer-card"
-import BrandInsightCard from "@/components/card/brand/brand-insight-card"
+import BrandInsightsCard from "@/components/card/brand/brand-insight-card"
 import GigInsightCard from "@/components/card/gig-insight-card"
 import dashboardService from "@/services/dashboardService"
-import BrandInsightsCard from "@/components/card/brand/brand-insight-card"
+import HeroSection from "@/components/header/HeroSection";
 
 export default function ExplorePage() {
     const [contactedInfluencer, setContactedInfluencer] = useState<string | null>(null)
@@ -31,7 +30,7 @@ export default function ExplorePage() {
 
                 console.log("Influencers:", influencerRes.data)
                 console.log("Brands:", brandRes.data)
-                console.log("Gigs:", gigRes.data)
+                console.log("Gigs ab:", gigRes.data)
 
                 setInfluencers(influencerRes.data)
                 setBrands(brandRes.data)
@@ -76,18 +75,17 @@ export default function ExplorePage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-            <div className="container mx-auto px-4 py-8">
-                <div className="mb-8">
-                    <div className="flex items-center space-x-2 mb-2">
-                        <Search className="w-6 h-6 text-violet-600"/>
-                        <Badge className="bg-violet-100 text-violet-700 border-violet-200">Real-time Discovery</Badge>
-                    </div>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-2">Explore</h1>
-                    <p className="text-lg text-slate-600">
-                        Discover top influencers, leading brands, and active gigs across all platforms
-                    </p>
-                </div>
 
+            <HeroSection
+                imageSrc="/hero1.png"
+                title="Explore"
+                description="Discover top influencers, leading brands, and active gigs across all platforms"
+                badgeText="Real-time Discovery"
+                icon={<Search className="w-6 h-6 text-white"/>}
+            />
+
+
+            <div className=" container mx-auto px-4 py-8">
                 {contactedInfluencer && (
                     <div
                         className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
@@ -171,7 +169,7 @@ export default function ExplorePage() {
                         ) : (
                             <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
                                 {gigs.map((gig, index) => (
-                                    <GigInsightCard key={index} gigData={gig} onApply={handleApplyToGig}/>
+                                    <GigInsightCard key={index} gigData={gig} onApplyAction={handleApplyToGig}/>
                                 ))}
                             </div>
                         )}

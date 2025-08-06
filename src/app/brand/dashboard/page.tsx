@@ -189,9 +189,9 @@ export default function BrandDashboard() {
                         <div className="flex items-center justify-between pb-4">
                             <h2 className="text-lg font-semibold text-gray-700">Latest</h2>
                             <Button className="bg-gradient-to-r from-[#C5A2E3] to-[#C5A2E3] text-white rounded-lg"
-                                    aria-label="Add Influencer">
+                                    aria-label="Add Influencers">
                                 <Plus className="w-4 h-4 "/>
-                                Add Influencer
+                                Add Influencers
                             </Button>
                         </div>
                         <div className="overflow-x-auto">

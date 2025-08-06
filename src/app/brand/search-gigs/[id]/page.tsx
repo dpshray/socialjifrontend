@@ -10,7 +10,7 @@ import {Separator} from "@/components/ui/separator"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {gigsService} from "@/services/gigs.service"
 import Image from "next/image"
-import {Gig, Review} from "@/types/gigs"
+import {Gig} from "@/types/gigs"
 import {reviewsService} from "@/services/reviewsService";
 import {useForm} from "react-hook-form"
 import {Label} from "@/components/ui/label"
@@ -18,6 +18,7 @@ import {toast} from "sonner";
 import TextInputField from "@/components/field/TextInputField";
 import paymentService from "@/services/paymentService";
 import {useRouter} from "next/navigation";
+import {Review} from "@/types/common";
 
 interface SearchGigProps {
     params: Promise<{ id: number }>

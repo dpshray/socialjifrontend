@@ -8,9 +8,11 @@ import {Skeleton} from "@/components/ui/skeleton"
 
 import Image from "next/image"
 import {cn} from "@/lib/utils"
-import type {Pricing, Tag, User} from "@/types/gigs"
-import {useState} from "react" // Add this import at the top
+
+import {useState} from "react"
 import {StarRating} from "../StarRating"
+import {Pricing, Tag} from "@/types/common";
+import {User} from "@/types/user";
 
 interface ProjectCardProps {
     gigId?: number

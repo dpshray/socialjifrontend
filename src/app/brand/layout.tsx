@@ -1,11 +1,11 @@
 'use client'
 
-import UserHeader from "@/components/header/InfluencerHeader"
-import {NavItem} from "@/types/types"
-import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import React, {useEffect} from "react"
-import {Bell, BookOpenIcon, Layers2Icon, LogOutIcon, PinIcon, Settings2Icon,} from "lucide-react"
+import GlobalHeader from "@/components/header/GlobalHeader"
+import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
+import {Bell, BookOpenIcon, Layers2Icon, LogOutIcon, PinIcon, Settings2Icon} from "lucide-react"
 import useAuth from "@/hooks/useAuth"
+import {NavItem} from "@/types/types"
 import {authService} from "@/app/(auth)/auth.service";
 
 
@@ -44,23 +44,23 @@ const notifications = [
     },
 ]
 
-const handleLogout = async () => {
-    try {
-        await authService.logout()
-        localStorage.removeItem("_at")
-        localStorage.removeItem("_role")
-        window.location.href = "/login"
-    } catch (err) {
-        console.error("Logout failed", err)
-    }
-}
-
-export default function BrandLayout({children}: { children: React.ReactNode }) {
+const BrandLayout = ({children}: { children: React.ReactNode }) => {
     const {user} = useAuth()
 
     useEffect(() => {
         console.log("User:", user)
     }, [user])
+
+    const handleLogout = async () => {
+        try {
+            await authService.logout()
+            localStorage.removeItem("_at")
+            localStorage.removeItem("_role")
+            window.location.href = "/login"
+        } catch (err) {
+            console.error("Logout failed", err)
+        }
+    }
 
     const dropdownItems = [
         {icon: Layers2Icon, label: "Campaigns", href: "/brand/campaigns"},
@@ -77,14 +77,13 @@ export default function BrandLayout({children}: { children: React.ReactNode }) {
 
     return (
         <ProtectedRoutes allowedRoles="brand">
-            <UserHeader
-                logoText="Brandly"
+            <GlobalHeader
                 navItems={sidebarItems}
                 dropdownItems={dropdownItems}
                 user={{
-                    name: `${user?.first_name}`,
-                    email: user?.email,
-                    avatarUrl: user?.image,
+                    name: `${user?.first_name ?? "User"}`,
+                    email: user?.email ?? "",
+                    avatarUrl: user?.image ?? "",
                 }}
                 iconButtons={[
                     {
@@ -94,7 +93,9 @@ export default function BrandLayout({children}: { children: React.ReactNode }) {
                     },
                 ]}
             />
-            <main className="container mx-auto min-h-screen">{children}</main>
+            <main className="container mx-auto min-h-screen ">{children}</main>
         </ProtectedRoutes>
     )
 }
+
+export default BrandLayout

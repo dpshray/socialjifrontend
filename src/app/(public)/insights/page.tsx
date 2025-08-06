@@ -35,8 +35,7 @@ import {
     XAxis,
     YAxis,
 } from "recharts"
-import {useEffect} from "react";
-import dashboardService from "@/services/dashboardService";
+import HeroSection from "@/components/header/HeroSection";
 
 const performanceData = [
     {month: "Jan", engagement: 4.2, reach: 2.5, conversions: 3.1, roi: 380},
@@ -135,22 +134,25 @@ const campaignMetrics = [
 export default function InsightsPage() {
 
     return (
-        <div className="min-h-screen container mx-auto bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
-            <div className="container-width section-padding py-8">
-                {/* Header */}
-                <div className="mb-8">
-                    <div className="flex items-center space-x-2 mb-2">
-                        <Brain className="w-6 h-6 text-violet-600"/>
-                        <Badge className="bg-violet-100 text-violet-700 border-violet-200">
-                            <Sparkles className="w-3 h-3 mr-1"/>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30">
+            <HeroSection
+                imageSrc="/hero1.png"
+                title="Insights Dashboard"
+                description="Smart analytics powered by AI to track performance and optimize your strategy"
+                icon={<Brain className="w-6 h-6 text-violet-600"/>}
+                badgeContent={
+                    <>
+                        <Sparkles className="w-3 h-3 mr-1"/>
+                       <span className={'text-white'}>
                             AI-Powered Analytics
-                        </Badge>
-                    </div>
-                    <h1 className="text-4xl font-bold text-slate-900 mb-2">Insights Dashboard</h1>
-                    <p className="text-lg text-slate-600">
-                        Smart analytics powered by AI to track performance and optimize your strategy
-                    </p>
-                </div>
+                       </span>
+                    </>
+                }
+            />
+
+            <div className="container-width mx-auto section-padding py-8">
+                {/* Header */}
+
 
                 {/* Key Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

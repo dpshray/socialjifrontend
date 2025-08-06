@@ -2,10 +2,11 @@
 
 import React, {useEffect, useMemo} from "react"
 
-import UserHeader from "@/components/header/InfluencerHeader"
+
 import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import useAuth from "@/hooks/useAuth"
 import {Bell} from "lucide-react";
+import GlobalHeader from "@/components/header/GlobalHeader";
 
 export default function InfluencerLayout({children}: { children: React.ReactNode }) {
     const {user, loading} = useAuth()
@@ -80,7 +81,7 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
     return (
         <ProtectedRoutes allowedRoles="influencer">
             <div className="min-h-screen bg-background flex flex-col">
-                <UserHeader
+                <GlobalHeader
                     navItems={sidebarItems}
                     user={{
                         name: user?.first_name ?? "Influencer",

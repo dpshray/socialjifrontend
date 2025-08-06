@@ -11,7 +11,7 @@ import {
     Package,
     Star,
     TrendingUp,
-    Users
+    Users,
 } from "lucide-react"
 import {Badge} from "@/components/ui/badge"
 import {Button} from "@/components/ui/button"
@@ -19,12 +19,11 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Separator} from "@/components/ui/separator"
 import {Progress} from "@/components/ui/progress"
-import {Influencer, SocialProfile} from "@/types/Influencer"
-import {brandService} from "@/app/brand/brand.service";
-import {Tabs} from "@/components/ui/tabs";
-import {TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {useRouter} from "next/navigation";
-import Image from "next/image";
+import Image from "next/image"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+import {Influencers} from "@/types/influencers"
+import {SocialProfile} from "@/types/common"
+import {brandService} from "@/app/brand/brand.service"
 
 interface DiscoverCreators {
     params: Promise<{ id: number }>
@@ -33,13 +32,12 @@ interface DiscoverCreators {
 export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) {
     const unwrappedParams = use(params)
     const id = unwrappedParams.id
-    const [influencer, setInfluencer] = useState<Influencer | null>(null)
+    const [influencer, setInfluencer] = useState<Influencers | null>(null)
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         const fetchInfluencerProfile = async () => {
             try {
-
                 const response = await brandService.getInfluencerById(id)
                 setInfluencer(response)
             } catch {
@@ -52,10 +50,11 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
         fetchInfluencerProfile()
     }, [id])
 
-    const formatNumber = (num: number) => {
-        if (num >= 1000000) return (num / 1000000).toFixed(1) + "M"
-        if (num >= 1000) return (num / 1000).toFixed(1) + "K"
-        return num.toString()
+    const formatNumber = (num: number | string) => {
+        const parsedNum = typeof num === "number" ? num : Number(num)
+        if (parsedNum >= 1000000) return (parsedNum / 1000000).toFixed(1) + "M"
+        if (parsedNum >= 1000) return (parsedNum / 1000).toFixed(1) + "K"
+        return parsedNum.toString()
     }
 
     const formatPrice = (price: string) => {
@@ -64,7 +63,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
     }
 
     const getSocialIcon = (platform: string) => {
-        const icons: { [key: string]: string } = {
+        const icons: Record<string, string> = {
             facebook: "📘",
             instagram: "📷",
             tiktok: "🎵",
@@ -75,7 +74,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
     }
 
     const getSocialColor = (platform: string) => {
-        const colors: { [key: string]: string } = {
+        const colors: Record<string, string> = {
             facebook: "bg-blue-500",
             instagram: "bg-gradient-to-r from-purple-500 to-pink-500",
             tiktok: "bg-black",
@@ -86,21 +85,28 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
     }
 
     const calculateEngagementRate = (profile: SocialProfile) => {
-        const totalEngagement = profile.avg_like_per_post_count + profile.avg_comment_per_post_count
-        return ((totalEngagement / profile.follower_count) * 100).toFixed(2)
+        const totalEngagement =
+            (Number(profile.avg_like_per_post_count) ?? 0) + (Number(profile.avg_comment_per_post_count) ?? 0)
+        const followerCount = typeof profile.follower_count === "number" ? profile.follower_count : Number(profile.follower_count)
+        if (!followerCount || followerCount <= 0) return "0.00"
+        return ((totalEngagement / followerCount) * 100).toFixed(2)
     }
 
     const getTotalFollowers = () => {
         if (!influencer) return 0
-        return influencer.social_profiles.reduce((total, profile) => total + profile.follower_count, 0)
+        return influencer.social_profiles.reduce(
+            (total, profile) => total + (typeof profile.follower_count === "number" ? profile.follower_count : Number(profile.follower_count)),
+            0,
+        )
     }
 
     const getAverageEngagement = () => {
-        if (!influencer) return 0
+        if (!influencer) return "0.00"
         const totalEngagement = influencer.social_profiles.reduce(
             (total, profile) => total + Number.parseFloat(calculateEngagementRate(profile)),
             0,
         )
+        if (influencer.social_profiles.length === 0) return "0.00"
         return (totalEngagement / influencer.social_profiles.length).toFixed(2)
     }
 
@@ -149,7 +155,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                             <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
                                 <div>
                                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                                        {influencer.first_name} {influencer.middle_name} {influencer.last_name}
+                                        {influencer.first_name} {influencer.middle_name || ""} {influencer.last_name}
                                     </h1>
                                     <p className="text-lg text-gray-600 mb-2">@{influencer.nick_name}</p>
                                     <div className="flex items-center gap-4 mb-4">
@@ -203,7 +209,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-gray-600">Avg Engagement</p>
-                                    <p className="text-2xl font-bold text-gray-900">{getAverageEngagement() || 0}%</p>
+                                    <p className="text-2xl font-bold text-gray-900">{getAverageEngagement()}%</p>
                                 </div>
                                 <TrendingUp className="w-8 h-8 text-green-500"/>
                             </div>
@@ -416,7 +422,8 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                                                     <p className="text-sm text-gray-700">{pricing.description}</p>
                                                     <Separator/>
                                                     <div>
-                                                        <h5 className="font-medium text-sm mb-2">What&#39;s included:</h5>
+                                                        <h5 className="font-medium text-sm mb-2">What&#39;s
+                                                            included:</h5>
                                                         <p className="text-xs text-gray-600">{pricing.requirement}</p>
                                                     </div>
                                                     <Button
@@ -465,3 +472,5 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
         </div>
     )
 }
+
+

@@ -3,7 +3,7 @@ import type React from "react"
 import { memo, useCallback, useEffect, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import {
     Bell,
     BoltIcon,
@@ -14,7 +14,7 @@ import {
     type LucideIcon,
     LucideMail,
     Menu,
-    PenIcon as UserPenIcon,
+    PenIcon,
     PinIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -32,7 +32,7 @@ import { Badge } from "@/components/ui/badge"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 
-type Notification = {
+export type Notification = {
     id: number
     user: string
     action: string
@@ -42,7 +42,7 @@ type Notification = {
     type?: "info" | "success" | "warning" | "error"
 }
 
-type DropdownItemConfig = {
+export type DropdownItemConfig = {
     icon: LucideIcon
     label: string
     onClick?: () => void
@@ -51,27 +51,27 @@ type DropdownItemConfig = {
     disabled?: boolean
 }
 
-type IconButtonConfig = {
+export type IconButtonConfig = {
     icon: React.ReactElement
     label: string
     notifications?: Notification[]
     onClick?: () => void
 }
 
-type NavItem = {
+export type NavItem = {
     label: string
     href: string
     disabled?: boolean
 }
 
-type UserInfo = {
+export type UserInfo = {
     name?: string
     email?: string
     avatarUrl?: string
     status?: "online" | "away" | "busy" | "offline"
 }
 
-type UserHeaderProps = {
+export type GlobalHeaderProps = {
     logoHref?: string
     logoText?: string
     logoSrc?: string
@@ -94,7 +94,6 @@ const Dot = ({ className, type = "info" }: { className?: string; type?: "info" |
         warning: "text-yellow-500",
         error: "text-red-500",
     }
-
     return (
         <span aria-hidden="true">
       <svg width="6" height="6" fill="currentColor" viewBox="0 0 6 6" className={cn(colorMap[type], className)}>
@@ -106,13 +105,11 @@ const Dot = ({ className, type = "info" }: { className?: string; type?: "info" |
 
 const StatusIndicator = ({ status }: { status: UserInfo["status"] }) => {
     if (!status || status === "offline") return null
-
     const statusColors = {
         online: "bg-green-500",
         away: "bg-yellow-500",
         busy: "bg-red-500",
     }
-
     return (
         <div
             className={cn(
@@ -154,16 +151,15 @@ const UserAvatar = memo(function UserAvatar({
         { icon: Layers2Icon, label: "Projects" },
         { icon: BookOpenIcon, label: "Docs" },
         { icon: PinIcon, label: "Pinned", separator: true },
-        { icon: UserPenIcon, label: "Settings" },
+        { icon: PenIcon, label: "Settings" },
         { icon: LogOutIcon, label: "Logout", onClick: onLogout, separator: true },
     ]
     const items = dropdownItems.length ? dropdownItems : defaultItems
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <div className="relative cursor-pointer">
-                    <Avatar className="cursor-pointer">
+                    <Avatar>
                         <AvatarImage src={user.avatarUrl || "/placeholder.svg?height=40&width=40"} alt="Avatar" />
                         <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
                     </Avatar>
@@ -206,22 +202,10 @@ const IconButton = memo(function IconButton({
                                             }: IconButtonConfig & { maxNotifications?: number }) {
     const [items, setItems] = useState(notifications)
     const unread = items.filter((n) => n.unread).length
+    const markAllRead = useCallback(() => setItems((prev) => prev.map((n) => ({ ...n, unread: false }))), [])
+    const handleClick = (id: number) => setItems((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)))
+    const handleButtonClick = useCallback(() => onClick?.(), [onClick])
 
-    const markAllRead = useCallback(() => {
-        setItems((prev) => prev.map((n) => ({ ...n, unread: false })))
-    }, [])
-
-    const handleClick = (id: number) => {
-        setItems((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)))
-    }
-
-    const handleButtonClick = useCallback(() => {
-        if (onClick) {
-            onClick()
-        }
-    }, [onClick])
-
-    // If no notifications and has onClick, render as simple button
     if (notifications.length === 0 && onClick) {
         return (
             <Button variant="ghost" size="icon" aria-label={label} onClick={handleButtonClick}>
@@ -284,22 +268,20 @@ const IconButton = memo(function IconButton({
     )
 })
 
-export default function UserHeader({
-                                       logoHref,
-                                       logoSrc = "/logo.png",
-                                       navItems,
-                                       user,
-                                       iconButtons = [],
-                                       dropdownItems = [],
-                                       onLogout,
-                                       className,
-                                       activeNavClass = "bg-navyBlue/80 px-3 py-2 rounded-md text-white",
-                                       inactiveNavClass = "text-muted-foreground",
-                                       showUserStatus = false,
-                                       maxNotifications = 99,
-                                   }: UserHeaderProps) {
+export default function GlobalHeader({
+                                         logoHref,
+                                         logoSrc = "/logo.png",
+                                         navItems,
+                                         user,
+                                         iconButtons = [],
+                                         dropdownItems = [],
+                                         className,
+                                         activeNavClass = "bg-navyBlue/80 px-3 py-2 rounded-md text-white",
+                                         inactiveNavClass = "text-muted-foreground",
+                                         showUserStatus = false,
+                                         maxNotifications = 99,
+                                     }: GlobalHeaderProps) {
     const pathname = usePathname()
-    const router = useRouter()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const [isScrolled, setIsScrolled] = useState(false)
 
@@ -320,11 +302,16 @@ export default function UserHeader({
     }, [])
 
     const handleLogout = useCallback(async () => {
-        if (onLogout) return onLogout()
-        localStorage.removeItem("_at")
-        localStorage.removeItem("_role")
-        router.push("/login")
-    }, [onLogout, router])
+        try {
+            // await authService.logout() // Removed due to file not found
+            console.log("Simulating logout...") // Placeholder for actual logout logic
+            localStorage.removeItem("_at")
+            localStorage.removeItem("_role")
+            window.location.href = "/login"
+        } catch (err) {
+            console.error("Logout failed", err)
+        }
+    }, [])
 
     return (
         <nav
@@ -347,8 +334,6 @@ export default function UserHeader({
                         priority
                     />
                 </Link>
-
-                {/* Desktop Navigation */}
                 <ul className="hidden md:flex gap-4 items-center font-medium">
                     {navItems.map(({ label, href, disabled }) => (
                         <li key={label}>
@@ -366,8 +351,6 @@ export default function UserHeader({
                         </li>
                     ))}
                 </ul>
-
-                {/* Desktop Icons */}
                 <div className="hidden md:flex items-center gap-3">
                     {finalIconButtons.map((button, index) => (
                         <IconButton key={`${button.label}-${index}`} {...button} maxNotifications={maxNotifications} />
@@ -379,8 +362,6 @@ export default function UserHeader({
                         showUserStatus={showUserStatus}
                     />
                 </div>
-
-                {/* Mobile Menu Trigger */}
                 <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                     <SheetTrigger asChild className="md:hidden">
                         <Button variant="ghost" size="icon" aria-label="Toggle menu">

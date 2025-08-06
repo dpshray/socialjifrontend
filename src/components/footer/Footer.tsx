@@ -1,8 +1,6 @@
 "use client"
-
 import Link from "next/link"
 import {Facebook, Linkedin, Twitter} from "lucide-react"
-import {AnimatedElement} from "@/components/animation/Animation"
 import Image from "next/image"
 
 const Footer = () => {
@@ -12,33 +10,28 @@ const Footer = () => {
         {label: "Brand Center", link: "#"},
         {label: "Blog", link: "#"},
     ]
-
     const helpCenter = [
         {label: "Join our Discord Server", link: "#"},
         {label: "Twitter", link: "#"},
         {label: "Facebook", link: "#"},
         {label: "Contact Us", link: "#"},
     ]
-
     const legal = [
         {label: "Privacy Policy", link: "#"},
         {label: "Licensing", link: "#"},
         {label: "Terms & Conditions", link: "#"},
     ]
-
     const downloads = [
         {label: "iOS", link: "#"},
         {label: "Android", link: "#"},
         {label: "Windows", link: "#"},
         {label: "MacOS", link: "#"},
     ]
-
     const socialLinks = [
         {href: "#", label: "Facebook", Icon: Facebook},
         {href: "#", label: "LinkedIn", Icon: Linkedin},
         {href: "#", label: "Twitter", Icon: Twitter},
     ]
-
     return (
         <footer className="bg-white border-t border-gray-200 font-montserrat mt-12">
             <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,32 +40,28 @@ const Footer = () => {
                     <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
                         {/* Brand Section */}
                         <div className="space-y-4">
-                            <AnimatedElement>
-                                <div className="flex items-center space-x-3">
-                                    <Image
-                                        src="/placeholder.svg?height=60&width=60"
-                                        width={60}
-                                        height={60}
-                                        alt="SocialJi Logo"
-                                        className="w-12 h-12 sm:w-16 sm:h-16"
-                                    />
-                                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">SocialJi</h2>
-                                </div>
-                            </AnimatedElement>
-
-                            <AnimatedElement delay={0.2}>
-                                <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-md">
-                                    <span className="font-semibold">SocialJi</span> is a platform for content creators
-                                    to showcase their
-                                    work and connect with their audience. Whether you&#39;re a professional photographer, a
-                                    passionate writer,
-                                    or a talented musician, SocialJi is the perfect place to share your creativity and
-                                    connect with
-                                    like-minded individuals.
-                                </p>
-                            </AnimatedElement>
+                            {/* Removed AnimatedElement wrapper */}
+                            <div className="flex items-center space-x-3">
+                                <Image
+                                    src="/logo.png"
+                                    width={60}
+                                    height={60}
+                                    alt="SocialJi Logo"
+                                    className="w-3/4 h-16 "
+                                />
+                                <span className={'sr-only'}> SocialJi</span>
+                            </div>
+                            {/* Removed AnimatedElement wrapper */}
+                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-md font-montserrat text-justify">
+                                <span className="font-semibold">SocialJi</span> is a platform for content creators to
+                                showcase their
+                                work and connect with their audience. Whether you&#39;re a professional photographer, a
+                                passionate
+                                writer, or a talented musician, SocialJi is the perfect place to share your creativity
+                                and connect with
+                                like-minded individuals.
+                            </p>
                         </div>
-
                         {/* Links Section */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full md:w-[70%] mt-8 md:mt-0">
                             {/* Company Section */}
@@ -91,7 +80,6 @@ const Footer = () => {
                                     ))}
                                 </ul>
                             </div>
-
                             {/* Help Center Section */}
                             <div>
                                 <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Help
@@ -109,7 +97,6 @@ const Footer = () => {
                                     ))}
                                 </ul>
                             </div>
-
                             {/* Legal Section */}
                             <div>
                                 <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Legal</h3>
@@ -126,7 +113,6 @@ const Footer = () => {
                                     ))}
                                 </ul>
                             </div>
-
                             {/* Download Section */}
                             <div>
                                 <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Download</h3>
@@ -146,10 +132,8 @@ const Footer = () => {
                         </div>
                     </div>
                 </div>
-
                 {/* Divider */}
                 <hr className="border-gray-200"/>
-
                 {/* Footer Bottom */}
                 <div className="py-6">
                     <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
@@ -172,24 +156,21 @@ const Footer = () => {
                             </div>
                         </div>
 
-                        {/* Social Icons */}
-                        <AnimatedElement type="bounce" viewport={{once: false, amount: 0.5}} delay={0.3}>
-                            <div className="flex space-x-3">
-                                {socialLinks.map(({href, label, Icon}, index) => (
-                                    <Link
-                                        key={index}
-                                        href={href}
-                                        aria-label={`Visit our ${label} page`}
-                                        className="inline-flex items-center justify-center w-10 h-10 bg-purple-50 hover:bg-purple-100 rounded-full transition-colors duration-200 group"
-                                    >
-                                        <Icon
-                                            size={18}
-                                            className="text-purple-600 group-hover:text-purple-700 transition-colors duration-200"
-                                        />
-                                    </Link>
-                                ))}
-                            </div>
-                        </AnimatedElement>
+                        <div className="flex space-x-3">
+                            {socialLinks.map(({href, label, Icon}, index) => (
+                                <Link
+                                    key={index}
+                                    href={href}
+                                    aria-label={`Visit our ${label} page`}
+                                    className="inline-flex items-center justify-center w-10 h-10 bg-purple-50 hover:bg-purple-100 rounded-full transition-colors duration-200 group"
+                                >
+                                    <Icon
+                                        size={18}
+                                        className="text-purple-600 group-hover:text-purple-700 transition-colors duration-200"
+                                    />
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

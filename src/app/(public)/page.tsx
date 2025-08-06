@@ -198,7 +198,7 @@ export default function Home() {
                             <div
                                 className="bg-gradient-to-br from-white to-purple-50/50 rounded-3xl p-8 shadow-2xl border border-purple-100/50">
                                 <Image
-                                    src="/placeholder.svg"
+                                    src="/land2.jpeg"
                                     width={500}
                                     height={400}
                                     alt="Brand Dashboard"
@@ -281,11 +281,11 @@ export default function Home() {
                             <div
                                 className="bg-gradient-to-br from-white to-green-50/50 rounded-3xl p-8 shadow-2xl border border-green-100/50">
                                 <Image
-                                    src="/placeholder.svg"
+                                    src="/land1.jpeg"
                                     width={500}
                                     height={400}
                                     alt="Creator Dashboard"
-                                    className="w-full h-auto rounded-2xl shadow-lg"
+                                    className="w-full h-auto object-fill rounded-2xl shadow-lg"
                                 />
                             </div>
                             <div
@@ -314,7 +314,7 @@ export default function Home() {
                     alt="Pledge Background"
                     fill
                     priority
-                    className="object-cover w-full h-full z-0"
+                    className="object-fill w-full h-full z-0"
                 />
 
                 {/* Overlay (optional for better readability) */}

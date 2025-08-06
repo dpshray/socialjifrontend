@@ -9,8 +9,9 @@ import {brandService} from '@/app/brand/brand.service';
 import {useDebounce} from '@/hooks/useDebounce';
 import CustomPagination from '@/components/Pagiantion/pagination';
 import {InfluencerProfileCard, InfluencerProfileCardSkeleton,} from '@/app/brand/hire-influencers/influencer-card';
-import {SocialProfile} from '@/types/user';
+
 import {useRouter} from "next/navigation";
+import {SocialProfile} from "@/types/common";
 
 interface InfluencerData {
     id: number;

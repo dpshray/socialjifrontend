@@ -23,7 +23,8 @@ import {Separator} from '@/components/ui/separator';
 import {Input} from '@/components/ui/input';
 import {Badge} from '@/components/ui/badge';
 import {Textarea} from '@/components/ui/textarea';
-import {Gig, Review} from '@/types/gigs';
+import {Gig, } from '@/types/gigs';
+import {Review} from "@/types/common";
 
 const options = [
     {label: 'Most relevant', value: 'relevant'},

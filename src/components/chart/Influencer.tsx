@@ -100,7 +100,7 @@ const contentConfig = {
 
 const InfluencerChart: React.FC = () => {
     return (
-        <section className="w-full rounded-xl bg-transparent shadow-none" aria-label="Influencer Analytics">
+        <section className="w-full rounded-xl bg-transparent shadow-none" aria-label="Influencers Analytics">
             <Tabs defaultValue="tab-1" className="w-full px-4 pt-4">
                 <ScrollArea className="w-full">
                     <TabsList

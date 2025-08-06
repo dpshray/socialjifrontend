@@ -15,6 +15,7 @@ import {Gig} from "@/types/gigs";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import paymentService from "@/services/paymentService";
+import {User} from "@/types/user";
 
 type SearchOption = {
     value: string;
@@ -220,7 +221,7 @@ export default function DiscoverCreators() {
                             description={gig.description}
                             followers={gig.follower_count}
                             pricings={gig.pricings}
-                            user={gig.user}
+                            user={gig.user as any}
                             tags={gig.tags}
                             onViewDetailsAction={() => {
                                 console.log(gig.id)

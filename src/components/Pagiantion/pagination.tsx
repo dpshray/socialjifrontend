@@ -1,5 +1,5 @@
 "use client"
-
+import React from "react"
 import {
     Pagination,
     PaginationContent,
@@ -9,132 +9,101 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
-import {cn} from "@/lib/utils"
-import {useMemo} from "react"
 
-interface PaginationProps {
+interface CustomPaginationProps {
     currentPage: number
     totalPages: number
     onPageChangeAction: (page: number) => void
+    maxPagesToShow?: number
     className?: string
-    siblingCount?: number
-    showBoundaries?: boolean
-    showControls?: boolean
-    labels?: {
-        previous?: string
-        next?: string
-    }
 }
 
 export default function CustomPagination({
                                              currentPage,
                                              totalPages,
                                              onPageChangeAction,
-                                             className = "",
-                                             siblingCount = 1,
-                                             showBoundaries = true,
-                                             showControls = true,
-                                             labels = {
-                                                 previous: "Previous",
-                                                 next: "Next",
-                                             },
-                                         }: PaginationProps) {
-    const handlePageClick = (page: number) => {
-        if (page !== currentPage && page >= 1 && page <= totalPages) {
-            onPageChangeAction(page)
+                                             maxPagesToShow = 5,
+                                             className
+                                         }: CustomPaginationProps) {
+    const getPageNumbers = () => {
+        const pageNumbers: number[] = []
+        let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2))
+        const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1)
+
+        if (endPage - startPage + 1 < maxPagesToShow) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1)
         }
+
+        for (let i = startPage; i <= endPage; i++) {
+            pageNumbers.push(i)
+        }
+        return pageNumbers
     }
 
-    const pageRange = useMemo<(number | "ellipsis")[]>(() => {
-        const totalPageNumbers = siblingCount * 2 + 1
-        const totalVisibleItems = totalPageNumbers + (showBoundaries ? 2 : 0)
-
-        if (totalPages <= totalVisibleItems) {
-            return Array.from({length: totalPages}, (_, i) => i + 1)
-        }
-
-        const pages: (number | "ellipsis")[] = []
-        const leftSibling = Math.max(currentPage - siblingCount, 1)
-        const rightSibling = Math.min(currentPage + siblingCount, totalPages)
-
-        const shouldShowLeftDots = leftSibling > (showBoundaries ? 2 : 1)
-        const shouldShowRightDots = rightSibling < (showBoundaries ? totalPages - 1 : totalPages)
-
-        if (showBoundaries && leftSibling > 1) {
-            pages.push(1)
-            if (leftSibling > 2) {
-                pages.push("ellipsis")
-            }
-        }
-
-        for (let i = leftSibling; i <= rightSibling; i++) {
-            pages.push(i)
-        }
-
-        if (showBoundaries && rightSibling < totalPages) {
-            if (rightSibling < totalPages - 1) {
-                pages.push("ellipsis")
-            }
-            pages.push(totalPages)
-        }
-
-        return pages
-    }, [currentPage, totalPages, siblingCount, showBoundaries])
-
-    if (totalPages <= 1) return null
+    const pageNumbers = getPageNumbers()
 
     return (
-        <Pagination>
-            <PaginationContent className={cn('gap-1 rounded-lg border border-border p-1', className)}>
-                {showControls && (
-                    <PaginationItem>
-                        <PaginationPrevious
-                            href="#"
-                            aria-label={labels.previous}
-                            onClick={(e) => {
-                                e.preventDefault()
-                                handlePageClick(currentPage - 1)
-                            }}
-                            className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
-                        >
-                            {labels.previous}
-                        </PaginationPrevious>
-                    </PaginationItem>
-                )}
-                {pageRange.map((page, index) => (
-                    <PaginationItem key={index}>
-                        {page === "ellipsis" ? (
-                            <PaginationEllipsis/>
-                        ) : (
-                            <PaginationLink
-                                href="#"
-                                isActive={page === currentPage}
-                                aria-label={`Page ${page}`}
-                                onClick={(e) => {
-                                    e.preventDefault()
-                                    handlePageClick(page)
-                                }}
-                            >
-                                {page}
-                            </PaginationLink>
+        <Pagination className={className}>
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious
+                        onClick={() => {
+                            if (currentPage > 1) onPageChangeAction(currentPage - 1)
+                        }}
+                        aria-disabled={currentPage === 1}
+                        aria-label="Previous page"
+                        tabIndex={currentPage === 1 ? -1 : undefined}
+                    />
+                </PaginationItem>
+
+                {pageNumbers[0] > 1 && (
+                    <>
+                        <PaginationItem>
+                            <PaginationLink onClick={() => onPageChangeAction(1)}>1</PaginationLink>
+                        </PaginationItem>
+                        {pageNumbers[0] > 2 && (
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
                         )}
+                    </>
+                )}
+
+                {pageNumbers.map((page) => (
+                    <PaginationItem key={page}>
+                        <PaginationLink
+                            onClick={() => onPageChangeAction(page)}
+                            isActive={currentPage === page}
+                            aria-current={currentPage === page ? "page" : undefined}
+                        >
+                            {page}
+                        </PaginationLink>
                     </PaginationItem>
                 ))}
-                {showControls && (
-                    <PaginationItem>
-                        <PaginationNext
-                            href="#"
-                            aria-label={labels.next}
-                            onClick={(e) => {
-                                e.preventDefault()
-                                handlePageClick(currentPage + 1)
-                            }}
-                            className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
-                        >
-                            {labels.next}
-                        </PaginationNext>
-                    </PaginationItem>
+
+                {pageNumbers[pageNumbers.length - 1] < totalPages && (
+                    <>
+                        {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
+                            <PaginationItem>
+                                <PaginationEllipsis />
+                            </PaginationItem>
+                        )}
+                        <PaginationItem>
+                            <PaginationLink onClick={() => onPageChangeAction(totalPages)}>{totalPages}</PaginationLink>
+                        </PaginationItem>
+                    </>
                 )}
+
+                <PaginationItem>
+                    <PaginationNext
+                        onClick={() => {
+                            if (currentPage < totalPages) onPageChangeAction(currentPage + 1)
+                        }}
+                        aria-disabled={currentPage === totalPages}
+                        aria-label="Next page"
+                        tabIndex={currentPage === totalPages ? -1 : undefined}
+                    />
+                </PaginationItem>
             </PaginationContent>
         </Pagination>
     )
