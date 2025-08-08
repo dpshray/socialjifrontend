@@ -18,13 +18,18 @@ export default function BrandProfile() {
     const {user, loading} = useAuth()
     const calculateStats = () => {
         if (!user?.social_profiles) return []
-        const totalFollowers = user.social_profiles.reduce((sum, profile) => sum + profile.follower_count, 0)
-        const totalPosts = user.social_profiles.reduce((sum, profile) => sum + profile.post_count, 0)
+        const totalFollowers = user.social_profiles
+            ? user.social_profiles.reduce((sum, profile) => sum + Number(profile.follower_count), 0)
+            : 0;
+
+        console.log('totalFollowers:', totalFollowers)
+        const totalPosts = user.social_profiles ? user.social_profiles.reduce((sum, profile) => sum + Number(profile.post_count), 0) : 0;
         const avgEngagement =
-            user.social_profiles.reduce(
+            user.social_profiles ? user.social_profiles.reduce(
                 (sum, profile) => sum + (profile.avg_like_per_post_count + profile.avg_comment_per_post_count),
                 0,
-            ) / user.social_profiles.length
+            ) / user.social_profiles.length : 0;
+
         return [
             {
                 title: "Total Followers",
@@ -52,6 +57,7 @@ export default function BrandProfile() {
             },
         ]
     }
+
     const statsData = calculateStats()
     const getTopSocialPlatforms = () => {
         if (!user?.social_profiles) return []
