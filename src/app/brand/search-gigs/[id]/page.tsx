@@ -50,7 +50,7 @@ export default function SearchGigDetailsPage({params}: SearchGigProps) {
     const fetchGigDetails = async () => {
         try {
             const response = await gigsService.GetGigById(id)
-            console.log("Gig details:", response.data)
+            console.log("Gig details fetched:", response.data)
             setGig(response.data)
         } catch (error) {
             console.error("Error fetching gig details:", error)
@@ -337,34 +337,33 @@ export default function SearchGigDetailsPage({params}: SearchGigProps) {
 
                     </div>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-2">
-                                <UserIcon className="w-5 h-5"/>
-                                About the Seller
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-center gap-3">
-                                <Avatar className="w-12 h-12">
-                                    <AvatarFallback>
-                                        {gig.user.first_name.charAt(0)}
-                                        {gig.user.last_name.charAt(0)}
-                                    </AvatarFallback>
-                                </Avatar>
-                                <div>
-                                    <div className="font-semibold">
-                                        {gig.user.first_name} {gig.user.middle_name} {gig.user.last_name}
-                                    </div>
-                                    <div className="text-sm text-muted-foreground">@{gig.user.nick_name}</div>
-                                </div>
-                            </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed">{gig.user.about}</p>
-                            <Button variant="outline" className="w-full bg-transparent">
-                                Contact Seller
-                            </Button>
-                        </CardContent>
-                    </Card>
+                    {/*<Card>*/}
+                    {/*    <CardHeader>*/}
+                    {/*        <CardTitle className="flex items-center gap-2">*/}
+                    {/*            <UserIcon className="w-5 h-5"/>*/}
+                    {/*            About the Seller*/}
+                    {/*        </CardTitle>*/}
+                    {/*    </CardHeader>*/}
+                    {/*    <CardContent className="space-y-4">*/}
+                    {/*        <div className="flex items-center gap-3">*/}
+                    {/*            <Avatar className="w-12 h-12">*/}
+                    {/*                <AvatarFallback>*/}
+                    {/*                  */}
+                    {/*                </AvatarFallback>*/}
+                    {/*            </Avatar>*/}
+                    {/*            <div>*/}
+                    {/*                <div className="font-semibold">*/}
+                    {/*                    {gig.user.first_name} {gig.user.middle_name} {gig.user.last_name}*/}
+                    {/*                </div>*/}
+                    {/*                <div className="text-sm text-muted-foreground">@{gig.user.nick_name}</div>*/}
+                    {/*            </div>*/}
+                    {/*        </div>*/}
+                    {/*        <p className="text-sm text-muted-foreground leading-relaxed">{gig.user.about}</p>*/}
+                    {/*        <Button variant="outline" className="w-full bg-transparent">*/}
+                    {/*            Contact Seller*/}
+                    {/*        </Button>*/}
+                    {/*    </CardContent>*/}
+                    {/*</Card>*/}
                 </div>
             </div>
         </div>
