@@ -5,7 +5,7 @@ import {Button} from '@/components/ui/button'
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar'
 import Image from 'next/image'
 import {cn, formatCompactNumber} from '@/lib/utils'
-import {Verified} from 'lucide-react'
+import {LocateIcon, Star, Verified} from 'lucide-react'
 import type {SocialProfile} from '@/types/common'
 
 export interface InfluencerInsight {
@@ -69,18 +69,18 @@ export default function InfluencerInsightsCard({
                         </div>
                     </div>
                     <div className="flex items-center gap-1 flex-shrink-0">
-                        <span className="text-yellow-400">★</span>
+                        <Star className="w-4 h-4 text-yellow-400"/>
                         <span className="font-semibold text-gray-900 text-sm">{rating}</span>
                     </div>
                 </div>
 
                 <div className="flex items-center gap-2 mb-4">
-                    <span className="text-gray-400">📍</span>
+                    <LocateIcon className="w-4 h-4 text-gray-400"/>
                     <span className="text-gray-600 text-sm">{location}</span>
                 </div>
 
                 <div className="grid grid-cols-4 gap-2 mb-4">
-                    {social_profiles.map((platform, i) => (
+                    {social_profiles.map((platform: any, i) => (
                         <div key={i} className="flex flex-col items-center gap-1">
                             <Image
                                 src={platform.profile_url}

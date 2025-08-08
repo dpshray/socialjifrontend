@@ -1,9 +1,9 @@
 "use client"
 import type React from "react"
-import { memo, useCallback, useEffect, useState } from "react"
+import {memo, useCallback, useEffect, useState} from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import {usePathname} from "next/navigation"
 import {
     Bell,
     BoltIcon,
@@ -17,7 +17,7 @@ import {
     PenIcon,
     PinIcon,
 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import {cn} from "@/lib/utils"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,11 +26,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import {Button} from "@/components/ui/button"
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
+import {Badge} from "@/components/ui/badge"
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover"
+import {Sheet, SheetContent, SheetTrigger} from "@/components/ui/sheet"
+import {authService} from "@/app/(auth)/auth.service";
 
 export type Notification = {
     id: number
@@ -87,7 +88,7 @@ export type GlobalHeaderProps = {
     maxNotifications?: number
 }
 
-const Dot = ({ className, type = "info" }: { className?: string; type?: "info" | "success" | "warning" | "error" }) => {
+const Dot = ({className, type = "info"}: { className?: string; type?: "info" | "success" | "warning" | "error" }) => {
     const colorMap = {
         info: "text-blue-500",
         success: "text-green-500",
@@ -97,13 +98,13 @@ const Dot = ({ className, type = "info" }: { className?: string; type?: "info" |
     return (
         <span aria-hidden="true">
       <svg width="6" height="6" fill="currentColor" viewBox="0 0 6 6" className={cn(colorMap[type], className)}>
-        <circle cx="3" cy="3" r="3" />
+        <circle cx="3" cy="3" r="3"/>
       </svg>
     </span>
     )
 }
 
-const StatusIndicator = ({ status }: { status: UserInfo["status"] }) => {
+const StatusIndicator = ({status}: { status: UserInfo["status"] }) => {
     if (!status || status === "offline") return null
     const statusColors = {
         online: "bg-green-500",
@@ -120,16 +121,16 @@ const StatusIndicator = ({ status }: { status: UserInfo["status"] }) => {
     )
 }
 
-const DropdownItem = ({ icon: Icon, label, onClick, href, separator, disabled }: DropdownItemConfig) => {
+const DropdownItem = ({icon: Icon, label, onClick, href, separator, disabled}: DropdownItemConfig) => {
     const content = (
         <DropdownMenuItem onClick={onClick} disabled={disabled}>
-            <Icon className="mr-2 h-4 w-4 text-muted-foreground" />
+            <Icon className="mr-2 h-4 w-4 text-muted-foreground"/>
             {label}
         </DropdownMenuItem>
     )
     return (
         <>
-            {separator && <DropdownMenuSeparator />}
+            {separator && <DropdownMenuSeparator/>}
             {href && !disabled ? <Link href={href}>{content}</Link> : content}
         </>
     )
@@ -147,12 +148,12 @@ const UserAvatar = memo(function UserAvatar({
     showUserStatus?: boolean
 }) {
     const defaultItems: DropdownItemConfig[] = [
-        { icon: BoltIcon, label: "Dashboard" },
-        { icon: Layers2Icon, label: "Projects" },
-        { icon: BookOpenIcon, label: "Docs" },
-        { icon: PinIcon, label: "Pinned", separator: true },
-        { icon: PenIcon, label: "Settings" },
-        { icon: LogOutIcon, label: "Logout", onClick: onLogout, separator: true },
+        {icon: BoltIcon, label: "Dashboard"},
+        {icon: Layers2Icon, label: "Projects"},
+        {icon: BookOpenIcon, label: "Docs"},
+        {icon: PinIcon, label: "Pinned", separator: true},
+        {icon: PenIcon, label: "Settings"},
+        {icon: LogOutIcon, label: "Logout", onClick: onLogout, separator: true},
     ]
     const items = dropdownItems.length ? dropdownItems : defaultItems
     return (
@@ -160,10 +161,10 @@ const UserAvatar = memo(function UserAvatar({
             <DropdownMenuTrigger asChild>
                 <div className="relative cursor-pointer">
                     <Avatar>
-                        <AvatarImage src={user.avatarUrl || "/placeholder.svg?height=40&width=40"} alt="Avatar" />
+                        <AvatarImage src={user.avatarUrl || "/placeholder.svg?height=40&width=40"} alt="Avatar"/>
                         <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
                     </Avatar>
-                    {showUserStatus && <StatusIndicator status={user.status} />}
+                    {showUserStatus && <StatusIndicator status={user.status}/>}
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -173,18 +174,19 @@ const UserAvatar = memo(function UserAvatar({
                 <DropdownMenuLabel className="flex items-center gap-3 px-3 py-2">
                     <div className="relative">
                         <Avatar className="h-10 w-10">
-                            <AvatarImage src={user.avatarUrl || "/placeholder.svg?height=40&width=40"} alt="Avatar" />
+                            <AvatarImage src={user.avatarUrl || "/placeholder.svg?height=40&width=40"} alt="Avatar"/>
                             <AvatarFallback>{user.name?.[0] || "U"}</AvatarFallback>
                         </Avatar>
-                        {showUserStatus && <StatusIndicator status={user.status} />}
+                        {showUserStatus && <StatusIndicator status={user.status}/>}
                     </div>
                     <div className="truncate">
                         <p className="text-sm font-medium truncate">{user.name || "User"}</p>
                         <p className="text-xs text-muted-foreground truncate">{user.email || "user@example.com"}</p>
-                        {showUserStatus && user.status && <p className="text-xs text-muted-foreground capitalize">{user.status}</p>}
+                        {showUserStatus && user.status &&
+                            <p className="text-xs text-muted-foreground capitalize">{user.status}</p>}
                     </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator/>
                 {items.map((item, index) => (
                     <DropdownItem key={`${item.label}-${index}`} {...item} />
                 ))}
@@ -202,8 +204,8 @@ const IconButton = memo(function IconButton({
                                             }: IconButtonConfig & { maxNotifications?: number }) {
     const [items, setItems] = useState(notifications)
     const unread = items.filter((n) => n.unread).length
-    const markAllRead = useCallback(() => setItems((prev) => prev.map((n) => ({ ...n, unread: false }))), [])
-    const handleClick = (id: number) => setItems((prev) => prev.map((n) => (n.id === id ? { ...n, unread: false } : n)))
+    const markAllRead = useCallback(() => setItems((prev) => prev.map((n) => ({...n, unread: false}))), [])
+    const handleClick = (id: number) => setItems((prev) => prev.map((n) => (n.id === id ? {...n, unread: false} : n)))
     const handleButtonClick = useCallback(() => onClick?.(), [onClick])
 
     if (notifications.length === 0 && onClick) {
@@ -220,7 +222,8 @@ const IconButton = memo(function IconButton({
                 <Button variant="ghost" size="icon" aria-label={label} className="relative">
                     {icon}
                     {unread > 0 && (
-                        <Badge className="absolute -top-2 left-full translate-x-[-50%] px-1 rounded-full min-w-[1.2rem] text-[10px]">
+                        <Badge
+                            className="absolute -top-2 left-full translate-x-[-50%] px-1 rounded-full min-w-[1.2rem] text-[10px]">
                             {unread > maxNotifications ? `${maxNotifications}+` : unread}
                         </Badge>
                     )}
@@ -240,7 +243,8 @@ const IconButton = memo(function IconButton({
                 </div>
                 <div className="max-h-60 overflow-y-auto">
                     {items.length === 0 ? (
-                        <div className="px-4 py-8 text-center text-sm text-muted-foreground">No {label.toLowerCase()} yet</div>
+                        <div
+                            className="px-4 py-8 text-center text-sm text-muted-foreground">No {label.toLowerCase()} yet</div>
                     ) : (
                         <ul>
                             {items.map((n) => (
@@ -255,7 +259,7 @@ const IconButton = memo(function IconButton({
                                                 <span className="font-medium">{n.target}</span>
                                                 <div className="text-xs text-muted-foreground">{n.timestamp}</div>
                                             </div>
-                                            {n.unread && <Dot type={n.type} className="mt-1" />}
+                                            {n.unread && <Dot type={n.type} className="mt-1"/>}
                                         </div>
                                     </button>
                                 </li>
@@ -288,13 +292,12 @@ export default function GlobalHeader({
     const finalIconButtons = iconButtons.length
         ? iconButtons
         : [
-            { icon: <Bell className="h-5 w-5" />, label: "Notifications", notifications: [] },
-            { icon: <LucideMail className="h-5 w-5" />, label: "Messages", notifications: [] },
-            { icon: <HeartIcon className="h-5 w-5" />, label: "Favorites", notifications: [] },
+            {icon: <Bell className="h-5 w-5"/>, label: "Notifications", notifications: []},
+            {icon: <LucideMail className="h-5 w-5"/>, label: "Messages", notifications: []},
+            {icon: <HeartIcon className="h-5 w-5"/>, label: "Favorites", notifications: []},
         ]
 
-    const basePath = logoHref || (pathname.startsWith("/brand") ? "/brand" : "/influencer")
-
+    const basePath = logoHref ? logoHref : "/"
     useEffect(() => {
         const onScroll = () => setIsScrolled(window.scrollY > 10)
         window.addEventListener("scroll", onScroll)
@@ -303,8 +306,8 @@ export default function GlobalHeader({
 
     const handleLogout = useCallback(async () => {
         try {
-            // await authService.logout() // Removed due to file not found
-            console.log("Simulating logout...") // Placeholder for actual logout logic
+            await authService.logout()
+            console.log("Simulating logout...")
             localStorage.removeItem("_at")
             localStorage.removeItem("_role")
             window.location.href = "/login"
@@ -335,7 +338,7 @@ export default function GlobalHeader({
                     />
                 </Link>
                 <ul className="hidden md:flex gap-4 items-center font-medium">
-                    {navItems.map(({ label, href, disabled }) => (
+                    {navItems.map(({label, href, disabled}) => (
                         <li key={label}>
                             <Link
                                 href={disabled ? "#" : href}
@@ -353,7 +356,7 @@ export default function GlobalHeader({
                 </ul>
                 <div className="hidden md:flex items-center gap-3">
                     {finalIconButtons.map((button, index) => (
-                        <IconButton key={`${button.label}-${index}`} {...button} maxNotifications={maxNotifications} />
+                        <IconButton key={`${button.label}-${index}`} {...button} maxNotifications={maxNotifications}/>
                     ))}
                     <UserAvatar
                         user={user}
@@ -365,14 +368,15 @@ export default function GlobalHeader({
                 <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
                     <SheetTrigger asChild className="md:hidden">
                         <Button variant="ghost" size="icon" aria-label="Toggle menu">
-                            <Menu className="h-6 w-6 text-foreground" />
+                            <Menu className="h-6 w-6 text-foreground"/>
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="w-80">
                         <div className="flex flex-col gap-4 mt-8">
                             <div className="flex items-center gap-3 pb-4 border-b">
                                 {finalIconButtons.map((button, index) => (
-                                    <IconButton key={`mobile-${button.label}-${index}`} {...button} maxNotifications={maxNotifications} />
+                                    <IconButton key={`mobile-${button.label}-${index}`} {...button}
+                                                maxNotifications={maxNotifications}/>
                                 ))}
                                 <UserAvatar
                                     user={user}
@@ -382,7 +386,7 @@ export default function GlobalHeader({
                                 />
                             </div>
                             <nav className="space-y-2">
-                                {navItems.map(({ label, href, disabled }) => (
+                                {navItems.map(({label, href, disabled}) => (
                                     <Link
                                         key={label}
                                         href={disabled ? "#" : href}

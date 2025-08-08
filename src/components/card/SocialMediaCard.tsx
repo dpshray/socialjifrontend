@@ -1,8 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Heart, MessageSquare, TrendingUp } from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Badge} from "@/components/ui/badge";
+import {ExternalLink, Heart, MessageSquare, TrendingUp} from 'lucide-react';
 import Link from "next/link";
 import Image from "next/image";
+import {formatCompactNumber} from "@/lib/utils";
 
 interface SocialMediaCardProps {
     platform: string;
@@ -19,44 +20,22 @@ interface SocialMediaCardProps {
     image?: string;
 }
 
-const platformColors: Record<string, string> = {
-    instagram: "bg-gradient-to-r from-purple-500 to-pink-500",
-    facebook: "bg-blue-600",
-    tiktok: "bg-black",
-    twitter: "bg-blue-400",
-    youtube: "bg-red-600",
-};
-
-const platformIcons: Record<string, string> = {
-    instagram: "📷",
-    facebook: "👥",
-    tiktok: "🎵",
-    twitter: "🐦",
-    youtube: "📺",
-};
-
-const formatNumber = (num: number): string => {
-    if (num >= 1_000_000) return (num / 1_000_000).toFixed(1) + "M";
-    if (num >= 1_000) return (num / 1_000).toFixed(1) + "K";
-    return num.toLocaleString();
-};
-
-export function SocialMediaCard({
-                                    platform,
-                                    title,
-                                    link,
-                                    followerCount,
-                                    followingCount,
-                                    postCount,
-                                    avgLikePerPost,
-                                    avgCommentPerPost,
-                                    followerGrowthRate,
-                                    highestLike,
-                                    lowestLike,
-                                    image,
-                                }: SocialMediaCardProps) {
-    const platformColor = platformColors[platform] || "bg-gray-600";
-    const platformIcon = platformIcons[platform] || "📱";
+export function SocialProfileCard({
+                                      platform,
+                                      title,
+                                      link,
+                                      followerCount,
+                                      followingCount,
+                                      postCount,
+                                      avgLikePerPost,
+                                      avgCommentPerPost,
+                                      followerGrowthRate,
+                                      highestLike,
+                                      lowestLike,
+                                      image,
+                                  }: SocialMediaCardProps) {
+    const platformColor = "bg-gray-600";
+    const platformIcon = "📱";
 
     return (
         <Card className="w-full shadow-sm hover:shadow-md transition-shadow duration-200">
@@ -65,7 +44,7 @@ export function SocialMediaCard({
                     <div className="flex items-center gap-3">
                         {image ? (
                             <Image
-                                src={image}
+                                src={image || "/placeholder.svg"}
                                 alt={`${title} profile`}
                                 width={40}
                                 height={40}
@@ -80,7 +59,7 @@ export function SocialMediaCard({
                             </div>
                         )}
                         <div>
-                            <CardTitle className="text-base sm:text-lg text-muted-foreground font-semibold">
+                            <CardTitle className="text-base sm:text-lg text-foreground font-semibold">
                                 {title}
                             </CardTitle>
                             <Link
@@ -90,57 +69,54 @@ export function SocialMediaCard({
                                 aria-label={`View ${title} profile on ${platform}`}
                                 className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
                             >
-                                View Profile <ExternalLink className="w-3 h-3" />
+                                View Profile <ExternalLink className="w-3 h-3"/>
                             </Link>
                         </div>
                     </div>
                 </div>
             </CardHeader>
-
             <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center text-muted-foreground">
                     <div>
-                        <div className="text-lg font-bold text-gray-900">{formatNumber(followerCount)}</div>
+                        <div className="text-lg font-bold text-gray-900">{formatCompactNumber(followerCount)}</div>
                         <div className="text-xs text-gray-500">Followers</div>
                     </div>
                     <div>
-                        <div className="text-lg font-bold text-gray-900">{formatNumber(followingCount)}</div>
+                        <div className="text-lg font-bold text-gray-900">{formatCompactNumber(followingCount)}</div>
                         <div className="text-xs text-gray-500">Following</div>
                     </div>
                     <div className="hidden sm:block">
-                        <div className="text-lg font-bold text-gray-900">{formatNumber(postCount)}</div>
+                        <div className="text-lg font-bold text-gray-900">{formatCompactNumber(postCount)}</div>
                         <div className="text-xs text-gray-500">Posts</div>
                     </div>
                 </div>
-
                 <div className="space-y-2 pt-2 border-t">
                     <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600 flex items-center gap-1">
-              <Heart className="w-3 h-3" /> Avg Likes
-            </span>
-                        <span className="font-medium">{formatNumber(avgLikePerPost)}</span>
+                        <span className="text-gray-600 flex items-center gap-1">
+                            <Heart className="w-3 h-3"/> Avg Likes
+                        </span>
+                        <span className="font-medium">{formatCompactNumber(avgLikePerPost)}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600 flex items-center gap-1">
-              <MessageSquare className="w-3 h-3" /> Avg Comments
-            </span>
-                        <span className="font-medium">{formatNumber(avgCommentPerPost)}</span>
+                        <span className="text-gray-600 flex items-center gap-1">
+                            <MessageSquare className="w-3 h-3"/> Avg Comments
+                        </span>
+                        <span className="font-medium">{formatCompactNumber(avgCommentPerPost)}</span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
-            <span className="text-gray-600 flex items-center gap-1">
-              <TrendingUp className="w-3 h-3" /> Growth/Week
-            </span>
+                        <span className="text-gray-600 flex items-center gap-1">
+                            <TrendingUp className="w-3 h-3"/> Growth/Week
+                        </span>
                         <Badge variant="outline" className="text-green-600 border-green-200">
-                            +{formatNumber(followerGrowthRate)}
+                            +{formatCompactNumber(followerGrowthRate)}
                         </Badge>
                     </div>
                 </div>
-
                 <div className="pt-2 border-t">
                     <div className="text-xs text-gray-500 mb-1">Like Range</div>
                     <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Low: {formatNumber(lowestLike)}</span>
-                        <span className="text-gray-600">High: {formatNumber(highestLike)}</span>
+                        <span className="text-gray-600">Low: {formatCompactNumber(lowestLike)}</span>
+                        <span className="text-gray-600">High: {formatCompactNumber(highestLike)}</span>
                     </div>
                 </div>
             </CardContent>

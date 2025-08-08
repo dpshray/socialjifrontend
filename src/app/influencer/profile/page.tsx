@@ -18,7 +18,7 @@ import {
     BarChart3,
     Clock,
     Download,
-    Globe,
+    Globe, Heart,
     Mail,
     MessageSquare,
     MoreHorizontal,
@@ -27,13 +27,15 @@ import {
     Share2,
     Star,
     User,
-    Users,
-} from "lucide-react"
+    Users
+} from 'lucide-react'
 import {Button} from "@/components/ui/button"
 import {Badge} from "@/components/ui/badge"
 import {Progress} from "@/components/ui/progress"
-import {SocialMediaCard} from "@/components/card/SocialMediaCard"
+import {SocialProfileCard} from "@/components/card/SocialMediaCard"
 import {Skeleton} from "@/components/ui/skeleton"
+import {ProfileStatsCard} from "@/components/card/profile-stats-card";
+
 
 export interface SocialPlatform {
     name: string
@@ -98,12 +100,56 @@ const reviews: Review[] = []
 const audienceInsights: AudienceInsight[] = []
 
 export default function InfluencerProfile() {
-    const {user} = useAuth()
-    const isLoading = !user || !user.social_profiles
-    const totalFollowers = user?.social_profiles.reduce((sum, profile) => sum + +profile.follower_count, 0)
+    const {user, loading} = useAuth()
+    const isLoading = loading || !user || !user.social_profiles
+
+    const calculateStats = () => {
+        if (!user?.social_profiles) return []
+        const totalFollowers = user.social_profiles.reduce((sum, profile) => sum + +profile.follower_count, 0)
+        const totalPosts = user.social_profiles.reduce((sum, profile) => sum + profile.post_count, 0)
+        const avgEngagement =
+            user.social_profiles.reduce(
+                (sum, profile) => sum + (profile.avg_like_per_post_count + profile.avg_comment_per_post_count),
+                0,
+            ) / user.social_profiles.length
+        return [
+            {
+                title: "Total Followers",
+                value: totalFollowers,
+                description: "Across all platforms",
+                icon: <Users className="w-6 h-6 text-white"/>,
+                colorClass: "bg-blue-500",
+                isLoading: loading,
+            },
+            {
+                title: "Total Posts",
+                value: totalPosts,
+                description: "Across all platforms",
+                icon: <MessageSquare className="w-6 h-6 text-white"/>,
+                colorClass: "bg-purple-500",
+                isLoading: loading,
+            },
+            {
+                title: "Avg Engagement",
+                value: Math.round(avgEngagement),
+                description: "Per post",
+                icon: <Heart className="w-6 h-6 text-white"/>,
+                colorClass: "bg-red-500",
+                isLoading: loading,
+            },
+        ]
+    }
+    const statsData = calculateStats()
+
+    const getTopSocialPlatforms = () => {
+        if (!user?.social_profiles) return []
+        return user.social_profiles.sort((a, b) => b.follower_count - a.follower_count).slice(0, 4)
+    }
+    const topPlatforms = getTopSocialPlatforms()
 
     return (
-        <div className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-full container mx-auto">
+        <div
+            className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-full container mx-auto">
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                     <div className="flex items-center gap-6">
@@ -206,34 +252,11 @@ export default function InfluencerProfile() {
                     </div>
                 </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {Array.from({length: 4}).map((_, i) => (
-                    <Card key={i} className="border-0 shadow-lg">
-                        <CardContent className="p-6 space-y-4">
-                            {isLoading ? (
-                                <>
-                                    <Skeleton className="w-12 h-12 rounded-xl"/>
-                                    <Skeleton className="h-4 w-24"/>
-                                    <Skeleton className="h-6 w-32"/>
-                                    <Skeleton className="h-4 w-20"/>
-                                </>
-                            ) : i === 0 ? (
-                                <>
-                                    <div
-                                        className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                                        <Users className="w-6 h-6 text-white"/>
-                                    </div>
-                                    <p className="text-sm font-medium text-blue-700 mb-1">Total Followers</p>
-                                    <p className="text-3xl font-bold text-blue-900">{totalFollowers}</p>
-                                    <p className="text-xs text-blue-600 mt-1">Across all platforms</p>
-                                </>
-                            ) : null}
-                        </CardContent>
-                    </Card>
+                {statsData.map((item, index) => (
+                    <ProfileStatsCard key={index} {...item} />
                 ))}
             </div>
-
             <Tabs defaultValue="overview" className="space-y-6">
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
                     <TabsList className="grid w-full grid-cols-5 bg-slate-50 rounded-xl p-1">
@@ -248,7 +271,6 @@ export default function InfluencerProfile() {
                         ))}
                     </TabsList>
                 </div>
-
                 <TabsContent value="overview" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <Card className="border-0 bg-white shadow-none">
@@ -297,7 +319,6 @@ export default function InfluencerProfile() {
                                 )}
                             </CardContent>
                         </Card>
-
                         <Card className="lg:col-span-2 border-0 bg-white shadow-none">
                             <CardHeader className="pb-4">
                                 <CardTitle className="flex items-center gap-2 text-slate-900">
@@ -312,9 +333,8 @@ export default function InfluencerProfile() {
                                             <Skeleton key={i} className="h-40 w-full rounded-xl"/>
                                         ))
                                         : user?.social_profiles.map((profile, index) => (
-                                            <SocialMediaCard
+                                            <SocialProfileCard
                                                 key={index}
-                                                image={profile.profile_url}
                                                 title={profile.social.label}
                                                 link={profile.profile_url}
                                                 followerCount={profile.follower_count}
@@ -325,7 +345,7 @@ export default function InfluencerProfile() {
                                                 followerGrowthRate={profile.follower_growth_rate_per_week}
                                                 highestLike={profile.highest_like}
                                                 lowestLike={profile.lowest_like}
-                                                platform=""
+                                                platform={profile.social.name}
                                             />
                                         ))}
                                 </div>

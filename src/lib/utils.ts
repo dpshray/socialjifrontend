@@ -30,3 +30,4 @@ export function formatCompactNumber(value: number): string {
         maximumFractionDigits: 1,
     }).format(value)
 }
+

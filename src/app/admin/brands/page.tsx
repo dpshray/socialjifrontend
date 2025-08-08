@@ -9,6 +9,8 @@ import {Checkbox} from "@/components/ui/checkbox"
 import {RowActions} from "@/components/table/row-actions"
 import {AdminBrandTable} from "@/types/admin"
 import {DashboardCard} from "@/components/card/admin/admin-dashboard-card"
+import Image from "next/image";
+import {useRouter} from "next/navigation";
 
 export default function AdminBrandPage() {
     const [loading, setLoading] = useState(false)
@@ -20,7 +22,7 @@ export default function AdminBrandPage() {
     const [pagination, setPagination] = useState<PaginationState>({pageIndex: 0, pageSize: 10})
     const [totalRows, setTotalRows] = useState(0)
     const [totalPagesFromApi, setTotalPagesFromApi] = useState(1)
-
+    const router = useRouter()
     const fetchBrands = useCallback(async () => {
         setLoading(true)
         try {
@@ -73,10 +75,13 @@ export default function AdminBrandPage() {
             size: 250,
             cell: ({row}) => (
                 <div className="flex items-center gap-2 max-w-[250px] overflow-hidden">
-                    <img
+                    <Image
                         src={row.original.image || "/placeholder.svg"}
                         alt={`${row.original.first_name} image`}
                         className="h-8 w-8 flex-shrink-0 rounded object-cover"
+                        width={32}
+                        height={32}
+                        priority
                     />
                     <div className="min-w-0 overflow-hidden">
                         <span
@@ -114,12 +119,14 @@ export default function AdminBrandPage() {
             id: "actions",
             header: "Actions",
             size: 80,
-            cell: ({row}) => <RowActions row={row}/>,
+            cell: ({row}) => <RowActions row={row} onViewAction={handleView}/>,
             enableSorting: false,
             enableHiding: false,
         },
     ]
-
+    const handleView = (brand: AdminBrandTable) => {
+        router.push(`/admin/brands/${brand.nick_name}`)
+    }
     const handleDeleteRows = (selectedRowIds: string[]) => {
         console.log("Deleting rows with IDs:", selectedRowIds)
     }

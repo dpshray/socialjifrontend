@@ -14,6 +14,7 @@ import {DataTable} from "@/components/table/data-table"
 import {createMultiColumnFilterFn} from "@/lib/table-utils"
 import {DashboardCard} from "@/components/card/admin/admin-dashboard-card"
 import {ListChecksIcon, StarIcon, Users2Icon} from "lucide-react"
+import {useRouter} from "next/navigation";
 
 type SocialProfile = { social: { label: string } }
 
@@ -33,6 +34,7 @@ export type InfluencerTable = {
 }
 
 export default function AdminInfluencerPage() {
+    const router = useRouter()
     const [influencers, setInfluencers] = useState<InfluencerTable[]>([])
     const [loading, setLoading] = useState(false)
     const [sorting, setSorting] = useState<SortingState>([])
@@ -62,12 +64,12 @@ export default function AdminInfluencerPage() {
             setInfluencers(influencersData)
             setTotalInfluencers(response?.total ?? 0)
             setTotalPagesFromApi(response?.last_page ?? 1)
-            const gigs = influencersData.reduce((sum: any, item:any) => sum + (item.total_gigs || 0), 0)
-            const reviews = influencersData.reduce((sum:any, item:any) => sum + (item.rating ? 1 : 0), 0)
-            const ratings = influencersData.map((item:any) => item.rating).filter(Boolean)
+            const gigs = influencersData.reduce((sum: any, item: any) => sum + (item.total_gigs || 0), 0)
+            const reviews = influencersData.reduce((sum: any, item: any) => sum + (item.rating ? 1 : 0), 0)
+            const ratings = influencersData.map((item: any) => item.rating).filter(Boolean)
             const avgRating =
                 ratings.length > 0
-                    ? parseFloat((ratings.reduce((sum: any, r:any) => sum + r, 0) / ratings.length).toFixed(2))
+                    ? parseFloat((ratings.reduce((sum: any, r: any) => sum + r, 0) / ratings.length).toFixed(2))
                     : 0
             setTotalGigs(gigs)
             setTotalReviews(reviews)
@@ -166,7 +168,7 @@ export default function AdminInfluencerPage() {
             cell: ({row}) => (
                 <RowActions
                     row={row}
-                    onViewAction={(influencer) => console.log("Viewing:", influencer)}
+                    onViewAction={handleViewDetails}
                     onEditAction={(influencer) => console.log("Editing:", influencer)}
                     onDeleteAction={(influencer) => console.log("Deleting:", influencer)}
                 />
@@ -175,7 +177,10 @@ export default function AdminInfluencerPage() {
             enableHiding: false,
         },
     ]
-
+    const handleViewDetails = (influencer: InfluencerTable) => {
+        router.push(`/admin/influencers/${influencer.nick_name}`)
+        console.log("Viewing details for influencer:", influencer);
+    }
     const handleDeleteRows = (selectedRowIds: string[]) => {
         console.log("Deleting influencer rows with IDs:", selectedRowIds)
     }

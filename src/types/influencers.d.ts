@@ -1,9 +1,10 @@
-import { SocialProfile } from '@/types/common'
+import {SocialProfile} from '@/types/common'
 
 export interface GigStats {
     total: number
     published: number
     gigs_sold_count: number
+    total_gigs?: number;
     top_selling_gig: {
         id: number
         title: string
@@ -75,13 +76,15 @@ export interface GigStats {
 export interface Influencers {
     id: number
     nick_name: string
+    address?: string | null
+
     first_name: string
     middle_name?: string
     last_name: string
-    email: string
-    about: string
+    email?: string
+    about?: string
     image: string
-    roles: string
+    roles?: string
     influencer_rating: number
     social_profiles: SocialProfile[]
     gig: GigStats

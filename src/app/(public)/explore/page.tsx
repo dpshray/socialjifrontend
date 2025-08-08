@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from "react"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {Search} from "lucide-react"
+import {Search, Sparkles} from "lucide-react"
 import InfluencerInsightsCard, {type InfluencerInsight} from "@/components/card/influencer/influencer-card"
 import BrandInsightsCard from "@/components/card/brand/brand-insight-card"
 import GigInsightCard from "@/components/card/gig-insight-card"
@@ -23,9 +23,9 @@ export default function ExplorePage() {
             try {
                 setLoading(true)
                 const [influencerRes, brandRes, gigRes] = await Promise.all([
-                    dashboardService.insightsInfluencer(params),
-                    dashboardService.brandInsights(params),
-                    dashboardService.gigInsights(params),
+                    dashboardService.explorerInfluencer(params),
+                    dashboardService.explorerBrand(params),
+                    dashboardService.explorerTopSales(params),
                 ])
 
                 console.log("Influencers:", influencerRes.data)
@@ -80,7 +80,12 @@ export default function ExplorePage() {
                 imageSrc="/hero1.png"
                 title="Explore"
                 description="Discover top influencers, leading brands, and active gigs across all platforms"
-                badgeText="Real-time Discovery"
+                badgeContent={
+                    <>
+                        <Sparkles className="w-3 h-3 mr-1"/>
+                        <span className="text-white">Real-time Discovery</span>
+                    </>
+                }
                 icon={<Search className="w-6 h-6 text-white"/>}
             />
 

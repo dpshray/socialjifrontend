@@ -3,17 +3,16 @@ import type {ReactNode} from "react"
 import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import type {NavItem} from "@/types/types"
 import {authService} from "@/app/(auth)/auth.service"
-import {Bell, BookOpenIcon, HeartIcon, Layers2Icon, LogOutIcon, LucideMail, PinIcon, Settings2Icon,} from "lucide-react"
+import {Bell, HeartIcon, Layers2Icon, LogOutIcon, LucideMail, Settings2Icon,} from "lucide-react"
 import GlobalHeader, {IconButtonConfig, Notification} from "@/components/header/GlobalHeader";
 
 
 const sidebarItems: NavItem[] = [
-    {label: "Influencer ", href: "/admin/influencer"},
-    {label: "Brand", href: "/admin/brand"},
-    {label: "Payment", href: "/admin/payment"},
+    {label: "Influencer ", href: "/admin/influencers"},
+    {label: "Brand", href: "/admin/brands"},
+    {label: "Payment", href: "/admin/payments"},
     {label: "Gigs", href: "/admin/gigs"},
-    {label: "Campaign", href: "/admin/campaigns"},
-    {label: "Payments", href: "/admin/payments"},
+
 ]
 
 const notifications: Notification[] = [
@@ -56,8 +55,6 @@ const handleLogout = async () => {
 
 const dropdownItems = [
     {icon: Layers2Icon, label: "Campaigns", href: "/brand/campaigns"},
-    {icon: BookOpenIcon, label: "Docs", href: "/brand/docs"},
-    {icon: PinIcon, label: "Pinned", href: "/brand/pinned", separator: true},
     {icon: Settings2Icon, label: "Settings", href: "/brand/settings"},
     {
         icon: LogOutIcon,
@@ -80,6 +77,7 @@ export default function AdminLayout({children}: { children: ReactNode }) {
                 navItems={sidebarItems}
                 iconButtons={iconButtons}
                 dropdownItems={dropdownItems}
+                logoHref="/admin"
                 user={{
                     name: "Admin User",
                     email: "admin@example.com",

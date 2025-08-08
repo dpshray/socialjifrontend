@@ -9,6 +9,7 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import {cn} from "@/lib/utils";
 
 interface CustomPaginationProps {
     currentPage: number
@@ -43,7 +44,7 @@ export default function CustomPagination({
     const pageNumbers = getPageNumbers()
 
     return (
-        <Pagination className={className}>
+        <Pagination className={cn('justify-end', className)}>
             <PaginationContent>
                 <PaginationItem>
                     <PaginationPrevious
@@ -63,7 +64,7 @@ export default function CustomPagination({
                         </PaginationItem>
                         {pageNumbers[0] > 2 && (
                             <PaginationItem>
-                                <PaginationEllipsis />
+                                <PaginationEllipsis/>
                             </PaginationItem>
                         )}
                     </>
@@ -85,7 +86,7 @@ export default function CustomPagination({
                     <>
                         {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && (
                             <PaginationItem>
-                                <PaginationEllipsis />
+                                <PaginationEllipsis/>
                             </PaginationItem>
                         )}
                         <PaginationItem>

@@ -20,18 +20,39 @@ export interface SocialPlatform {
     label: string
 }
 
+// export interface SocialProfile {
+//     id: number
+//     userId: number
+//     socialSiteId: number
+//     profile_url: string
+//     follower_count: number | string
+//     following_count: number | string
+//     post_count: number
+//     avg_like_per_post_count: number
+//     avg_comment_per_post_count: number
+//     follower_growth_rate_per_week: number
+//     highest_like: number
+//     lowest_like: number
+//     social: SocialPlatform
+// }
 export interface SocialProfile {
-    profile_url: string
-    follower_count: number | string
-    following_count: number | string
-    post_count: number
-    avg_like_per_post_count: number
-    avg_comment_per_post_count: number
-    follower_growth_rate_per_week: number
-    highest_like: number
-    lowest_like: number
-    social: SocialPlatform
+    id: number;
+    user_id: number;
+    social_site_id: number;
+    profile_url: string;
+    follower_count: number;
+    following_count: number;
+    post_count: number;
+    avg_like_per_post_count: number;
+    avg_comment_per_post_count: number;
+    follower_growth_rate_per_week: number;
+    highest_like: number;
+    lowest_like: number;
+    created_at: string | null;
+    updated_at: string | null;
+    deleted_at: string | null;
 }
+
 export interface Helpfuls {
     upvote: number
     downvote: number

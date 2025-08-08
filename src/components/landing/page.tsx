@@ -94,10 +94,10 @@ export default function HomeHeroSection() {
                         whileInView={{opacity: 1, y: 0}}
                         transition={{duration: 0.5, ease: "easeOut", delay: 0.2}}
                         className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Link href="#" className="btn-gradient">
+                        <Link href="/register" className="btn-gradient">
                             Join as Brand
                         </Link>
-                        <Link href="#"
+                        <Link href="/register"
                               className="border border-gray-700 text-gray-900 px-6 py-3 rounded-md text-center font-medium hover:bg-gray-100 transition sm:w-auto w-full">
                             Join as Creator
                         </Link>

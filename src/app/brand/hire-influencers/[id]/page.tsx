@@ -247,7 +247,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
 
                     <TabsContent value="analytics" className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {influencer.social_profiles.map((profile, index) => (
+                            {influencer.social_profiles.map((profile:any, index) => (
                                 <Card key={index} className="overflow-hidden">
                                     <CardHeader className="pb-3">
                                         <div className="flex items-center justify-between">

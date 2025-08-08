@@ -1,12 +1,10 @@
 "use client"
 
 import React, {useEffect, useMemo} from "react"
-
-
 import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import useAuth from "@/hooks/useAuth"
-import {Bell} from "lucide-react";
-import GlobalHeader from "@/components/header/GlobalHeader";
+import {Bell, DollarSign, LogOutIcon, PinIcon, Settings2Icon,} from "lucide-react"
+import GlobalHeader from "@/components/header/GlobalHeader"
 
 export default function InfluencerLayout({children}: { children: React.ReactNode }) {
     const {user, loading} = useAuth()
@@ -66,6 +64,13 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
         []
     )
 
+    const dropdownItems = [
+        {icon: DollarSign, label: "Payments", href: "/influencer/payments"},
+        {icon: PinIcon, label: "Pinned", href: "/influencer/pinned", separator: true},
+        {icon: Settings2Icon, label: "Settings", href: "/influencer/profile"},
+        {icon: LogOutIcon, label: "Logout", separator: true},
+    ]
+
     useEffect(() => {
         console.log("User:", user)
     }, [user, loading])
@@ -83,20 +88,18 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
             <div className="min-h-screen bg-background flex flex-col">
                 <GlobalHeader
                     navItems={sidebarItems}
+                    logoHref="/influencer"
+                    dropdownItems={dropdownItems}
                     user={{
-                        name: user?.first_name ?? "Influencer",
-                        email: user?.email ?? "user@example.com",
-                        avatarUrl:
-                            user?.image && user.image.startsWith("http")
-                                ? user.image
-                                : "/default-avatar.png",
+                        name: `${user?.first_name ?? "User"}`,
+                        email: user?.email ?? "",
+                        avatarUrl: user?.image ?? "",
                     }}
                     iconButtons={[
-
                         {
-                            icon: <Bell className=" w-5 h-5  "/>,
-                            label: "Messages",
-                            notifications: messages,
+                            icon: <Bell className="h-5 w-5"/>,
+                            label: "Notifications",
+                            notifications,
                         },
                     ]}
                 />
