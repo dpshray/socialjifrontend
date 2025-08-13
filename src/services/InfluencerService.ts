@@ -16,6 +16,19 @@ class InfluencerService extends HttpServices {
             console.error('Error in brandPaymentList:', error);
         }
     }
+
+
+    async getFacebookFollowers() {
+        try {
+            return await this.getRequest({
+                // https://socialapi.stage.dworklabs.com/api/v1/social-data-fetcher/fb
+                url: '/social-data-fetcher/fb',
+                config: {auth: true}
+            })
+        } catch (error) {
+            console.error('Error in brandPaymentList:', error);
+        }
+    }
 }
 
 const influencerService = new InfluencerService()
