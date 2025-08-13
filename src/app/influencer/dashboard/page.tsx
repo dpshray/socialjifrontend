@@ -58,26 +58,21 @@ export default function InfluencerDashboard() {
         {title: 'Sales', value: '2,500', icon: BriefcaseIcon},
     ];
 
-    const getFacebookFollowers = async () => {
-        try {
-            await influencerService.getFacebookFollowers();
-        } catch (error) {
-            console.error('Error fetching Facebook data:', error);
-            alert('Error fetching Facebook data');
-        }
-    };
 
-    const handleConnect = async (type: string) => {
-        setLoadingType(type);
 
+    const handleConnect = (type: string) => {
         if (type === 'facebook') {
-            await getFacebookFollowers();
+            const token = localStorage.getItem('_at');
+            if (!token) {
+                alert('User token not found. Please log in.');
+                return;
+            }
+            window.location.href = `https://socialapi.stage.dworklabs.com/api/v1/social-data-fetcher/fb?token=${encodeURIComponent(token)}`;
         } else {
-            toast.error(`Connect to ${type.toUpperCase()} feature is not implemented yet.`);
+            alert(`Connect to ${type.toUpperCase()} is not implemented yet.`);
         }
-
-        setLoadingType(null);
     };
+
 
     return (
         <section className="w-full py-8 bg-background container mx-auto">
