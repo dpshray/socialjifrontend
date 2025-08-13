@@ -6,11 +6,12 @@ import Image from 'next/image';
 
 import InfluencerChart from '@/components/chart/Influencer';
 import LatestGigsTable from '@/components/table/userTable';
-import {Button} from "@/components/ui/button";
-import {ComingStatsCard, InfluencerStatsCard} from "@/components/card/influencer/influencer-dashboard";
+import {Button} from '@/components/ui/button';
+import {ComingStatsCard, InfluencerStatsCard} from '@/components/card/influencer/influencer-dashboard';
 import {Card} from '@/components/ui/card';
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import influencerService from "@/services/InfluencerService";
+import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
+import influencerService from '@/services/InfluencerService';
+import {toast} from "sonner";
 
 interface UserCardProps {
     image: string;
@@ -18,87 +19,61 @@ interface UserCardProps {
     username: string;
 }
 
-function UserCard({image, name, username}: UserCardProps) {
-    return (
-        <Card className="p-3">
-            <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0">
-                    <Avatar>
-                        <AvatarImage src={image}/>
-                        <AvatarFallback>{name[0]}</AvatarFallback>
-                    </Avatar>
-                </div>
-                <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
-                    <p className="text-sm text-gray-500 truncate">{username}</p>
-                </div>
-                <div className="flex-shrink-0">
-                    <Button variant="secondary">View</Button>
-                </div>
+const UserCard: React.FC<UserCardProps> = ({image, name, username}) => (
+    <Card className="p-3">
+        <div className="flex items-center space-x-4">
+            <Avatar>
+                <AvatarImage src={image}/>
+                <AvatarFallback>{name[0]}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
+                <p className="text-sm text-gray-500 truncate">{username}</p>
             </div>
-        </Card>
-    );
-}
+            <Button variant="secondary">View</Button>
+        </div>
+    </Card>
+);
 
 interface SocialMediaIcon {
     image: string;
     title: string;
     description: string;
-    link: string;
     type: string;
 }
+
+const socialMediaIcons: SocialMediaIcon[] = [
+    {image: '/Thread.png', title: 'X', description: '950K Followers', type: 'x'},
+    {image: '/youtube.png', title: 'YouTube', description: '3.2M Subscribers', type: 'youtube'},
+    {image: '/facebook1.png', title: 'Facebook', description: '5.6M Followers', type: 'facebook'},
+];
 
 export default function InfluencerDashboard() {
     const [loadingType, setLoadingType] = useState<string | null>(null);
 
     const statsData = [
-        {title: 'Revenue', value: '$2,500', description: 'Monthly revenue from sales', icon: TrendingUp, trend: 'up'},
-        {title: 'Orders', value: '1,320', description: 'Total orders processed', icon: TrendingUp, trend: 'down'},
-        {title: 'Customers', value: '2,500', description: 'Number of customers', icon: DollarSign, trend: 'up'},
-        {title: 'Sales', value: '2,500', description: 'Monthly sales from sales', icon: BriefcaseIcon, trend: 'up'},
-    ];
-
-    const socialMediaIcons: SocialMediaIcon[] = [
-        {
-            image: '/Thread.png',
-            title: 'X',
-            description: '950K Followers',
-            link: 'https://twitter.com/Twitter',
-            type: 'x'
-        },
-        {
-            image: '/youtube.png',
-            title: 'YouTube',
-            description: '3.2M Subscribers',
-            link: 'https://www.youtube.com/user/YouTube',
-            type: 'youtube'
-        },
-        {
-            image: '/facebook1.png',
-            title: 'Facebook',
-            description: '5.6M Followers',
-            link: '/api/social-data-fetcher/fb',
-            type: 'facebook'
-        },
+        {title: 'Revenue', value: '$2,500', icon: TrendingUp},
+        {title: 'Orders', value: '1,320', icon: TrendingUp},
+        {title: 'Customers', value: '2,500', icon: DollarSign},
+        {title: 'Sales', value: '2,500', icon: BriefcaseIcon},
     ];
 
     const getFacebookFollowers = async () => {
         try {
-            const res = await influencerService.getFacebookFollowers();
-            console.log('Facebook data:', res);
+            await influencerService.getFacebookFollowers();
         } catch (error) {
-            console.error('Error in getFacebookFollowers:', error);
+            console.error('Error fetching Facebook data:', error);
             alert('Error fetching Facebook data');
         }
     };
 
-    const handleConnect = async (type: string, link: string) => {
+    const handleConnect = async (type: string) => {
         setLoadingType(type);
 
         if (type === 'facebook') {
             await getFacebookFollowers();
         } else {
-            window.open(link, '_blank');
+            toast.error(`Connect to ${type.toUpperCase()} feature is not implemented yet.`);
         }
 
         setLoadingType(null);
@@ -118,16 +93,15 @@ export default function InfluencerDashboard() {
                     <div className="md:col-span-3 space-y-6">
                         {/* Stats Cards */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                            {statsData.map((stat, index) => (
-                                <InfluencerStatsCard key={index} title={stat.title} value={stat.value}
-                                                     icon={stat.icon}/>
+                            {statsData.map((stat, idx) => (
+                                <InfluencerStatsCard key={idx} title={stat.title} value={stat.value} icon={stat.icon}/>
                             ))}
                         </div>
 
                         {/* Coming Soon Cards */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {Array.from({length: 4}).map((_, index) => (
-                                <ComingStatsCard key={index}/>
+                            {Array.from({length: 4}).map((_, idx) => (
+                                <ComingStatsCard key={idx}/>
                             ))}
                         </div>
                     </div>
@@ -150,7 +124,7 @@ export default function InfluencerDashboard() {
                                     <Button
                                         variant="outline"
                                         className="w-20 h-8 mx-auto mt-2"
-                                        onClick={() => handleConnect(icon.type, icon.link)}
+                                        onClick={() => handleConnect(icon.type)}
                                         disabled={loadingType === icon.type}
                                     >
                                         {loadingType === icon.type ? 'Connecting...' : 'Connect'}
@@ -176,14 +150,12 @@ export default function InfluencerDashboard() {
                         <InfluencerChart/>
                     </div>
 
-                    <aside className="bg-white rounded-lg p-4" aria-labelledby="people-heading">
-                        <h2 id="people-heading" className="text-lg font-medium text-gray-900 mb-2">
-                            People
-                        </h2>
+                    <aside className="bg-white rounded-lg p-4">
+                        <h2 className="text-lg font-medium text-gray-900 mb-2">People</h2>
                         <div className="space-y-3">
-                            {Array.from({length: 3}).map((_, index) => (
+                            {Array.from({length: 3}).map((_, idx) => (
                                 <UserCard
-                                    key={index}
+                                    key={idx}
                                     image="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
                                     name="Jese Leos"
                                     username="@jeseleos"
