@@ -16,6 +16,7 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
             {label: "Payments", href: "/influencer/payments"},
             {label: "Profile", href: "/influencer/profile"},
             {label: "Reviews", href: "/influencer/reviews"},
+            {label: "campaigns", href: "/influencer/campaigns"},
         ],
         []
     )

@@ -1,0 +1,175 @@
+"use client"
+
+import {useForm} from "react-hook-form"
+import {yupResolver} from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import {Button} from "@/components/ui/button"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
+import {Separator} from "@/components/ui/separator"
+
+import type {Campaign, CampaignFormData} from "@/types/campaigns"
+import {ArrowUpRight, DollarSign, Sparkles, Zap} from "lucide-react"
+import TextInputField from "@/components/field/TextInputField";
+import FileInputField from "@/components/field/FileInputField";
+
+const campaignSchema = yup.object({
+    title: yup.string().required("Campaign title is required").min(3, "Title must be at least 3 characters"),
+    description: yup.string().required("Description is required").min(10, "Description must be at least 10 characters"),
+    categories: yup.string().required("Categories are required"),
+    eligibility: yup.string().required("Eligibility criteria is required"),
+    requirement: yup.string().required("Requirements are required"),
+    price: yup
+        .number()
+        .typeError("Budget must be a number")
+        .required("Budget is required")
+        .min(1, "Budget must be greater than 0"),
+    image: yup.mixed().optional(),
+})
+
+interface CampaignFormProps {
+    editingCampaign?: Campaign | null
+    onSubmit: (data: CampaignFormData) => Promise<void>
+    onCancel: () => void
+}
+
+export function CampaignForm({editingCampaign, onSubmit, onCancel}: CampaignFormProps) {
+    const {
+        register,
+        handleSubmit,
+        formState: {errors, isSubmitting},
+    } = useForm<CampaignFormData>({
+        resolver: yupResolver(campaignSchema) as any,
+        defaultValues: {
+            title: editingCampaign?.title || "",
+            description: editingCampaign?.description || "",
+            categories: editingCampaign?.categories || "",
+            eligibility: editingCampaign?.eligibility || "",
+            requirement: editingCampaign?.requirement || "",
+            price: editingCampaign?.price || 0,
+            image: editingCampaign?.image || "",
+        },
+    })
+
+    const handleFormSubmit = async (data: CampaignFormData) => {
+        await onSubmit(data)
+    }
+
+    return (
+        <Card className="glass-card border-0">
+            <CardHeader className="pb-6">
+                <div className="flex items-center space-x-3">
+                    <div
+                        className="h-10 w-10 rounded-xl bg-gradient-to-br from-violet-600 to-blue-600 flex items-center justify-center">
+                        <Zap className="w-5 h-5 text-white"/>
+                    </div>
+                    <div>
+                        <CardTitle
+                            className="text-2xl">{editingCampaign ? "Edit Campaign" : "Create New Campaign"}</CardTitle>
+                        <CardDescription className="text-base">
+                            {editingCampaign
+                                ? "Update your campaign details below"
+                                : "Fill in the details below to create your influencer marketing campaign"}
+                        </CardDescription>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-8" noValidate>
+                    <div className="space-y-6">
+                        <div>
+                            <h3 className="text-lg font-semibold text-slate-900 mb-4">Basic Information</h3>
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <TextInputField
+                                    {...register("title")}
+                                    label="Campaign Title"
+                                    placeholder="Enter campaign title"
+                                    required
+                                    error={errors.title?.message}
+                                />
+                                <TextInputField
+                                    {...register("price")}
+                                    label="Budget (USD)"
+                                    placeholder="0.00"
+                                    type="number"
+                                    required
+                                    icon={DollarSign}
+                                    error={errors.price?.message}
+                                />
+                            </div>
+                        </div>
+
+                        <TextInputField
+                            {...register("description")}
+                            label="Campaign Description"
+                            placeholder="Describe your campaign objectives, key messages, and what you want to achieve..."
+                            textarea
+                            required
+                            error={errors.description?.message}
+                            className="min-h-[120px]"
+                        />
+
+                        <TextInputField
+                            {...register("categories")}
+                            label="Categories"
+                            placeholder="e.g., Fashion, Lifestyle, Beauty (comma-separated)"
+                            required
+                            error={errors.categories?.message}
+                        />
+
+                        <FileInputField
+                            {...register("image")}
+                            label="Campaign Image"
+                            accept="image/*"
+                            error={errors.image?.message}
+                        />
+                    </div>
+
+                    <Separator/>
+
+                    <div className="space-y-6">
+                        <h3 className="text-lg font-semibold text-slate-900">Requirements & Eligibility</h3>
+
+                        <TextInputField
+                            {...register("eligibility")}
+                            label="Eligibility Criteria"
+                            placeholder="Define who can apply for this campaign (follower count, demographics, niche, etc.)"
+                            textarea
+                            required
+                            error={errors.eligibility?.message}
+                            className="min-h-[100px]"
+                        />
+
+                        <TextInputField
+                            {...register("requirement")}
+                            label="Campaign Requirements"
+                            placeholder="Specify deliverables, content requirements, posting schedule, etc."
+                            textarea
+                            required
+                            error={errors.requirement?.message}
+                            className="min-h-[100px]"
+                        />
+                    </div>
+
+                    <Separator/>
+
+                    <div className="flex items-center justify-between pt-6">
+                        <Button type="button" variant="outline" onClick={onCancel} className="px-8 bg-transparent">
+                            Cancel
+                        </Button>
+                        <div className="flex items-center space-x-4">
+                            <Button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 px-8"
+                            >
+                                <Sparkles className="w-4 h-4 mr-2"/>
+                                {isSubmitting ? "Saving..." : editingCampaign ? "Update Campaign" : "Create Campaign"}
+                                <ArrowUpRight className="w-4 h-4 ml-2"/>
+                            </Button>
+                        </div>
+                    </div>
+                </form>
+            </CardContent>
+        </Card>
+    )
+}

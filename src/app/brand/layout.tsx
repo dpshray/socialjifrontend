@@ -14,6 +14,7 @@ const sidebarItems: NavItem[] = [
     {label: "Profile", href: "/brand/profile"},
     {label: "Search Gigs", href: "/brand/search-gigs"},
     {label: "Discover Creators", href: "/brand/hire-influencers"},
+    {label: "campaigns", href: "/brand/campaigns"},
 
 ]
 
