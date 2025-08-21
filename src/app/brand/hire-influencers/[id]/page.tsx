@@ -137,6 +137,8 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
         )
     }
 
+    const topSellingPricings = influencer.gig?.top_selling_gig?.pricings || []
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -146,8 +148,11 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                             <Avatar className="w-32 h-32">
                                 <AvatarImage src={influencer.image || "/placeholder.svg"} alt={influencer.first_name}/>
                                 <AvatarFallback className="text-2xl">
-                                    {influencer.first_name.charAt(0)}
-                                    {influencer.last_name.charAt(0)}
+                                    <AvatarFallback className="text-2xl">
+                                        {influencer.first_name?.[0] ?? ''}
+                                        {influencer.last_name?.[0] ?? ''}
+                                    </AvatarFallback>
+
                                 </AvatarFallback>
                             </Avatar>
                         </div>
@@ -166,9 +171,7 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                                             {[...Array(5)].map((_, i) => (
                                                 <Star
                                                     key={i}
-                                                    className={`w-4 h-4 ${
-                                                        i < influencer.influencer_rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-                                                    }`}
+                                                    className={`w-4 h-4 ${i < influencer.influencer_rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                                                 />
                                             ))}
                                             <span
@@ -247,14 +250,13 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
 
                     <TabsContent value="analytics" className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            {influencer.social_profiles.map((profile:any, index) => (
+                            {influencer.social_profiles.map((profile: any, index) => (
                                 <Card key={index} className="overflow-hidden">
                                     <CardHeader className="pb-3">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
                                                 <div
-                                                    className={`w-10 h-10 rounded-lg ${getSocialColor(profile.social.name)} flex items-center justify-center text-white text-lg`}
-                                                >
+                                                    className={`w-10 h-10 rounded-lg ${getSocialColor(profile.social.name)} flex items-center justify-center text-white text-lg`}>
                                                     {getSocialIcon(profile.social.name)}
                                                 </div>
                                                 <div>
@@ -356,90 +358,86 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                             </CardContent>
                         </Card>
 
-                        <Card>
-                            <CardHeader>
-                                <div className="flex items-center justify-between">
+                        {influencer.gig.top_selling_gig && (
+                            <Card>
+                                <CardHeader>
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <CardTitle
+                                                className="text-xl">{influencer.gig.top_selling_gig.title}</CardTitle>
+                                            <p className="text-gray-600 mt-1">Category: {influencer.gig.top_selling_gig.category}</p>
+                                            <Badge variant="outline" className="mt-2">Top Seller</Badge>
+                                        </div>
+                                        <Image
+                                            width={300}
+                                            height={300}
+                                            src={influencer.gig.top_selling_gig.image || "/placeholder.svg"}
+                                            alt={influencer.gig.top_selling_gig.title}
+                                            className="w-24 h-16 object-cover rounded-lg"
+                                        />
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="space-y-6">
                                     <div>
-                                        <CardTitle
-                                            className="text-xl">{influencer.gig.top_selling_gig.title}</CardTitle>
-                                        <p className="text-gray-600 mt-1">Category: {influencer.gig.top_selling_gig.category}</p>
-                                        <Badge variant="outline" className="mt-2">
-                                            Top Seller
-                                        </Badge>
+                                        <h4 className="font-semibold mb-2">Description</h4>
+                                        <p className="text-gray-700">{influencer.gig.top_selling_gig.description}</p>
                                     </div>
-                                    <Image
-                                        width={300}
-                                        height={300}
-                                        src={influencer.gig.top_selling_gig.image || "/placeholder.svg"}
-                                        alt={influencer.gig.top_selling_gig.title}
-                                        className="w-24 h-16 object-cover rounded-lg"
-                                    />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                <div>
-                                    <h4 className="font-semibold mb-2">Description</h4>
-                                    <p className="text-gray-700">{influencer.gig.top_selling_gig.description}</p>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div>
-                                        <h4 className="font-semibold mb-2">Requirements</h4>
-                                        <p className="text-gray-700 text-sm">{influencer.gig.top_selling_gig.requirements}</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <h4 className="font-semibold mb-2">Requirements</h4>
+                                            <p className="text-gray-700 text-sm">{influencer.gig.top_selling_gig.requirements}</p>
+                                        </div>
+                                        <div>
+                                            <h4 className="font-semibold mb-2">Features</h4>
+                                            <p className="text-gray-700 text-sm">{influencer.gig.top_selling_gig.features}</p>
+                                        </div>
                                     </div>
                                     <div>
-                                        <h4 className="font-semibold mb-2">Features</h4>
-                                        <p className="text-gray-700 text-sm">{influencer.gig.top_selling_gig.features}</p>
+                                        <h4 className="font-semibold mb-4">Pricing Packages</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                            {topSellingPricings.map((pricing, index) => (
+                                                <Card key={pricing.id}
+                                                      className={`relative ${index === 1 ? "border-blue-500 border-2" : ""}`}>
+                                                    {index === 1 && (
+                                                        <div
+                                                            className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                                                            <Badge className="bg-blue-500">Most Popular</Badge>
+                                                        </div>
+                                                    )}
+                                                    <CardHeader className="text-center pb-4">
+                                                        <CardTitle className="text-lg">{pricing.label}</CardTitle>
+                                                        <div className="flex items-center justify-center gap-1">
+                                                            <span
+                                                                className="text-3xl font-bold">{pricing.currency.symbol}{formatPrice(pricing.price)}</span>
+                                                        </div>
+                                                    </CardHeader>
+                                                    <CardContent className="space-y-4">
+                                                        <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                            <Clock className="w-4 h-4"/>
+                                                            <span>7 days delivery</span>
+                                                        </div>
+                                                        <p className="text-sm text-gray-700">{pricing.description}</p>
+                                                        <Separator/>
+                                                        <div>
+                                                            <h5 className="font-medium text-sm mb-2">What&#39;s
+                                                                included:</h5>
+                                                            <p className="text-xs text-gray-600">{pricing.requirement}</p>
+                                                        </div>
+                                                        <Button
+                                                            className={`w-full ${index === 1 ? "bg-blue-600 hover:bg-blue-700" : ""}`}
+                                                            variant={index === 1 ? "default" : "outline"}
+                                                        >
+                                                            <DollarSign className="w-4 h-4 mr-2"/>
+                                                            Select {pricing.label}
+                                                        </Button>
+                                                    </CardContent>
+                                                </Card>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
-
-                                <div>
-                                    <h4 className="font-semibold mb-4">Pricing Packages</h4>
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        {influencer.gig.top_selling_gig.pricings.map((pricing, index) => (
-                                            <Card key={pricing.id}
-                                                  className={`relative ${index === 1 ? "border-blue-500 border-2" : ""}`}>
-                                                {index === 1 && (
-                                                    <div
-                                                        className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                                                        <Badge className="bg-blue-500">Most Popular</Badge>
-                                                    </div>
-                                                )}
-                                                <CardHeader className="text-center pb-4">
-                                                    <CardTitle className="text-lg">{pricing.label}</CardTitle>
-                                                    <div className="flex items-center justify-center gap-1">
-                            <span className="text-3xl font-bold">
-                              {pricing.currency.symbol}
-                                {formatPrice(pricing.price)}
-                            </span>
-                                                    </div>
-                                                </CardHeader>
-                                                <CardContent className="space-y-4">
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <Clock className="w-4 h-4"/>
-                                                        <span>7 days delivery</span>
-                                                    </div>
-                                                    <p className="text-sm text-gray-700">{pricing.description}</p>
-                                                    <Separator/>
-                                                    <div>
-                                                        <h5 className="font-medium text-sm mb-2">What&#39;s
-                                                            included:</h5>
-                                                        <p className="text-xs text-gray-600">{pricing.requirement}</p>
-                                                    </div>
-                                                    <Button
-                                                        className={`w-full ${index === 1 ? "bg-blue-600 hover:bg-blue-700" : ""}`}
-                                                        variant={index === 1 ? "default" : "outline"}
-                                                    >
-                                                        <DollarSign className="w-4 h-4 mr-2"/>
-                                                        Select {pricing.label}
-                                                    </Button>
-                                                </CardContent>
-                                            </Card>
-                                        ))}
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        )}
                     </TabsContent>
                 </Tabs>
 
@@ -450,9 +448,8 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
                     <CardContent>
                         <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
                             <div>
-                                <p className="text-gray-600 mb-2">
-                                    Get in touch with {influencer.first_name} to discuss partnership opportunities.
-                                </p>
+                                <p className="text-gray-600 mb-2">Get in touch with {influencer.first_name} to discuss
+                                    partnership opportunities.</p>
                                 <p className="text-sm text-gray-500">Email: {influencer.email}</p>
                             </div>
                             <div className="flex gap-3">
@@ -472,5 +469,3 @@ export default function DiscoverCreatorsDetailsPage({params}: DiscoverCreators) 
         </div>
     )
 }
-
-

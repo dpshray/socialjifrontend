@@ -26,6 +26,8 @@ export default function CustomPagination({
                                              maxPagesToShow = 5,
                                              className
                                          }: CustomPaginationProps) {
+    if (totalPages <= 1) return null
+
     const getPageNumbers = () => {
         const pageNumbers: number[] = []
         let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2))
