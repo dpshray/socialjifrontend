@@ -1,19 +1,19 @@
-export interface Campaign {
+interface Tag {
     id: number
-    brand_id: number
+    name: string
+}
+
+
+interface Campaign {
+    id: number
     title: string
     description: string
     categories: string
     eligibility: string
     requirement: string
-    price: number
-    image?: string
-    created_at: string
-    updated_at: string
-    status: "active" | "draft" | "completed" | "paused"
-    applications: number
-    brand_name: string
-    deadline: string
+    price: string
+    tags: Tag[]
+    image: string
 }
 
 export interface CampaignFormData {
@@ -22,18 +22,7 @@ export interface CampaignFormData {
     categories: string
     eligibility: string
     requirement: string
-    price: number
-    image?: File | string
-}
-
-export interface CampaignFilters {
-    searchTerm: string
-    status: string
-}
-
-export interface CampaignStats {
-    activeCampaigns: number
-    totalApplications: number
-    totalBudget: string
-    avgConversion: string
+    price: string | number
+    tags?: Tag[]
+    image?: any
 }

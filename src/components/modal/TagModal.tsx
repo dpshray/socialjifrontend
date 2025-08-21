@@ -109,7 +109,7 @@ export const TagModal = React.memo(() => {
         <Dialog>
             <DialogTrigger asChild>
                 <Button variant="outline"
-                        className="font-semibold text-sm text-white sm:text-base bg-gradient-to-br from-blue-500 to-purple-600 ">
+                        className="font-semibold text-sm !text-white sm:text-base bg-gradient-to-br from-blue-500 to-purple-600 ">
                     <Plus size={16}/>
                     <span className="hidden xs:inline">Add Tags</span>
                     <span className="xs:hidden">Tags</span>

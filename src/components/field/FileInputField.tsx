@@ -1,8 +1,8 @@
 'use client'
-import React, { useState } from "react"
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
-import { Input } from "../ui/input"
+import React, {useState} from "react"
+import {Label} from "@/components/ui/label"
+import {cn} from "@/lib/utils"
+import {Input} from "../ui/input"
 
 interface FileInputFieldProps {
     name: string
@@ -12,24 +12,26 @@ interface FileInputFieldProps {
     className?: string
     error?: string
     accept?: string
+
     [key: string]: any
 }
 
 export default function FileInputField({
-    name,
-    label,
-    placeholder,
-    required = false,
-    className,
-    error,
-    accept,
-    ...props
-}: FileInputFieldProps) {
+                                           name,
+                                           label,
+                                           placeholder,
+                                           required = false,
+                                           className,
+                                           error,
+                                           accept,
+                                           ...props
+                                       }: FileInputFieldProps) {
     const [selectedFile, setSelectedFile] = useState<File | null>(null)
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files ? e.target.files[0] : null
         setSelectedFile(file)
+
     }
 
     const errorId = `${name}-error`
@@ -70,8 +72,14 @@ export default function FileInputField({
             {selectedFile && (
                 <p className="text-sm text-gray-500 mt-1">
                     {selectedFile.name}
+                    { selectedFile.size > 1024 * 1024 && (
+                        <span className="text-red-500"> (File size limit: 1MB)</span>
+                    )}
                 </p>
             )}
+
+
+
 
             {hasError && (
                 <p id={errorId} className="text-sm text-red-500 mt-1">

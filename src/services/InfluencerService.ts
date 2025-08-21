@@ -29,6 +29,8 @@ class InfluencerService extends HttpServices {
             console.error('Error in brandPaymentList:', error);
         }
     }
+
+
 }
 
 const influencerService = new InfluencerService()

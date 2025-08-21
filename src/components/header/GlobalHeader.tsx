@@ -343,7 +343,7 @@ export default function GlobalHeader({
                             <Link
                                 href={disabled ? "#" : href}
                                 className={cn(
-                                    "transition-colors duration-200 text-sm",
+                                    "transition-colors duration-200 text-sm Capitalize",
                                     disabled && "opacity-50 cursor-not-allowed",
                                     pathname === href ? activeNavClass : inactiveNavClass,
                                 )}
@@ -394,7 +394,7 @@ export default function GlobalHeader({
                                             if (!disabled) setIsMenuOpen(false)
                                         }}
                                         className={cn(
-                                            "block py-2 text-sm transition-colors",
+                                            "block py-2 text-sm transition-colors capitalize",
                                             disabled && "opacity-50 cursor-not-allowed",
                                             pathname === href
                                                 ? "text-foreground font-semibold"

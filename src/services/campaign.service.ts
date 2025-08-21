@@ -8,7 +8,26 @@ class CampaignService extends HttpsService {
                 url: '/campaign',
                 data,
                 config: {
-                    auth: true
+                    auth: true,
+                    file: true
+                }
+            });
+            console.log(' Response from createCampaign:', result.data);
+            return result?.data;
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    async getCampaigns(params?: { per_page?: number, page?: number }) {
+        try {
+
+            const result: any = await this.getRequest({
+                url: '/campaign',
+                config: {
+                    auth: true,
+                    params
                 }
             });
             return result?.data;
@@ -18,12 +37,28 @@ class CampaignService extends HttpsService {
 
     }
 
-    async getCampaigns() {
+    async getCampaignById(id: number) {
         try {
             const result: any = await this.getRequest({
-                url: '/campaign',
+                url: `/campaign/${id}`,
                 config: {
                     auth: true
+                }
+            });
+            return result?.data;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getInfluencerCampaigns(params?: { per_page?: number, page?: number }) {
+        try {
+
+            const result: any = await this.getRequest({
+                url: '/campaign-list',
+                config: {
+                    auth: true,
+                    params
                 }
             });
             return result?.data;
@@ -39,7 +74,8 @@ class CampaignService extends HttpsService {
                 url: `/campaign/${id}`,
                 data,
                 config: {
-                    auth: true
+                    auth: true,
+                    file: true
                 }
             });
             return result?.data;
@@ -51,8 +87,21 @@ class CampaignService extends HttpsService {
 
     async deleteCampaign(id: number) {
         try {
-            const result: any = await this.deleteRequest({
+            return await this.deleteRequest({
                 url: `/campaign/${id}`,
+                config: {
+                    auth: true
+                }
+            });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async getCampaignTags() {
+        try {
+            const result: any = await this.getRequest({
+                url: '/campaign/get-brand-tag',
                 config: {
                     auth: true
                 }
@@ -60,6 +109,18 @@ class CampaignService extends HttpsService {
             return result?.data;
         } catch (error) {
             throw error;
+        }
+    }
+
+    async createBidForCampaign(id: number, data: any) {
+        try {
+            return await this.postRequest({
+                url: `/campaign/${id}/bid`,
+                data,
+                config: {auth: true}
+            })
+        } catch (error) {
+            console.error('Error in brandPaymentList:', error);
         }
     }
 }

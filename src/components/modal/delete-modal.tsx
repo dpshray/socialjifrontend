@@ -1,7 +1,7 @@
-'use client';
-import {Trash2} from "lucide-react";
+'use client'
 
-import React, {memo} from "react";
+import { Trash2 } from "lucide-react"
+import React, { memo } from "react"
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,17 +11,16 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {buttonVariants} from "@/components/ui/button";
-
+} from "@/components/ui/alert-dialog"
+import { buttonVariants } from "@/components/ui/button"
 
 interface DeleteModalProps {
-    open: boolean;
-    onCloseAction: () => void;
-    onConfirmAction: () => void;
-    loading?: boolean;
-    title?: string;
-    description?: string;
+    open: boolean
+    onCloseAction: () => void
+    onConfirmAction: () => void
+    loading?: boolean
+    title?: string
+    description?: string
 }
 
 export const DeleteModal = memo(({
@@ -30,11 +29,10 @@ export const DeleteModal = memo(({
                                      onConfirmAction,
                                      loading = false,
                                      title = "Are you sure?",
-                                     description = "This action cannot be undone. Do you really want to proceed?"
+                                     description = "This action cannot be undone. Do you really want to proceed?",
                                  }: DeleteModalProps) => {
     return (
         <AlertDialog open={open} onOpenChange={open ? undefined : onCloseAction}>
-            {/* No AlertDialogTrigger here since we control open externally */}
             <AlertDialogContent
                 className="max-w-sm rounded-lg p-6 shadow-lg bg-white dark:bg-zinc-900
           mx-4 sm:mx-auto
@@ -45,7 +43,7 @@ export const DeleteModal = memo(({
                         aria-hidden="true"
                         className="flex-shrink-0 rounded-full bg-red-50 dark:bg-red-900 p-3"
                     >
-                        <Trash2 className="h-6 w-6 text-red-600 dark:text-red-200"/>
+                        <Trash2 className="h-6 w-6 text-red-600 dark:text-red-200" />
                     </div>
                     <div className="flex flex-col gap-1 text-center sm:text-left">
                         <AlertDialogTitle className="text-lg font-semibold text-gray-900 dark:text-gray-100">
@@ -58,14 +56,14 @@ export const DeleteModal = memo(({
                 </AlertDialogHeader>
                 <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end">
                     <AlertDialogCancel
-                        className={buttonVariants({variant: "outline"})}
+                        className={buttonVariants({ variant: "outline" })}
                         onClick={onCloseAction}
                         disabled={loading}
                     >
                         Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
-                        className={buttonVariants({variant: "destructive"})}
+                        className={buttonVariants({ variant: "destructive" })}
                         onClick={onConfirmAction}
                         disabled={loading}
                     >
@@ -100,10 +98,7 @@ export const DeleteModal = memo(({
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    );
-});
+    )
+})
 
-DeleteModal.displayName = "DeleteModal";
-
-
-
+DeleteModal.displayName = "DeleteModal"

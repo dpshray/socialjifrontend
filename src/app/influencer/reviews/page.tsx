@@ -14,7 +14,6 @@ function ProgressBar(props: { percentage: number }) {
     return null;
 }
 
-// Rating Bar Component
 const RatingBar = ({label, percentage}: { label: string; percentage: number }) => (
     <div className="flex items-center gap-2">
         <span className="text-sm w-12">{label} star</span>

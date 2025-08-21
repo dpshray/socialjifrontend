@@ -1,22 +1,29 @@
-"use client"
+'use client'
 
-import React, {useEffect, useMemo} from "react"
+import React, { useEffect, useMemo, useCallback } from "react"
 import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import useAuth from "@/hooks/useAuth"
-import {Bell, DollarSign, LogOutIcon, PinIcon, Settings2Icon,} from "lucide-react"
+import {
+    Bell,
+    DollarSign,
+    LogOutIcon,
+    PinIcon,
+    Settings2Icon,
+} from "lucide-react"
 import GlobalHeader from "@/components/header/GlobalHeader"
+import { authService } from "@/app/(auth)/auth.service"
 
-export default function InfluencerLayout({children}: { children: React.ReactNode }) {
-    const {user, loading} = useAuth()
+export default function InfluencerLayout({ children }: { children: React.ReactNode }) {
+    const { user, loading } = useAuth()
 
     const sidebarItems = useMemo(
         () => [
-            {label: "Dashboard", href: "/influencer/dashboard"},
-            {label: "Gigs", href: "/influencer/gigs"},
-            {label: "Payments", href: "/influencer/payments"},
-            {label: "Profile", href: "/influencer/profile"},
-            {label: "Reviews", href: "/influencer/reviews"},
-            {label: "campaigns", href: "/influencer/campaigns"},
+            { label: "Dashboard", href: "/influencer/dashboard" },
+            { label: "Gigs", href: "/influencer/gigs" },
+            { label: "Payments", href: "/influencer/payments" },
+            { label: "Profile", href: "/influencer/profile" },
+            { label: "Reviews", href: "/influencer/reviews" },
+            { label: "campaigns", href: "/influencer/campaigns" },
         ],
         []
     )
@@ -65,12 +72,28 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
         []
     )
 
-    const dropdownItems = [
-        {icon: DollarSign, label: "Payments", href: "/influencer/payments"},
-        {icon: PinIcon, label: "Pinned", href: "/influencer/pinned", separator: true},
-        {icon: Settings2Icon, label: "Settings", href: "/influencer/profile"},
-        {icon: LogOutIcon, label: "Logout", separator: true},
-    ]
+    const handleLogout = useCallback(async () => {
+        try {
+            console.log("Logging out...")
+            await authService.logout()
+            console.log("Logout successful")
+            localStorage.removeItem("_at")
+            localStorage.removeItem("_role")
+            window.location.href = "/login"
+        } catch (err) {
+            console.error("Logout failed", err)
+        }
+    }, [])
+
+    const dropdownItems = useMemo(
+        () => [
+            { icon: DollarSign, label: "Payments", href: "/influencer/payments" },
+            { icon: PinIcon, label: "Pinned", href: "/influencer/pinned", separator: true },
+            { icon: Settings2Icon, label: "Settings", href: "/influencer/profile" },
+            { icon: LogOutIcon, label: "Logout", separator: true, onClick: handleLogout },
+        ],
+        [handleLogout]
+    )
 
     useEffect(() => {
         console.log("User:", user)
@@ -98,15 +121,14 @@ export default function InfluencerLayout({children}: { children: React.ReactNode
                     }}
                     iconButtons={[
                         {
-                            icon: <Bell className="h-5 w-5"/>,
+                            icon: <Bell className="h-5 w-5" />,
                             label: "Notifications",
                             notifications,
                         },
                     ]}
+                    onLogout={handleLogout}
                 />
-                <main className="container mx-auto flex-1 px-4 py-6 w-full">
-                    {children}
-                </main>
+                <main className="container mx-auto flex-1 px-4 py-6 w-full">{children}</main>
             </div>
         </ProtectedRoutes>
     )

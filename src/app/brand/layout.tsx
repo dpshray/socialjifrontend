@@ -48,9 +48,6 @@ const notifications = [
 const BrandLayout = ({children}: { children: React.ReactNode }) => {
     const {user} = useAuth()
 
-    useEffect(() => {
-        console.log("User:", user)
-    }, [user])
 
     const handleLogout = async () => {
         try {
@@ -96,6 +93,7 @@ const BrandLayout = ({children}: { children: React.ReactNode }) => {
                         notifications,
                     },
                 ]}
+                onLogout={handleLogout}
             />
             <main className="container mx-auto min-h-screen ">{children}</main>
         </ProtectedRoutes>

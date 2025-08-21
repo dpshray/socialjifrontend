@@ -5,114 +5,71 @@ import {Card, CardContent} from "@/components/ui/card"
 import {Badge} from "@/components/ui/badge"
 import {Button} from "@/components/ui/button"
 import {Separator} from "@/components/ui/separator"
-import {
-    AlertCircle,
-    Building2,
-    Calendar,
-    CheckCircle,
-    Clock,
-    Edit,
-    Eye,
-    FileText,
-    Shield,
-    Tag,
-    Trash2,
-    Users,
-} from "lucide-react"
-import {Campaign} from "@/types/campaigns"
+import {Edit, Eye, FileText, Shield, Trash2} from "lucide-react"
+import {cn} from "@/lib/utils"
 
-type Status = "active" | "draft" | "completed" | "paused" | string
+interface Tag {
+    id: number
+    name: string
+}
+
+interface Campaign {
+    id: number
+    title: string
+    description: string
+    categories: string
+    eligibility: string
+    requirement: string
+    price: string
+    tags: Tag[]
+    image: string
+}
 
 interface CampaignCardProps {
     campaign: Campaign
     onEditAction?: (campaign: Campaign) => void
     onDeleteAction?: (campaignId: number) => void
     onViewAction?: (campaign: Campaign) => void
+    onApplyAction?: (campaign: Campaign) => void
 }
 
-export function CampaignCard({campaign, onEditAction, onDeleteAction, onViewAction}: CampaignCardProps) {
-    const getStatusColor = (status: Status) => {
-        switch (status) {
-            case "active":
-                return "bg-green-100 text-green-800 border-green-200"
-            case "draft":
-                return "bg-yellow-100 text-yellow-800 border-yellow-200"
-            case "completed":
-                return "bg-blue-100 text-blue-800 border-blue-200"
-            case "paused":
-                return "bg-gray-100 text-gray-800 border-gray-200"
-            default:
-                return "bg-gray-100 text-gray-800 border-gray-200"
-        }
-    }
-
-    const getStatusIcon = (status: Status) => {
-        switch (status) {
-            case "active":
-                return <CheckCircle className="w-3 h-3"/>
-            case "draft":
-                return <Clock className="w-3 h-3"/>
-            case "completed":
-                return <CheckCircle className="w-3 h-3"/>
-            case "paused":
-                return <AlertCircle className="w-3 h-3"/>
-            default:
-                return <Clock className="w-3 h-3"/>
-        }
-    }
-
-    const categories = campaign.categories ? campaign.categories.split(", ") : []
+export function CampaignCard({
+                                 campaign,
+                                 onEditAction,
+                                 onDeleteAction,
+                                 onViewAction,
+                                 onApplyAction,
+                             }: CampaignCardProps) {
+    const categories = campaign.categories ? campaign.categories.split(",").map((cat) => cat.trim()) : []
+    const tags = campaign.tags || []
 
     return (
-        <Card className="glass-card border-0 group hover:shadow-xl transition-all duration-300">
+        <Card
+            className={cn("bg-white/80 backdrop-blur-sm border shadow-lg group hover:shadow-xl transition-all duration-300 py-0")}>
             {campaign.image && (
                 <div className="relative h-48 overflow-hidden rounded-t-xl">
                     <Image
-                        src={campaign.image}
+                        src={campaign.image || "/placeholder.svg"}
                         alt={campaign.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
+
+                        priority
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                    <div className="absolute top-4 right-4">
-                        <Badge className={getStatusColor(campaign.status)}>
-                            {getStatusIcon(campaign.status)}
-                            <span className="ml-1 capitalize">{campaign.status}</span>
-                        </Badge>
-                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"/>
                 </div>
             )}
-
             <CardContent className="p-8">
                 <div className="flex items-start justify-between mb-6">
                     <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-3">
-                            <h3 className="text-2xl font-bold text-slate-900">{campaign.title}</h3>
-                            {!campaign.image && (
-                                <Badge className={getStatusColor(campaign.status)}>
-                                    {getStatusIcon(campaign.status)}
-                                    <span className="ml-1 capitalize">{campaign.status}</span>
-                                </Badge>
-                            )}
-                        </div>
-                        <div className="flex items-center space-x-4 mb-4">
-                            <div className="flex items-center space-x-2">
-                                <Building2 className="w-4 h-4 text-slate-400"/>
-                                <span className="text-sm text-slate-600">{campaign.brand_name}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Calendar className="w-4 h-4 text-slate-400"/>
-                                <span className="text-sm text-slate-600">Due: {campaign.deadline}</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                                <Users className="w-4 h-4 text-slate-400"/>
-                                <span className="text-sm text-slate-600">{campaign.applications} applications</span>
-                            </div>
-                        </div>
+                        <h3 className="text-2xl font-bold text-slate-900 mb-3">{campaign.title}</h3>
                         <p className="text-slate-600 mb-4 line-clamp-2">{campaign.description}</p>
                     </div>
                     <div className="text-right ml-6">
-                        <div className="text-3xl font-bold gradient-text mb-1">${campaign.price.toLocaleString()}</div>
+                        <div
+                            className="text-3xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-1">
+                            ${Number(campaign.price).toLocaleString()}
+                        </div>
                         <div className="text-sm text-slate-500">Campaign Budget</div>
                     </div>
                 </div>
@@ -120,7 +77,7 @@ export function CampaignCard({campaign, onEditAction, onDeleteAction, onViewActi
                 <div className="grid md:grid-cols-3 gap-6 mb-6">
                     <div>
                         <div className="flex items-center space-x-2 mb-2">
-                            <Tag className="w-4 h-4 text-slate-400"/>
+                            <Shield className="w-4 h-4 text-slate-400"/>
                             <span className="text-sm font-medium text-slate-700">Categories</span>
                         </div>
                         <div className="flex flex-wrap gap-1">
@@ -151,39 +108,60 @@ export function CampaignCard({campaign, onEditAction, onDeleteAction, onViewActi
                     </div>
                 </div>
 
+                <div>
+                    <div className="flex items-center space-x-2 mb-2">
+                        <Shield className="w-4 h-4 text-slate-400"/>
+                        <span className="text-sm font-medium text-slate-700">Tags</span>
+                    </div>
+                    <div className="flex flex-wrap gap-1">
+                        {tags.length > 0 ? (
+                            tags.map((tag) => (
+                                <Badge key={tag.id} variant="outline" className="text-xs">
+                                    {tag.name}
+                                </Badge>
+                            ))
+                        ) : (
+                            <span className="text-slate-500 text-xs">No tags</span>
+                        )}
+                    </div>
+                </div>
+
                 <Separator className="my-6"/>
 
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-slate-500">
-                        <span>Created: {new Date(campaign.created_at).toLocaleDateString()}</span>
-                        <span>•</span>
-                        <span>Updated: {new Date(campaign.updated_at).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                        {onEditAction && (
-                            <Button variant="outline" size="sm" onClick={() => onEditAction(campaign)}>
-                                <Edit className="w-4 h-4 mr-2"/>
-                                Edit
-                            </Button>
-                        )}
-                        {onViewAction && (
-                            <Button variant="outline" size="sm" onClick={() => onViewAction(campaign)}>
-                                <Eye className="w-4 h-4 mr-2"/>
-                                View Details
-                            </Button>
-                        )}
-                        {onDeleteAction && (
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
-                                onClick={() => onDeleteAction(campaign.id)}
-                            >
-                                <Trash2 className="w-4 h-4 mr-2"/>
-                                Delete
-                            </Button>
-                        )}
-                    </div>
+                <div className="flex items-center justify-end space-x-3">
+                    {onEditAction && (
+                        <Button variant="outline" size="sm" onClick={() => onEditAction(campaign)}>
+                            <Edit className="w-4 h-4 mr-2"/>
+                            Edit
+                        </Button>
+                    )}
+                    {onViewAction && (
+                        <Button variant="outline" size="sm" onClick={() => onViewAction(campaign)}>
+                            <Eye className="w-4 h-4 mr-2"/>
+                            View Details
+                        </Button>
+                    )}
+                    {onApplyAction && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-green-600 border-green-200 hover:bg-green-50 bg-transparent"
+                            onClick={() => onApplyAction(campaign)}
+                        >
+                            Apply
+                        </Button>
+                    )}
+                    {onDeleteAction && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            className="text-red-600 border-red-200 hover:bg-red-50 bg-transparent"
+                            onClick={() => onDeleteAction(campaign.id)}
+                        >
+                            <Trash2 className="w-4 h-4 mr-2"/>
+                            Delete
+                        </Button>
+                    )}
                 </div>
             </CardContent>
         </Card>

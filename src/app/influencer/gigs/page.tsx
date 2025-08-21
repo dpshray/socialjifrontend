@@ -10,7 +10,7 @@ import {Button} from "@/components/ui/button";
 import SelectInputField from "@/components/field/SelectField";
 import CustomPagination from "@/components/Pagiantion/pagination";
 import CategoryNav from "@/components/header/category-nav";
-import {DeleteModal} from "@/components/modal/modal";
+import {DeleteModal} from "@/components/modal/delete-modal";
 
 import {categoriesHeader} from "@/data";
 import {gigsService} from "@/services/gigs.service";

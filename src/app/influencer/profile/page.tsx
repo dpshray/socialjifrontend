@@ -1,156 +1,78 @@
-'use client'
+"use client";
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
-import useAuth from "@/hooks/useAuth"
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {Separator} from "@/components/ui/separator"
-import {
-    Award,
-    BarChart3,
-    Clock,
-    Download,
-    Globe, Heart,
-    Mail,
-    MessageSquare,
-    MoreHorizontal,
-    Plus,
-    Settings,
-    Share2,
-    Star,
-    User,
-    Users
-} from 'lucide-react'
-import {Button} from "@/components/ui/button"
-import {Badge} from "@/components/ui/badge"
-import {Progress} from "@/components/ui/progress"
-import {SocialProfileCard} from "@/components/card/SocialMediaCard"
-import {Skeleton} from "@/components/ui/skeleton"
-import {ProfileStatsCard} from "@/components/card/profile-stats-card";
-
+import React from "react";
+import {useRouter} from "next/navigation";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Separator} from "@/components/ui/separator";
+import {Badge} from "@/components/ui/badge";
+import {Progress} from "@/components/ui/progress";
+import {Button} from "@/components/ui/button";
+import {SocialProfileCard} from "@/components/card/SocialMediaCard";
+import {SocialStatsCard} from "@/components/card/SocialStatsCard";
+import {Skeleton} from "@/components/ui/skeleton";
+import {AiFillProject} from "react-icons/ai";
+import useAuth from "@/hooks/useAuth";
+import {Award, BarChart3, Clock, Globe, Mail, Plus, Star, User} from "lucide-react";
+import {SocialProfileCardSkeleton} from "@/components/Skeleton/SocialProfileCardSkeleton";
+import {ProfileForm} from "@/components/form/brand-profile-form";
 
 export interface SocialPlatform {
-    name: string
-    label: string
+    name: string;
+    label: string;
 }
 
 export interface SocialProfile {
-    profile_url: string
-    follower_count: number
-    following_count: number
-    post_count: number
-    avg_like_per_post_count: number
-    avg_comment_per_post_count: number
-    follower_growth_rate_per_week: number
-    highest_like: number
-    lowest_like: number
-    social: SocialPlatform
+    profile_url: string;
+    follower_count: number;
+    following_count: number;
+    post_count: number;
+    avg_like_per_post_count: number;
+    avg_comment_per_post_count: number;
+    follower_growth_rate_per_week: number;
+    highest_like: number;
+    lowest_like: number;
+    social: SocialPlatform;
 }
 
 export interface User {
-    id: number
-    nick_name: string
-    image: string
-    roles: string
-    influencer_rating: number
-    social_profiles: SocialProfile[]
-    first_name?: string
-    last_name?: string
-    email?: string
-    about?: string
+    id: number;
+    nick_name: string;
+    image: string;
+    roles: string;
+    influencer_rating: number;
+    social_profiles: SocialProfile[];
+    first_name?: string;
+    last_name?: string;
+    email?: string;
+    about?: string;
 }
-
-interface Campaign {
-    name: string
-    brand: string
-    date: string
-    reach: string
-    engagement: string
-    earnings: string
-    status: "Active" | "Completed" | "Pending"
-    performance: "excellent" | "good" | "average"
-}
-
-interface Review {
-    name: string
-    country: string
-    rating: number
-    review: string
-    avatar: string
-    company: string
-    campaign: string
-}
-
-interface AudienceInsight {
-    demographic: string
-    percentage: number
-    color: string
-}
-
-const campaignHistory: Campaign[] = []
-const reviews: Review[] = []
-const audienceInsights: AudienceInsight[] = []
 
 export default function InfluencerProfile() {
-    const {user, loading} = useAuth()
-    const isLoading = loading || !user || !user.social_profiles
+    const {user, loading} = useAuth();
+    const router = useRouter();
+    const isLoading = loading || !user || !user.social_profiles;
 
-    const calculateStats = () => {
-        if (!user?.social_profiles) return []
-        const totalFollowers = user.social_profiles.reduce((sum, profile) => sum + +profile.follower_count, 0)
-        const totalPosts = user.social_profiles.reduce((sum, profile) => sum + profile.post_count, 0)
-        const avgEngagement =
-            user.social_profiles.reduce(
-                (sum, profile) => sum + (profile.avg_like_per_post_count + profile.avg_comment_per_post_count),
-                0,
-            ) / user.social_profiles.length
-        return [
-            {
-                title: "Total Followers",
-                value: totalFollowers,
-                description: "Across all platforms",
-                icon: <Users className="w-6 h-6 text-white"/>,
-                colorClass: "bg-blue-500",
-                isLoading: loading,
-            },
-            {
-                title: "Total Posts",
-                value: totalPosts,
-                description: "Across all platforms",
-                icon: <MessageSquare className="w-6 h-6 text-white"/>,
-                colorClass: "bg-purple-500",
-                isLoading: loading,
-            },
-            {
-                title: "Avg Engagement",
-                value: Math.round(avgEngagement),
-                description: "Per post",
-                icon: <Heart className="w-6 h-6 text-white"/>,
-                colorClass: "bg-red-500",
-                isLoading: loading,
-            },
-        ]
-    }
-    const statsData = calculateStats()
+    const tabs = [
+        {label: "Overview", value: "overview"},
+        {label: "Social Profiles", value: "social-profiles"},
+        {label: "Reviews", value: "reviews"},
+        {label: "Edit Profile", value: "edit-profile"}
+    ];
 
-    const getTopSocialPlatforms = () => {
-        if (!user?.social_profiles) return []
-        return user.social_profiles.sort((a, b) => b.follower_count - a.follower_count).slice(0, 4)
-    }
-    const topPlatforms = getTopSocialPlatforms()
+    const handleSubmit = (data: any) => {
+        console.log("Submit", data);
+    };
+
+    const handleCancel = () => {
+        console.log("Cancel");
+    };
 
     return (
         <div
-            className="p-4 sm:p-8 space-y-8 bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-full container mx-auto">
-            <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-8">
+            className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 container mx-auto p-4 sm:p-8 space-y-8">
+            <Card className="p-4 sm:p-8 rounded-2xl shadow-sm border border-slate-200 bg-white">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                     <div className="flex items-center gap-6">
                         <div className="relative">
@@ -191,8 +113,8 @@ export default function InfluencerProfile() {
                                             {user?.roles}
                                         </Badge>
                                         <Badge variant="outline"
-                                               className="border-green-200 text-green-700 bg-green-50">
-                                            <div className="w-2 h-2 bg-green-500 rounded-full mr-2"/>
+                                               className="border-green-200 text-green-700 bg-green-50 flex items-center gap-1">
+                                            <div className="w-2 h-2 bg-green-500 rounded-full"/>
                                             Verified
                                         </Badge>
                                     </div>
@@ -216,61 +138,35 @@ export default function InfluencerProfile() {
                         </div>
                     </div>
                     <div className="flex gap-3 flex-wrap">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm" aria-label="More actions">
-                                    <MoreHorizontal className="w-4 h-4"/>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator/>
-                                <DropdownMenuItem>
-                                    <Download className="w-4 h-4 mr-2"/>
-                                    Export Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Share2 className="w-4 h-4 mr-2"/>
-                                    Share Profile
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <Settings className="w-4 h-4 mr-2"/>
-                                    Settings
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Button variant="outline" className="border-slate-300 bg-transparent" aria-label="Message">
-                            <MessageSquare className="w-4 h-4 mr-2"/>
-                            Message
+                        <Button variant="outline" className="border-slate-300 bg-transparent"
+                                onClick={() => router.push("/influencer/campaign")}>
+                            <AiFillProject className="w-4 h-4 mr-2"/>
+                            Projects
                         </Button>
                         <Button
                             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg"
-                            aria-label="Create Campaign">
+                            onClick={() => router.push("/influencer/campaign")}>
                             <Plus className="w-4 h-4 mr-2"/>
                             Create Campaign
                         </Button>
                     </div>
                 </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {statsData.map((item, index) => (
-                    <ProfileStatsCard key={index} {...item} />
-                ))}
-            </div>
+            </Card>
+
+            <SocialStatsCard socialProfiles={user?.social_profiles} loading={isLoading}/>
+
             <Tabs defaultValue="overview" className="space-y-6">
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
                     <TabsList className="grid w-full grid-cols-5 bg-slate-50 rounded-xl p-1">
-                        {["overview", "analytics", "campaigns", "audience", "reviews"].map((tab) => (
-                            <TabsTrigger
-                                key={tab}
-                                value={tab}
-                                className="rounded capitalize cursor-pointer data-[state=active]:bg-navyBlue/60 data-[state=active]:text-white data-[state=active]:shadow-sm"
-                            >
-                                {tab}
+                        {tabs.map((tab) => (
+                            <TabsTrigger key={tab.value} value={tab.value}
+                                         className="rounded capitalize cursor-pointer data-[state=active]:bg-navyBlue/60 data-[state=active]:text-white data-[state=active]:shadow-sm">
+                                {tab.label}
                             </TabsTrigger>
                         ))}
                     </TabsList>
                 </div>
+
                 <TabsContent value="overview" className="space-y-6">
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <Card className="border-0 bg-white shadow-none">
@@ -319,6 +215,7 @@ export default function InfluencerProfile() {
                                 )}
                             </CardContent>
                         </Card>
+
                         <Card className="lg:col-span-2 border-0 bg-white shadow-none">
                             <CardHeader className="pb-4">
                                 <CardTitle className="flex items-center gap-2 text-slate-900">
@@ -329,9 +226,7 @@ export default function InfluencerProfile() {
                             <CardContent>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     {isLoading
-                                        ? Array.from({length: 3}).map((_, i) => (
-                                            <Skeleton key={i} className="h-40 w-full rounded-xl"/>
-                                        ))
+                                        ? Array.from({length: 3}).map((_, i) => <SocialProfileCardSkeleton key={i}/>)
                                         : user?.social_profiles.map((profile, index) => (
                                             <SocialProfileCard
                                                 key={index}
@@ -353,7 +248,44 @@ export default function InfluencerProfile() {
                         </Card>
                     </div>
                 </TabsContent>
+
+                <TabsContent value="social-profiles" className="space-y-6">
+                    <Card className="border-0 bg-white shadow-none">
+                        <CardHeader className="pb-4">
+                            <CardTitle className="flex items-center gap-2 text-slate-900">
+                                <AiFillProject className="w-5 h-5 text-slate-600"/>
+                                Projects
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                {isLoading
+                                    ? Array.from({length: 3}).map((_, i) => <SocialProfileCardSkeleton key={i}/>)
+                                    : user?.social_profiles.map((profile, index) => (
+                                        <SocialProfileCard
+                                            key={index}
+                                            title={profile.social.label}
+                                            link={profile.profile_url}
+                                            followerCount={profile.follower_count}
+                                            followingCount={profile.following_count}
+                                            postCount={profile.post_count}
+                                            avgLikePerPost={profile.avg_like_per_post_count}
+                                            avgCommentPerPost={profile.avg_comment_per_post_count}
+                                            followerGrowthRate={profile.follower_growth_rate_per_week}
+                                            highestLike={profile.highest_like}
+                                            lowestLike={profile.lowest_like}
+                                            platform={profile.social.name}
+                                        />
+                                    ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="edit-profile">
+                    <ProfileForm editingProfile={user} onSubmit={handleSubmit} onCancel={handleCancel}/>
+                </TabsContent>
             </Tabs>
         </div>
-    )
+    );
 }

@@ -11,7 +11,7 @@ interface MultiSelectFieldProps {
     placeholder?: string;
     options: Option[] | any;
     error?: string;
-    name: string;
+    name?: string;
     onChangeAction: (value: string[]) => void;
     className?: string;
 

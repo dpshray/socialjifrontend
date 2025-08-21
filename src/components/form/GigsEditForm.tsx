@@ -21,6 +21,7 @@ import {Badge} from "@/components/ui/badge";
 import {AlertCircle, DollarSign, ImageIcon, Star, X} from "lucide-react";
 import {tagsService} from "@/services/tagsService";
 import {Alert, AlertDescription} from "@/components/ui/alert";
+import {TagModal} from "@/components/modal/TagModal";
 
 export type GigFormData = InferType<typeof gigsSchema>;
 
@@ -241,7 +242,7 @@ const GigEditForm: React.FC<GigFormProps> = ({
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 w-full">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl rounded-3xl overflow-hidden">
-                <div className="bg-gray-50 p-6 border-b border-gray-200">
+                <div className="bg-gray-50 flex items-center justify-between p-6 border-b border-gray-200">
                     <div className="flex items-center justify-between text-gray-900">
                         <div>
                             <h2 className="text-2xl font-bold">{mode === "edit" ? "Edit Your Gig" : "Create New Gig"}</h2>
@@ -253,6 +254,9 @@ const GigEditForm: React.FC<GigFormProps> = ({
                                 <span className="text-sm font-medium text-gray-700">Saving...</span>
                             </div>
                         )}
+                    </div>
+                    <div className={' flex items-center'}>
+                        <TagModal/>
                     </div>
                 </div>
                 <div className="p-8 space-y-8">
