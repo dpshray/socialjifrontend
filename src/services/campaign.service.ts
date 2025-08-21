@@ -12,7 +12,7 @@ class CampaignService extends HttpsService {
                     file: true
                 }
             });
-            console.log(' Response from createCampaign:', result.data);
+
             return result?.data;
         } catch (error) {
             throw error;

@@ -17,6 +17,11 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
     title: "SocialJi – Influencer & UGC Marketplace for Brands",
     description: "Connect with top influencers and user-generated content creators to boost your brand. Hire creators for authentic content and secure collaborations with SocialJi's escrow-protected platform.",
+    openGraph: {
+        title: "SocialJi - Connect with Influencers and UGC Creators",
+        description: "Boost your brand with authentic influencers and user-generated content creators. Secure collaborations with SocialJi's escrow-protected platform.",
+        images: ["/og/og.jpg"],
+    },
 }
 export default function RootLayout({
                                        children,
