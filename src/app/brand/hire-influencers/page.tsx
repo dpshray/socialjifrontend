@@ -5,7 +5,7 @@ import {SearchIcon} from 'lucide-react';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
 import SelectInputField from '@/components/field/SelectField';
-import {brandService} from '@/app/brand/brand.service';
+import {brandService} from '@/services/brand.service';
 import {useDebounce} from '@/hooks/useDebounce';
 import CustomPagination from '@/components/Pagiantion/pagination';
 import {InfluencerProfileCard, InfluencerProfileCardSkeleton,} from '@/app/brand/hire-influencers/influencer-card';

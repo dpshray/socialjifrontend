@@ -29,6 +29,18 @@ class InfluencerService extends HttpServices {
             console.error('Error in brandPaymentList:', error);
         }
     }
+    async influencerDashboard() {
+        try {
+           const response = await this.getRequest({
+                ///influencer/dashboard
+                url: '/influencer/dashboard',
+                config: {auth: true}
+            })
+            return response?.data
+        } catch (error) {
+            console.error('Error in brandPaymentList:', error);
+        }
+    }
 
 
 }

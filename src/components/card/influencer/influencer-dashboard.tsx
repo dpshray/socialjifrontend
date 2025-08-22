@@ -8,6 +8,7 @@ interface StatsCardProps {
     title: string;
     value: string;
     icon: any;
+    className?: string
 
 }
 
@@ -47,13 +48,14 @@ export function ProfileCard({
     )
 }
 
-export function InfluencerStatsCard({title, value, icon: Icon}: StatsCardProps) {
+export function InfluencerStatsCard({title, value, icon: Icon,className}: StatsCardProps) {
     return (
         <div
             className={cn(
                 "bg-white rounded-md w-full h-22 font-inter p-2 px-4 overflow-hidden border border-gray-200 shadow-sm",
                 "hover:shadow-md transition-all duration-200 ease-in-out",
-                "rounded-sm"
+                "rounded-sm",
+                className
             )}
         >
             <div className="flex justify-between items-start">

@@ -42,13 +42,12 @@ class GigsService extends HttpServices {
 
     async DeleteGig(id: number) {
         try {
-            const result: any = await this.deleteRequest({
+            return await this.deleteRequest({
                 url: `/influencer/gig/${id}`,
                 config: {
                     auth: true
                 }
-            });
-            return result?.data;
+            })
 
         } catch (error) {
             throw error;

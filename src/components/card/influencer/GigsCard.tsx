@@ -8,8 +8,7 @@ import {Star} from "lucide-react"
 import {cn} from "@/lib/utils"
 import {Skeleton} from "@/components/ui/skeleton"
 import {useRouter} from "next/navigation"
-import {ActionButtons} from "@/components/card/action-buttons";
-
+import {ActionButtons} from "@/components/card/action-buttons"
 
 interface Currency {
     id: number
@@ -101,31 +100,29 @@ export const GigsCard = ({
     return (
         <Card
             className={cn(
-                "w-[300px] h-[360px] !py-0 gap-2 bg-transparent  shadow-none rounded-md overflow-hidden border-black/10",
+                "py-0 gap-2",
+                "w-[300px] h-[380px] flex flex-col bg-transparent shadow-none rounded-md overflow-hidden border-black/10",
                 "transition-all duration-200 ease-in-out cursor-pointer",
-                "group hover:shadow-lg  hover:rounded-md hover:border-input hover:bg-white",
+                "group hover:shadow-lg hover:rounded-md hover:border-input hover:bg-white",
             )}
             role="article"
             aria-label={`Gig card for ${title}`}
             onClick={() => handleViewGig(id)}
         >
-            {/* Gig Image */}
-            <div className="relative h-50 w-full overflow-hidden rounded-t-md group-hover:rounded-none">
+            <div
+                className="relative h-[160px] w-full overflow-hidden rounded-t-md group-hover:rounded-none flex-shrink-0">
                 <Image
                     src={image || "/placeholder.svg"}
                     alt={`${title} - Influencer Gig`}
-                    width={300}
-                    height={160}
-                    className={cn("w-full h-full object-cover", "group-hover:scale-105 transition-all duration-200 ease-in-out")}
+                    fill
+                    className={cn("object-cover", "group-hover:scale-105 transition-all duration-200 ease-in-out")}
                     priority
                 />
             </div>
 
-            {/* Card Content */}
-            <CardContent className="px-2 flex flex-col  flex-grow">
-                {/* Pricing Tier Badges */}
+            <CardContent className="px-3  flex flex-col flex-1 min-h-0">
                 <div className="flex flex-wrap gap-1 justify-end mb-2">
-                    {pricingTierLabels.map((label, index) => (
+                    {pricingTierLabels.slice(0, 2).map((label, index) => (
                         <Badge
                             key={index}
                             variant="outline"
@@ -136,53 +133,44 @@ export const GigsCard = ({
                     ))}
                 </div>
 
-                {/* Title */}
-                <div className="flex justify-between items-start mb-2">
-                    <h2 className="text-black text-lg font-semibold truncate font-poppins capitalize">{title}</h2>
-                </div>
+                <h2 className="text-black text-base font-semibold line-clamp-1 font-poppins capitalize mb-2">{title}</h2>
 
-                {/* Description */}
-                <p className="text-sm text-gray-600 font-sans line-clamp-2 mb-2" aria-label="Gig description">
+                <p className="text-sm text-gray-600 font-sans line-clamp-2 mb-2 flex-shrink-0"
+                   aria-label="Gig description">
                     {description}
                 </p>
 
-                {/* Tags */}
-                <div
-                    className="flex flex-wrap items-center text-xs text-muted-foreground gap-x-1 gap-y-1 py-1 line-clamp-1 mb-2">
+                <div className="flex flex-wrap items-center text-xs text-muted-foreground gap-x-1 mb-2 line-clamp-1">
                     {tags && tags.length > 0 ? (
-                        tags.map((tag, index) => (
+                        tags.slice(0, 3).map((tag, index) => (
                             <span key={tag.id ?? index} className="flex items-center gap-1">
                 <span className="capitalize font-semibold text-black">{tag.name}</span>
-                                {index < tags.length - 1 && <span className="text-gray-400">|</span>}
+                                {index < Math.min(tags.length - 1, 2) && <span className="text-gray-400">|</span>}
               </span>
                         ))
                     ) : (
-                        <span className="flex items-center gap-1">
-              <span className="capitalize font-semibold text-black">No tags</span>
-            </span>
+                        <span className="capitalize font-semibold text-black">No tags</span>
                     )}
                 </div>
 
-                {/* Pricing & Ratings */}
                 <div
                     className="text-sm flex items-center justify-between text-gray-700 font-medium mt-auto"
                     aria-label="Price range and rating"
                 >
-                    <span className="font-semibold text-green-600">{pricingRange}</span>
+                    <span className="font-semibold text-green-600 text-xs">{pricingRange}</span>
                     <div className="flex items-center gap-1">
                         {Array.from({length: 5}).map((_, index) => (
-                            <Star key={index} className="text-yellow-400" size={16} fill="currentColor"
+                            <Star key={index} className="text-yellow-400" size={12} fill="currentColor"
                                   aria-hidden="true"/>
                         ))}
-                        <span className="text-sm text-gray-500 font-sans ml-1" aria-label="Rating score">
+                        <span className="text-xs text-gray-500 font-sans ml-1" aria-label="Rating score">
               4.5
             </span>
                     </div>
                 </div>
             </CardContent>
 
-            {/* Action Buttons Footer */}
-            <CardFooter className={cn("px-2 pb-2 pt-0")}>
+            <CardFooter className="px-3 pb-2 pt-0 flex-shrink-0">
                 <ActionButtons id={id} onView={handleViewGig} onEdit={onEditAction} onDelete={onDeleteAction}/>
             </CardFooter>
         </Card>
@@ -192,51 +180,43 @@ export const GigsCard = ({
 export function GigsCardSkeleton() {
     return (
         <Card
-            className="w-[300px] h-[360px] !py-0 gap-2 bg-transparent rounded-none shadow-none rounded-t-md overflow-hidden !border-none"
+            className=" py-0    w-[300px] h-[450px] flex flex-col bg-transparent rounded-md shadow-none overflow-hidden border-black/10"
             role="article"
             aria-label="Loading gig card"
         >
-            {/* Image placeholder */}
-            <div className="relative h-40 w-full overflow-hidden rounded-t-md">
+            <div className="relative h-[160px] w-full overflow-hidden rounded-t-md flex-shrink-0">
                 <Skeleton className="absolute inset-0 w-full h-full"/>
             </div>
 
-            {/* Content */}
-            <CardContent className="p-2 flex flex-col gap-3 pt-2">
-                {/* Badges */}
-                <div className="flex justify-end gap-2">
+            <CardContent className="px-3 py-2 flex flex-col flex-1 min-h-0">
+                <div className="flex justify-end gap-2 mb-2">
                     <Skeleton className="h-5 w-12 rounded-full"/>
                     <Skeleton className="h-5 w-16 rounded-full"/>
                 </div>
 
-                {/* Title */}
-                <Skeleton className="h-6 w-3/4 rounded-md"/>
+                <Skeleton className="h-5 w-3/4 rounded-md mb-2"/>
 
-                {/* Description */}
-                <div className="space-y-2">
+                <div className="space-y-2 mb-2">
                     <Skeleton className="h-4 w-full rounded"/>
                     <Skeleton className="h-4 w-5/6 rounded"/>
                 </div>
 
-                {/* Tags */}
-                <div className="flex gap-2">
+                <div className="flex gap-2 mb-2">
                     <Skeleton className="h-3 w-12 rounded"/>
                     <Skeleton className="h-3 w-16 rounded"/>
                     <Skeleton className="h-3 w-10 rounded"/>
                 </div>
 
-                {/* Rating and Price */}
                 <div className="flex items-center justify-between mt-auto">
-                    <Skeleton className="h-4 w-20 rounded-md"/>
+                    <Skeleton className="h-4 w-16 rounded-md"/>
                     <div className="flex items-center gap-1">
-                        <Skeleton className="h-4 w-16 rounded-md"/>
-                        <Skeleton className="h-4 w-8 rounded-md"/>
+                        <Skeleton className="h-3 w-12 rounded-md"/>
+                        <Skeleton className="h-3 w-6 rounded-md"/>
                     </div>
                 </div>
             </CardContent>
 
-            {/* Footer */}
-            <CardFooter className="px-2 pb-2 pt-0">
+            <CardFooter className="px-3 pb-2 pt-0 flex-shrink-0">
                 <div className="flex gap-1">
                     <Skeleton className="h-8 w-8 rounded-md"/>
                     <Skeleton className="h-8 w-8 rounded-md"/>

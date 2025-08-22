@@ -20,6 +20,7 @@ export default function ProtectedRoutes({ children, allowedRoles }: ProtectedRou
             setStoredRole(localStorage.getItem("_role"))
             setToken(localStorage.getItem("_at"))
         }
+
     }, [])
 
     const isRoleAllowed = useCallback((): boolean => {

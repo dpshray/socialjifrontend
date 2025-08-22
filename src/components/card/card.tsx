@@ -204,3 +204,33 @@ export const ReviewCard = ({avatar, name, country, rating, review}: ReviewType) 
         </div>
     </Card>
 );
+
+interface UserCardProps {
+    image: string
+    name: string
+    username: string
+    followers: number
+    growthRate: number
+}
+
+export const DashboardUserCard: React.FC<UserCardProps> = ({image, name, username, followers, growthRate}) => (
+    <Card className="p-3">
+        <div className="flex items-center space-x-3">
+            <Avatar className="h-10 w-10">
+                <AvatarImage src={image || "/placeholder.svg"} alt={name}/>
+                <AvatarFallback>
+                    {name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 ">
+                <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
+                <p className="text-xs text-gray-500 truncate">@{username}</p>
+                <p className="text-xs text-gray-600">{followers.toLocaleString()} followers</p>
+                <p className="text-xs text-green-600">+{growthRate}% growth</p>
+            </div>
+        </div>
+    </Card>
+)

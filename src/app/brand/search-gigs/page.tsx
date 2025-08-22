@@ -8,7 +8,7 @@ import CategoryNav from "@/components/header/category-nav";
 import {categoriesHeader} from "@/data";
 import SelectInputField from "@/components/field/SelectField";
 import {ProjectCard, ProjectCardSkeleton} from "@/components/card/brand/ProjectCard";
-import {brandService} from "@/app/brand/brand.service";
+import {brandService} from "@/services/brand.service";
 import {useDebounce} from "@/hooks/useDebounce";
 import CustomPagination from "@/components/Pagiantion/pagination";
 import {Gig} from "@/types/gigs";

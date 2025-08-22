@@ -62,7 +62,7 @@ export function SocialProfileCard({
                             <CardTitle className="text-base sm:text-lg text-foreground font-semibold">
                                 {title}
                             </CardTitle>
-                            <Link
+                            <a
                                 href={link}
                                 target="_blank"
                                 rel="noopener noreferrer"
@@ -70,7 +70,7 @@ export function SocialProfileCard({
                                 className="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1"
                             >
                                 View Profile <ExternalLink className="w-3 h-3"/>
-                            </Link>
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -56,6 +56,20 @@ class BrandService extends HttpServices {
             throw error;
         }
     }
+    brandDashboard = async () => {
+        try {
+            const response = await this.getRequest({
+                url: `/brand/dashboard`,
+                config: {
+                    auth: true,
+                },
+            });
+            return response?.data;
+        } catch (error: any) {
+            console.error("Error fetching gig details:", error?.response?.data || error.message);
+            throw error;
+        }
+    }
 }
 
 export const brandService = new BrandService();

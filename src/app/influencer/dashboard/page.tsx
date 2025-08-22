@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {BriefcaseIcon, DollarSign, Plus, TrendingUp} from 'lucide-react';
 import Image from 'next/image';
 
@@ -8,32 +8,9 @@ import InfluencerChart from '@/components/chart/Influencer';
 import LatestGigsTable from '@/components/table/userTable';
 import {Button} from '@/components/ui/button';
 import {ComingStatsCard, InfluencerStatsCard} from '@/components/card/influencer/influencer-dashboard';
-import {Card} from '@/components/ui/card';
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import influencerService from '@/services/InfluencerService';
+import {DashboardUserCard} from "@/components/card/card";
 import {toast} from "sonner";
-
-interface UserCardProps {
-    image: string;
-    name: string;
-    username: string;
-}
-
-const UserCard: React.FC<UserCardProps> = ({image, name, username}) => (
-    <Card className="p-3">
-        <div className="flex items-center space-x-4">
-            <Avatar>
-                <AvatarImage src={image}/>
-                <AvatarFallback>{name[0]}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
-                <p className="text-sm text-gray-500 truncate">{username}</p>
-            </div>
-            <Button variant="secondary">View</Button>
-        </div>
-    </Card>
-);
 
 interface SocialMediaIcon {
     image: string;
@@ -43,22 +20,13 @@ interface SocialMediaIcon {
 }
 
 const socialMediaIcons: SocialMediaIcon[] = [
-    {image: '/Thread.png', title: 'X', description: '950K Followers', type: 'x'},
-    {image: '/youtube.png', title: 'YouTube', description: '3.2M Subscribers', type: 'youtube'},
-    {image: '/facebook1.png', title: 'Facebook', description: '5.6M Followers', type: 'facebook'},
+    {image: "/instagram.png", title: "Instagram", description: "Connect Account", type: "instagram"},
+    {image: "/facebook1.png", title: "Facebook", description: "Connect Account", type: "facebook"},
 ];
 
 export default function InfluencerDashboard() {
     const [loadingType, setLoadingType] = useState<string | null>(null);
-
-    const statsData = [
-        {title: 'Revenue', value: '$2,500', icon: TrendingUp},
-        {title: 'Orders', value: '1,320', icon: TrendingUp},
-        {title: 'Customers', value: '2,500', icon: DollarSign},
-        {title: 'Sales', value: '2,500', icon: BriefcaseIcon},
-    ];
-
-
+    const [dashboardData, setDashboardData] = useState<any>(null);
 
     const handleConnect = (type: string) => {
         if (type === 'facebook') {
@@ -67,33 +35,75 @@ export default function InfluencerDashboard() {
                 alert('User token not found. Please log in.');
                 return;
             }
+            setLoadingType(type);
             window.location.href = `https://socialapi.stage.dworklabs.com/api/v1/social-data-fetcher/fb?token=${encodeURIComponent(token)}`;
         } else {
-            alert(`Connect to ${type.toUpperCase()} is not implemented yet.`);
+            toast.error('This feature is not available yet.');
         }
     };
 
+    useEffect(() => {
+        const fetchInfluencerData = async () => {
+            try {
+                const response = await influencerService.influencerDashboard();
+                setDashboardData(response);
+            } catch {
+                setDashboardData(null);
+            }
+        };
+        fetchInfluencerData();
+    }, []);
+
+    const statsData = [
+        {
+            title: "Total Gigs",
+            value: dashboardData?.total_gigs_count?.toString() ?? "0",
+            icon: BriefcaseIcon,
+        },
+        {
+            title: "Reviews Received",
+            value: dashboardData?.total_reviews_received_from_gigs_count?.toString() ?? "0",
+            icon: TrendingUp,
+        },
+        {
+            title: "Reviews Given",
+            value: dashboardData?.total_reviews_given_count?.toString() ?? "0",
+            icon: DollarSign,
+        },
+        {
+            title: "Campaign Bids",
+            value: dashboardData?.total_bidded_on_campaign_count?.toString() ?? "0",
+            icon: TrendingUp,
+        },
+    ];
+
+    const isConnected = (platformType: string) =>
+        dashboardData?.social_followers?.some(
+            (follower: any) => follower.social_site.name.toLowerCase() === platformType.toLowerCase()
+        ) ?? false;
+
+    const getFollowerData = (platformType: string) =>
+        dashboardData?.social_followers?.find(
+            (follower: any) => follower.social_site.name.toLowerCase() === platformType.toLowerCase()
+        );
 
     return (
-        <section className="w-full py-8 bg-background container mx-auto">
-            <div className="container mx-auto px-4">
-                {/* Header */}
+        <section className="w-full py-8 bg-background container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-                    <p className="text-gray-600 mt-2">Welcome back! Here&#39;s your performance overview.</p>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">Welcome back! Here&#39;s your performance
+                        overview.</p>
                 </div>
 
-                {/* Stats + Coming Soon Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="md:col-span-3 space-y-6">
-                        {/* Stats Cards */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             {statsData.map((stat, idx) => (
                                 <InfluencerStatsCard key={idx} title={stat.title} value={stat.value} icon={stat.icon}/>
                             ))}
                         </div>
 
-                        {/* Coming Soon Cards */}
                         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {Array.from({length: 4}).map((_, idx) => (
                                 <ComingStatsCard key={idx}/>
@@ -101,66 +111,95 @@ export default function InfluencerDashboard() {
                         </div>
                     </div>
 
-                    {/* Quick Actions */}
-                    <aside className="space-y-2">
-                        <h2 className="text-base font-semibold text-gray-900 mb-2">Quick Actions</h2>
-                        <div className="grid grid-cols-2 gap-4">
-                            {socialMediaIcons.map((icon) => (
-                                <div key={icon.type} className="text-center">
-                                    <Image
-                                        src={icon.image}
-                                        alt={`${icon.title} logo`}
-                                        width={32}
-                                        height={32}
-                                        className="w-8 h-8 mx-auto mb-2 object-contain rounded"
-                                    />
-                                    <p className="text-sm font-medium text-gray-900">{icon.title}</p>
-                                    <p className="text-xs text-gray-600">{icon.description}</p>
-                                    <Button
-                                        variant="outline"
-                                        className="w-20 h-8 mx-auto mt-2"
-                                        onClick={() => handleConnect(icon.type)}
-                                        disabled={loadingType === icon.type}
-                                    >
-                                        {loadingType === icon.type ? 'Connecting...' : 'Connect'}
-                                    </Button>
-                                </div>
-                            ))}
+                    <aside className="space-y-4">
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Quick Actions</h2>
+                        <div className="grid grid-cols-1 gap-3">
+                            {socialMediaIcons.map((icon) => {
+                                const connected = isConnected(icon.type);
+                                const followerData = getFollowerData(icon.type);
 
-                            <div className="text-center">
-                                <Button variant="outline" className="w-8 h-8 mx-auto mb-2" disabled>
+                                return (
+                                    <div
+                                        key={icon.type}
+                                        className="flex items-center space-x-3 p-3 border rounded-lg dark:border-gray-700 bg-white dark:bg-gray-800"
+                                    >
+                                        <Image
+                                            src={icon.image || "/placeholder.svg"}
+                                            alt={`${icon.title} logo`}
+                                            width={24}
+                                            height={24}
+                                            className="w-6 h-6 object-contain"
+                                        />
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">{icon.title}</p>
+                                            {connected && followerData ? (
+                                                <>
+                                                    <p className="text-xs text-green-600">Connected</p>
+                                                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                                                        {followerData.follower_count.toLocaleString()} followers
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <p className="text-xs text-gray-600 dark:text-gray-400">{icon.description}</p>
+                                            )}
+                                        </div>
+                                        {!connected && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleConnect(icon.type)}
+                                                disabled={loadingType === icon.type}
+                                            >
+                                                {loadingType === icon.type ? "Connecting..." : "Connect"}
+                                            </Button>
+                                        )}
+                                        {connected && (
+                                            <Button variant="secondary" size="sm">
+                                                Manage
+                                            </Button>
+                                        )}
+                                    </div>
+                                );
+                            })}
+
+                            <div
+                                className="flex items-center space-x-3 p-3 border rounded-lg border-dashed dark:border-gray-600 bg-white dark:bg-gray-800">
+                                <Button variant="outline" size="sm" className="w-6 h-6 p-0 bg-transparent" disabled>
                                     <Plus className="w-4 h-4"/>
                                 </Button>
-                                <p className="text-sm font-medium text-gray-900">Add</p>
-                                <p className="text-xs text-gray-600">Add Social Media</p>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Add Platform</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Connect more social
+                                        media</p>
+                                </div>
                             </div>
                         </div>
                     </aside>
                 </div>
 
-                {/* Chart + People */}
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-4 gap-6">
-                    <div className="md:col-span-3 bg-white rounded-lg p-4 shadow-sm">
+                    <div className="md:col-span-3 bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
                         <h2 className="sr-only">Performance Chart</h2>
                         <InfluencerChart/>
                     </div>
 
-                    <aside className="bg-white rounded-lg p-4">
-                        <h2 className="text-lg font-medium text-gray-900 mb-2">People</h2>
+                    <aside className="bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
+                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Influencers</h2>
                         <div className="space-y-3">
-                            {Array.from({length: 3}).map((_, idx) => (
-                                <UserCard
-                                    key={idx}
-                                    image="https://flowbite.com/docs/images/people/profile-picture-1.jpg"
-                                    name="Jese Leos"
-                                    username="@jeseleos"
+                            {dashboardData?.top_influencer_with_max_followers_count?.slice(0, 3).map((influencer: any) => (
+                                <DashboardUserCard
+                                    key={influencer.id}
+                                    image={influencer.image}
+                                    name={`${influencer.first_name} ${influencer.last_name}`}
+                                    username={influencer.nick_name}
+                                    followers={influencer.social_profiles_sum_follower}
+                                    growthRate={Math.round(influencer.avg_follower_growth_rate_per_week)}
                                 />
                             ))}
                         </div>
                     </aside>
                 </div>
 
-                {/* Table */}
                 <div className="mt-10">
                     <LatestGigsTable/>
                 </div>

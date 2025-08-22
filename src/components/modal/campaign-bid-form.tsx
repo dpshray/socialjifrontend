@@ -1,8 +1,9 @@
 "use client"
 
-import {useForm} from "react-hook-form"
+import { useEffect } from "react"
+import { useForm } from "react-hook-form"
 import * as yup from "yup"
-import {yupResolver} from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 import {
     Dialog,
     DialogContent,
@@ -11,19 +12,20 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import {Button} from "@/components/ui/button"
-import {Campaign} from "@/types/campaigns"
+import { Button } from "@/components/ui/button"
+import { Campaign } from "@/types/campaigns"
 import TextInputField from "@/components/field/TextInputField"
-import {useEffect} from "react";
 
 const bidSchema = yup.object({
-    amount: yup
+    bid: yup
         .number()
-        .transform((value, originalValue) => (originalValue === "" ? NaN : value))
+        .transform((value, originalValue) =>
+            originalValue === "" ? NaN : value
+        )
         .typeError("Bid amount must be a number")
         .positive("Bid amount must be greater than zero")
         .required("Bid amount is required"),
-    message: yup
+    detail: yup
         .string()
         .min(10, "Proposal message should be at least 10 characters")
         .required("Proposal message is required"),
@@ -47,24 +49,20 @@ export function CampaignBidFormModal({
     const {
         register,
         handleSubmit,
-        formState: {errors, isSubmitting},
+        formState: { errors, isSubmitting },
         reset,
-        setValue,
     } = useForm<BidFormValues>({
         resolver: yupResolver(bidSchema),
         mode: "onTouched",
-        defaultValues: {
-            amount: 25750.50,
-            message: "lorem ipsum dolor",
-        },
+        // no defaultValues provided here
     })
 
+    // Reset form when modal opens
     useEffect(() => {
         if (open) {
-            setValue("amount", 25750.5)
-            setValue("message", "lorem ipsum dolor")
+            reset()
         }
-    }, [open, setValue])
+    }, [open, reset])
 
     const handleFormSubmit = async (data: BidFormValues) => {
         await onSubmit(data, campaign)
@@ -81,16 +79,17 @@ export function CampaignBidFormModal({
                         Submit your bid to participate in this campaign.
                     </DialogDescription>
                 </DialogHeader>
+
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
                     <div className="space-y-1">
                         <TextInputField
                             label="Bidding Price"
-                            {...register("amount")}
-                            error={errors.amount?.message}
-                            placeholder="Enter your bid amount"
+                            {...register("bid")}
+                            error={errors.bid?.message}
+                            placeholder="e.g., 12345.67"
                             type="number"
                             inputMode="decimal"
-                            step="any"
+                            step="0.01"
                             min="0"
                         />
                     </div>
@@ -99,9 +98,9 @@ export function CampaignBidFormModal({
                         <TextInputField
                             textarea
                             label="Proposal Message"
-                            {...register("message")}
-                            error={errors.message?.message}
-                            placeholder="Enter your proposal message"
+                            {...register("detail")}
+                            error={errors.detail?.message}
+                            placeholder="Enter your proposal message (minimum 10 characters)"
                         />
                     </div>
 

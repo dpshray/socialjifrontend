@@ -14,6 +14,7 @@ import {toast} from "sonner"
 import CustomPagination from "@/components/Pagiantion/pagination"
 import {DeleteModal} from "@/components/modal/delete-modal"
 import {CampaignCardSkeleton} from "@/components/Skeleton/campaign-card-skeleton"
+import {useRouter} from "next/navigation";
 
 export default function BrandCampaignsPage() {
     const [activeTab, setActiveTab] = useState<string>("overview")
@@ -25,6 +26,7 @@ export default function BrandCampaignsPage() {
     const [loading, setLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null)
+    const router = useRouter()
 
     const handleFormSubmit = async (data: CampaignFormData) => {
         setLoading(true)
@@ -106,7 +108,9 @@ export default function BrandCampaignsPage() {
         }
     }
 
-    const handleViewCampaign = (campaign: Campaign) => console.log("Viewing campaign:", campaign)
+    const handleViewCampaign = (campaign: Campaign) => {
+        router.push(`/brand/campaigns/${campaign.id}`)
+    }
     const handleCancel = () => {
         setEditingCampaign(null);
         setActiveTab("overview")
