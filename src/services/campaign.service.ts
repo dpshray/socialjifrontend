@@ -120,7 +120,23 @@ class CampaignService extends HttpsService {
                 config: {auth: true}
             })
         } catch (error) {
-          throw error
+            throw error
+        }
+    }
+
+    async getBidsForCampaign(id: number, params?: { per_page?: number, page?: number }) {
+        try {
+            const result: any = await this.getRequest({
+                //campaign-bidders/20?per_page=10&page=1
+                url: `/campaign-bidders/${id}`,
+                config: {
+                    auth: true,
+                    params
+                }
+            })
+            return result?.data
+        } catch (error) {
+            throw error
         }
     }
 }
