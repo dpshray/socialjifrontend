@@ -1,24 +1,25 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Input } from "@/components/ui/input"
-import { Filter, Search, Sparkles, Target } from "lucide-react"
+import {useCallback, useEffect, useState} from "react"
+import {Button} from "@/components/ui/button"
+import {Badge} from "@/components/ui/badge"
+import {Input} from "@/components/ui/input"
+import {Filter, Search, Sparkles, Target} from "lucide-react"
 import SelectInputField from "@/components/field/SelectField"
-import { CampaignCard } from "@/components/card/brand/campaigns-card"
-import type { Campaign } from "@/types/campaigns"
+import {CampaignCard} from "@/components/card/brand/campaigns-card"
+import type {Campaign} from "@/types/campaigns"
 import campaignService from "@/services/campaign.service"
-import { CampaignBidFormModal } from "@/components/modal/campaign-bid-form"
+import {CampaignBidFormModal} from "@/components/modal/campaign-bid-form"
+import {toast} from "sonner";
 
 const categoryOptions = [
-    { value: "all", label: "All Categories" },
-    { value: "fashion", label: "Fashion" },
-    { value: "technology", label: "Technology" },
-    { value: "fitness", label: "Fitness" },
-    { value: "beauty", label: "Beauty" },
-    { value: "travel", label: "Travel" },
-    { value: "gaming", label: "Gaming" },
+    {value: "all", label: "All Categories"},
+    {value: "fashion", label: "Fashion"},
+    {value: "technology", label: "Technology"},
+    {value: "fitness", label: "Fitness"},
+    {value: "beauty", label: "Beauty"},
+    {value: "travel", label: "Travel"},
+    {value: "gaming", label: "Gaming"},
 ]
 
 export default function InfluencerCampaignsPage() {
@@ -39,10 +40,11 @@ export default function InfluencerCampaignsPage() {
                 search: searchTerm || undefined,
             }
             const response = await campaignService.getInfluencerCampaigns(params)
-            console.log(' Response from Fetchgigs',response.data)
+            console.log(' Response from getInfluencerCampaigns:', response.data)
             setCampaigns(response?.data || [])
         } catch (error) {
             console.error("Error fetching campaigns:", error)
+
         } finally {
             setIsFetching(false)
         }
@@ -62,14 +64,20 @@ export default function InfluencerCampaignsPage() {
     }
 
     const handleBidSubmit = async (
-        data: { amount: number; message: string },
+        data: { bid: number; detail: string },
         campaign: Campaign
     ) => {
         try {
             const response = await campaignService.createBidForCampaign(campaign.id, data)
             console.log("Bid submitted successfully:", response)
-        } catch (error) {
-            console.error("Error submitting bid:", error)
+            if (response) {
+                toast.success(response?.message || "Bid submitted successfully")
+            }
+        } catch (error: any) {
+            console.error("Error submitting bid:", error?.errors)
+            Object.entries(error?.errors).forEach(([_, message]) => {
+                toast.error(typeof message === 'string' ? message : JSON.stringify(message))
+            })
         } finally {
             setIsModalOpen(false)
             setSelectedCampaign(null)
@@ -81,9 +89,9 @@ export default function InfluencerCampaignsPage() {
             <div className="container-width section-padding py-8">
                 <div className="mb-8">
                     <div className="flex items-center space-x-2 mb-2">
-                        <Target className="w-6 h-6 text-violet-600" />
+                        <Target className="w-6 h-6 text-violet-600"/>
                         <Badge className="bg-violet-100 text-violet-700 border-violet-200 flex items-center">
-                            <Sparkles className="w-3 h-3 mr-1" />
+                            <Sparkles className="w-3 h-3 mr-1"/>
                             Campaign Discovery
                         </Badge>
                     </div>
@@ -121,7 +129,7 @@ export default function InfluencerCampaignsPage() {
                             disabled={isFetching}
                             aria-label="Filter campaigns"
                         >
-                            <Filter className="w-4 h-4 mr-2" />
+                            <Filter className="w-4 h-4 mr-2"/>
                             Filter
                         </Button>
                     </div>

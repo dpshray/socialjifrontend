@@ -16,8 +16,9 @@ import {categoriesHeader} from "@/data";
 import {gigsService} from "@/services/gigs.service";
 import globalService from "@/services/GlobalService";
 import {TagModal} from "@/components/modal/TagModal";
+import {toast} from "sonner";
 
-const CATEGORIES = [
+const FILTERS = [
     {label: "All", value: "1"},
     {label: "Design", value: "2"},
     {label: "Development", value: "3"},
@@ -25,12 +26,6 @@ const CATEGORIES = [
     {label: "Writing", value: "5"},
 ];
 
-const FILTERS = [
-    {label: "React", value: "react"},
-    {label: "Next.js", value: "next"},
-    {label: "Astro", value: "astro"},
-    {label: "Gatsby", value: "gatsby"},
-];
 
 export default function GigsPage() {
     const router = useRouter();
@@ -52,6 +47,7 @@ export default function GigsPage() {
                 page: currentPage,
             });
             setGigs(response.data || []);
+            console.log("Response from searchGigs:", response);
             setTotalPages(response?.last_page || 1);
         } catch (error) {
             console.error("Error fetching gigs:", error);
@@ -80,8 +76,13 @@ export default function GigsPage() {
         if (!selectedGigId) return;
         setIsDeleting(true);
         try {
-            await gigsService.DeleteGig(selectedGigId);
-            setGigs((prev) => prev.filter((gig) => gig.id !== selectedGigId));
+            console.log('selectedGigId:', selectedGigId);
+           const response = await gigsService.DeleteGig(selectedGigId);
+           if (response) {
+               toast.success(response?.message || "Successfully deleted gig");
+               console.log('Response from DeleteGig:', response);
+               await fetchGigs();
+           }
             setShowDeleteModal(false);
             setSelectedGigId(null);
         } catch (error) {

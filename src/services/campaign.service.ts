@@ -120,7 +120,7 @@ class CampaignService extends HttpsService {
                 config: {auth: true}
             })
         } catch (error) {
-            console.error('Error in brandPaymentList:', error);
+          throw error
         }
     }
 }

@@ -23,7 +23,7 @@ import Image from "next/image"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Influencers} from "@/types/influencers"
 import {SocialProfile} from "@/types/common"
-import {brandService} from "@/app/brand/brand.service"
+import {brandService} from "@/services/brand.service"
 
 interface DiscoverCreators {
     params: Promise<{ id: number }>

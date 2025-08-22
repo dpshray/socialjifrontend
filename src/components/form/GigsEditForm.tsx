@@ -211,7 +211,10 @@ const GigEditForm: React.FC<GigFormProps> = ({
             });
 
             if (data.image && Array.isArray(data.image)) {
-                formData.append("image", data.image[0] as File);
+                formData.append("image", data.image[0]);
+            }
+            for (const pair of formData.entries()) {
+                console.log(`${pair}: ${pair}`);
             }
 
             if (mode === "edit" && defaultValues?.id) {
@@ -221,6 +224,7 @@ const GigEditForm: React.FC<GigFormProps> = ({
             } else {
                 const response = await gigsService.createGig(formData);
                 if (response) {
+                    console.log("Gig created:", response);
                     toast.success("Gig created successfully");
                     router.push("/influencer/gigs");
                 }
@@ -250,7 +254,8 @@ const GigEditForm: React.FC<GigFormProps> = ({
                         </div>
                         {isSubmitting && (
                             <div className="flex items-center gap-2 bg-gray-200 rounded-full px-4 py-2">
-                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-500 border-t-transparent"></div>
+                                <div
+                                    className="animate-spin rounded-full h-4 w-4 border-2 border-gray-500 border-t-transparent"></div>
                                 <span className="text-sm font-medium text-gray-700">Saving...</span>
                             </div>
                         )}
