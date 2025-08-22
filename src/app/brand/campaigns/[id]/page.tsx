@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 
 import { BidsList } from "@/components/card/bid-card"
 import campaignService from "@/services/campaign.service";
+import Image from "next/image";
 
 export default function BrandCampaignDetails() {
     const params = useParams()
@@ -146,7 +147,10 @@ export default function BrandCampaignDetails() {
                                         {campaign.media.map((media: any) => (
                                             <Card key={media.id} className="overflow-hidden">
                                                 <div className="relative aspect-video w-full">
-                                                    <img
+                                                    <Image
+                                                        fill
+                                                        width={200}
+                                                        height={200}
                                                         src={media.original_url || "/placeholder.svg"}
                                                         alt={media.name}
                                                         className="object-cover w-full h-full"

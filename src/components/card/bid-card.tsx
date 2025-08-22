@@ -105,7 +105,7 @@ export function BidsList({bids}: { bids: BidData[] }) {
                         </svg>
                     </div>
                     <h3 className="text-lg font-medium text-gray-900 mb-1">No Bids Yet</h3>
-                    <p className="text-gray-500">This campaign hasn't received any bids yet.</p>
+                    <p className="text-gray-500">This campaign hasn&#39;t received any bids yet.</p>
                 </CardContent>
             </Card>
         )
