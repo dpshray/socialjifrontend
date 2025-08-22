@@ -1,24 +1,17 @@
-'use client'
+"use client"
 
-import { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useEffect, useState } from "react"
+import { useParams } from "next/navigation"
+import { AlertCircle, CalendarDays, CheckCircle, DollarSign, ImageOff, Tag } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Separator } from "@/components/ui/separator"
 
-import {
-    AlertCircle,
-    CalendarDays,
-    CheckCircle,
-    DollarSign,
-    Tag,
-} from 'lucide-react'
-
-import campaignService from '@/services/campaign.service'
-import type { Campaign } from '@/types/campaigns'
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Button} from "@/components/ui/button";
-import {Badge} from "@/components/ui/badge";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {Separator} from "@/components/ui/separator";
-
+import { BidsList } from "@/components/card/bid-card"
+import campaignService from "@/services/campaign.service";
+import Image from "next/image";
 
 export default function BrandCampaignDetails() {
     const params = useParams()
@@ -26,6 +19,8 @@ export default function BrandCampaignDetails() {
     const [campaign, setCampaign] = useState<any | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [bids, setBids] = useState<any[]>([])
+    const [showBids, setShowBids] = useState(false)
 
     useEffect(() => {
         if (!id || Number.isNaN(id)) return
@@ -37,54 +32,54 @@ export default function BrandCampaignDetails() {
                 const data = await campaignService.getCampaignById(id)
                 setCampaign(data)
             } catch {
-                setError('Failed to fetch campaign details.')
+                setError("Failed to fetch campaign details.")
             } finally {
                 setLoading(false)
             }
         }
+
+        const fetchBids = async () => {
+            try {
+                const data = await campaignService.getBidsForCampaign(id)
+                setBids(data?.data || [])
+            } catch {
+                setError("Failed to fetch bids.")
+            }
+        }
+
         fetchCampaign()
+        fetchBids()
     }, [id])
 
     const formatDate = (dateString: string) =>
-        new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
+        new Date(dateString).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
         })
 
     const getBrandInitials = (firstName: string, lastName?: string) =>
-        lastName
-            ? `${firstName[0]}${lastName}`.toUpperCase()
-            : firstName.slice(0, 2).toUpperCase()
+        lastName ? `${firstName[0]}${lastName[0]}`.toUpperCase() : firstName.slice(0, 2).toUpperCase()
 
     if (loading) {
         return (
-            <main
-                role="status"
-                aria-live="polite"
-                className="flex min-h-[400px] flex-col items-center justify-center space-y-4"
-            >
-                <div
-                    className="animate-spin rounded-full border-b-2 border-primary h-8 w-8"
-                    aria-hidden="true"
-                />
-                <p className="text-muted-foreground">Loading campaign details...</p>
+            <main className="flex min-h-[400px] flex-col items-center justify-center space-y-4 px-4">
+                <div className="animate-spin rounded-full border-b-2 border-primary h-8 w-8" />
+                <p className="text-muted-foreground text-center">Loading campaign details...</p>
             </main>
         )
     }
 
     if (error) {
         return (
-            <main className="flex min-h-[400px] flex-col items-center justify-center">
+            <main className="flex min-h-[400px] flex-col items-center justify-center px-4">
                 <Card className="max-w-md w-full">
                     <CardContent className="pt-6">
                         <div className="flex flex-col items-center space-y-4 text-center">
-                            <AlertCircle className="h-12 w-12 text-destructive" aria-hidden="true" />
+                            <AlertCircle className="h-12 w-12 text-destructive" />
                             <h3 className="text-lg font-semibold">Error Loading Campaign</h3>
                             <p className="text-sm text-muted-foreground">{error}</p>
-                            <Button onClick={() => window.location.reload()} aria-label="Reload campaign details">
-                                Try Again
-                            </Button>
+                            <Button onClick={() => window.location.reload()}>Try Again</Button>
                         </div>
                     </CardContent>
                 </Card>
@@ -94,11 +89,11 @@ export default function BrandCampaignDetails() {
 
     if (!campaign) {
         return (
-            <main className="flex min-h-[400px] flex-col items-center justify-center">
+            <main className="flex min-h-[400px] flex-col items-center justify-center px-4">
                 <Card className="max-w-md w-full">
                     <CardContent className="pt-6">
                         <div className="flex flex-col items-center space-y-4 text-center">
-                            <AlertCircle className="h-12 w-12 text-muted-foreground" aria-hidden="true" />
+                            <AlertCircle className="h-12 w-12 text-muted-foreground" />
                             <h3 className="text-lg font-semibold">Campaign Not Found</h3>
                             <p className="text-sm text-muted-foreground">
                                 The campaign you&#39;re looking for doesn&#39;t exist or has been removed.
@@ -111,58 +106,53 @@ export default function BrandCampaignDetails() {
     }
 
     return (
-        <main className="container mx-auto max-w-7xl px-4 py-8">
-            <section className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                <article className="lg:col-span-2 space-y-6">
+        <main className="container mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-2 space-y-6">
                     <Card>
                         <CardHeader>
-                            <div className="flex items-start justify-between">
-                                <div className="space-y-2">
-                                    <CardTitle className="text-3xl">{campaign.title}</CardTitle>
-                                    <div className="flex flex-wrap items-center space-x-4 text-sm text-muted-foreground">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between space-y-4 sm:space-y-0 sm:space-x-4">
+                                <div className="space-y-2 flex-1 min-w-0">
+                                    <CardTitle className="text-2xl sm:text-3xl break-words leading-tight">{campaign.title}</CardTitle>
+                                    <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                         <div className="flex items-center space-x-1">
-                                            <CalendarDays className="h-4 w-4" aria-hidden="true" />
-                                            <time dateTime={campaign.created_at}>
-                                                Created {formatDate(campaign.created_at)}
-                                            </time>
+                                            <CalendarDays className="h-4 w-4 flex-shrink-0" />
+                                            <span>Created {formatDate(campaign.created_at)}</span>
                                         </div>
                                         <div className="flex items-center space-x-1">
-                                            <DollarSign className="h-4 w-4" aria-hidden="true" />
+                                            <DollarSign className="h-4 w-4 flex-shrink-0" />
                                             <span>${campaign.price}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <Badge
                                     variant="secondary"
-                                    className="bg-green-100 border-green-200 text-green-800 flex items-center"
-                                    aria-label="Campaign status: Active"
+                                    className="bg-green-100 border-green-200 text-green-800 flex items-center flex-shrink-0"
                                 >
-                                    <CheckCircle className="mr-1 h-3 w-3" aria-hidden="true" />
+                                    <CheckCircle className="mr-1 h-3 w-3" />
                                     Active
                                 </Badge>
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            <section aria-labelledby="description-heading">
-                                <h3 id="description-heading" className="mb-2 text-lg font-semibold">
-                                    Description
-                                </h3>
-                                <p className="leading-relaxed text-muted-foreground">{campaign.description}</p>
-                            </section>
+                            <div>
+                                <h3 className="mb-2 text-lg font-semibold">Description</h3>
+                                <p className="leading-relaxed text-muted-foreground break-words">{campaign.description}</p>
+                            </div>
 
-                            {campaign.media?.length > 0 && (
-                                <section aria-labelledby="media-heading">
-                                    <h3 id="media-heading" className="mb-4 text-lg font-semibold">
-                                        Campaign Media
-                                    </h3>
-                                    <div className="grid gap-4 md:grid-cols-2">
-                                        {campaign.media.map((media:any) => (
-                                            <Card key={media.id} className="overflow-hidden py-0" tabIndex={0}>
+                            <div>
+                                <h3 className="mb-4 text-lg font-semibold">Campaign Media</h3>
+                                {campaign.media && campaign.media.length > 0 ? (
+                                    <div className="grid gap-4 sm:grid-cols-2">
+                                        {campaign.media.map((media: any) => (
+                                            <Card key={media.id} className="overflow-hidden">
                                                 <div className="relative aspect-video w-full">
-                                                    <img
-                                                        src={media.original_url}
+                                                    <Image
+                                                        fill
+                                                        width={200}
+                                                        height={200}
+                                                        src={media.original_url || "/placeholder.svg"}
                                                         alt={media.name}
-                                                        loading="lazy"
                                                         className="object-cover w-full h-full"
                                                     />
                                                 </div>
@@ -175,8 +165,18 @@ export default function BrandCampaignDetails() {
                                             </Card>
                                         ))}
                                     </div>
-                                </section>
-                            )}
+                                ) : (
+                                    <Card className="border-dashed">
+                                        <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                                            <ImageOff className="h-12 w-12 text-muted-foreground mb-4" />
+                                            <h4 className="text-lg font-semibold text-muted-foreground mb-2">No Image Found</h4>
+                                            <p className="text-sm text-muted-foreground">
+                                                This campaign doesn&#39;t have any media files attached.
+                                            </p>
+                                        </CardContent>
+                                    </Card>
+                                )}
+                            </div>
                         </CardContent>
                     </Card>
 
@@ -185,54 +185,84 @@ export default function BrandCampaignDetails() {
                             <CardTitle>Campaign Requirements</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <section>
-                                <h4 className="mb-2 flex items-center font-semibold">
-                                    <CheckCircle className="mr-2 h-4 w-4 text-green-600" aria-hidden="true" />
+                            <div>
+                                <h4 className="mb-2 flex items-center font-semibold text-muted-foreground">
+                                    <CheckCircle className="mr-2 h-4 w-4 text-green-600 flex-shrink-0" />
                                     Eligibility Criteria
                                 </h4>
-                                <p className="pl-6 text-muted-foreground">{campaign.eligibility}</p>
-                            </section>
+                                <p className="pl-6 text-muted-foreground break-words">{campaign.eligibility}</p>
+                            </div>
                             <Separator />
-                            <section>
-                                <h4 className="mb-2 flex items-center font-semibold">
-                                    <Tag className="mr-2 h-4 w-4 text-blue-600" aria-hidden="true" />
+                            <div>
+                                <h4 className="mb-2 flex items-center font-semibold text-muted-foreground">
+                                    <Tag className="mr-2 h-4 w-4 text-blue-600 flex-shrink-0" />
                                     Requirements
                                 </h4>
-                                <p className="pl-6 text-muted-foreground">{campaign.requirement}</p>
-                            </section>
+                                <p className="pl-6 text-muted-foreground break-words">{campaign.requirement}</p>
+                            </div>
                         </CardContent>
                     </Card>
-                </article>
+                    <div>
+                        <div className="space-y-3">
+                            <Button className="w-full" size="lg" onClick={() => setShowBids(!showBids)}>
+                                {showBids ? "Hide Bids" : "View Bids"}
+                            </Button>
+                            <Button variant="outline" className="w-full bg-transparent">
+                                Contact Brand
+                            </Button>
+                        </div>
+                        {showBids &&
+                            (bids.length > 0 ? (
+                                <BidsList bids={bids} />
+                            ) : (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Bidders</CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <div className="text-center py-8">
+                                            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                                            <h4 className="text-lg font-semibold text-muted-foreground mb-2">No Bids Yet</h4>
+                                            <p className="text-sm text-muted-foreground">This campaign hasn&#39;t received any bids yet.</p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                    </div>
+                </div>
 
-                <aside className="space-y-6">
+                <div className="space-y-6">
                     <Card>
                         <CardHeader>
                             <CardTitle>Brand Information</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex items-center space-x-4">
-                                <Avatar className="h-16 w-16">
+                            <div className="flex items-start space-x-4">
+                                <Avatar className="h-16 w-16 flex-shrink-0">
                                     {campaign.brand.image ? (
-                                        <AvatarImage src={campaign.brand.image} alt={`${campaign.brand.nick_name || campaign.brand.first_name}'s avatar`} />
+                                        <AvatarImage
+                                            src={campaign.brand.image || "/placeholder.svg"}
+                                            alt={`${campaign.brand.nick_name || campaign.brand.first_name}'s avatar`}
+                                        />
                                     ) : (
                                         <AvatarFallback className="bg-primary/10 text-primary">
                                             {getBrandInitials(campaign.brand.first_name, campaign.brand.last_name)}
                                         </AvatarFallback>
                                     )}
                                 </Avatar>
-                                <div className="flex-1">
-                                    <h3 className="text-lg font-semibold">
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="text-lg font-semibold break-words">
                                         {campaign.brand.nick_name ||
-                                            `${campaign.brand.first_name} ${campaign.brand.last_name || ''}`.trim()}
+                                            `${campaign.brand.first_name} ${campaign.brand.last_name || ""}`.trim()}
                                     </h3>
                                     <a
                                         href={`mailto:${campaign.brand.email}`}
-                                        className="block truncate text-sm text-muted-foreground underline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary"
+                                        className="block text-sm text-muted-foreground underline-offset-2 hover:underline break-all"
                                     >
                                         {campaign.brand.email}
                                     </a>
                                     {campaign.brand.about && (
-                                        <p className="mt-2 text-sm text-muted-foreground">{campaign.brand.about}</p>
+                                        <p className="mt-2 text-sm text-muted-foreground break-words">{campaign.brand.about}</p>
                                     )}
                                 </div>
                             </div>
@@ -246,9 +276,7 @@ export default function BrandCampaignDetails() {
                         <CardContent className="space-y-4 text-sm">
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Campaign ID</span>
-                                <Badge variant="outline" aria-label={`Campaign ID ${campaign.id}`}>
-                                    #{campaign.id}
-                                </Badge>
+                                <Badge variant="outline">#{campaign.id}</Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Budget</span>
@@ -256,34 +284,23 @@ export default function BrandCampaignDetails() {
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Categories</span>
-                                <Badge variant="secondary" aria-label={`Categories: ${campaign.categories}`}>
-                                    {campaign.categories}
-                                </Badge>
+                                <Badge variant="secondary">{campaign.categories}</Badge>
                             </div>
                             <Separator />
                             <div className="space-y-2">
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-start">
                                     <span className="text-muted-foreground">Created</span>
-                                    <time dateTime={campaign.created_at}>{formatDate(campaign.created_at)}</time>
+                                    <span className="text-right">{formatDate(campaign.created_at)}</span>
                                 </div>
-                                <div className="flex justify-between">
+                                <div className="flex justify-between items-start">
                                     <span className="text-muted-foreground">Last Updated</span>
-                                    <time dateTime={campaign.updated_at}>{formatDate(campaign.updated_at)}</time>
+                                    <span className="text-right">{formatDate(campaign.updated_at)}</span>
                                 </div>
                             </div>
                         </CardContent>
                     </Card>
-
-                    <div className="space-y-3">
-                        <Button className="w-full" size="lg" type="button" aria-label="Apply for campaign">
-                            Apply for Campaign
-                        </Button>
-                        <Button variant="outline" className="w-full" type="button" aria-label="Contact the brand">
-                            Contact Brand
-                        </Button>
-                    </div>
-                </aside>
-            </section>
+                </div>
+            </div>
         </main>
     )
 }
