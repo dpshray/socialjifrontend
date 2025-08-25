@@ -6,15 +6,15 @@ import {Badge} from "@/components/ui/badge"
 import {Input} from "@/components/ui/input"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import type {Campaign, CampaignFormData} from "@/types/campaigns"
-import {Eye, Plus, Search, Sparkles, Target} from "lucide-react"
+import {Eye, Loader2, Plus, Search, Sparkles, Target} from "lucide-react"
 import {CampaignForm} from "@/components/form/campaign-form"
 import campaignService from "@/services/campaign.service"
-import {CampaignCard} from "@/components/card/brand/campaigns-card"
+import {CampaignCard} from "@/components/card/campaigns/campaigns-card"
 import {toast} from "sonner"
 import CustomPagination from "@/components/Pagiantion/pagination"
 import {DeleteModal} from "@/components/modal/delete-modal"
 import {CampaignCardSkeleton} from "@/components/Skeleton/campaign-card-skeleton"
-import {useRouter} from "next/navigation";
+import {useRouter} from "next/navigation"
 
 export default function BrandCampaignsPage() {
     const [activeTab, setActiveTab] = useState<string>("overview")
@@ -26,45 +26,12 @@ export default function BrandCampaignsPage() {
     const [loading, setLoading] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [selectedCampaignId, setSelectedCampaignId] = useState<number | null>(null)
+    const [isFetching, setIsFetching] = useState(false)
     const router = useRouter()
-
-    const handleFormSubmit = async (data: CampaignFormData) => {
-        setLoading(true)
-        const formData = new FormData()
-        formData.append("title", data.title)
-        formData.append("description", data.description)
-        formData.append("categories", data.categories)
-        formData.append("eligibility", data.eligibility)
-        formData.append("requirement", data.requirement)
-        formData.append("price", String(data.price))
-        if (data.tags && Array.isArray(data.tags)) {
-            data.tags.forEach(tag => formData.append("tags[]", String(tag)))
-        }
-        formData.append("image", data.image[0])
-        console.log("FormData entries:")
-        for (const [key, value] of formData.entries()) {
-            console.log(key, value)
-        }
-        try {
-            if (editingCampaign) {
-                await campaignService.updateCampaign(editingCampaign.id, formData)
-                toast.success("Successfully updated campaign")
-            } else {
-                const response = await campaignService.createCampaign(formData)
-                if (response) toast.success("Successfully created campaign")
-            }
-            setEditingCampaign(null)
-            setActiveTab("overview")
-            await fetchCampaigns()
-        } catch (error) {
-            console.error("Error saving campaign:", error)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const fetchCampaigns = useCallback(async () => {
         setLoading(true)
+        setIsFetching(true)
         try {
             const params = {per_page: 10, page: currentPage}
             const response = await campaignService.getCampaigns(params)
@@ -72,9 +39,10 @@ export default function BrandCampaignsPage() {
             setCurrentPage(response?.current_page || 1)
             setTotalPages(response?.last_page || 1)
         } catch (error) {
-            console.error("Error fetching campaigns:", error)
+            console.error(error)
         } finally {
             setLoading(false)
+            setIsFetching(false)
         }
     }, [currentPage])
 
@@ -84,14 +52,13 @@ export default function BrandCampaignsPage() {
 
     const handlePageChange = (page: number) => setCurrentPage(page)
     const handleEditCampaign = (campaign: Campaign) => {
-        setEditingCampaign(campaign);
+        setEditingCampaign(campaign)
         setActiveTab("create")
     }
     const openDeleteModal = (campaignId: number) => {
-        setSelectedCampaignId(campaignId);
+        setSelectedCampaignId(campaignId)
         setIsModalOpen(true)
     }
-
     const handleDeleteConfirmed = async () => {
         if (!selectedCampaignId) return
         setLoading(true)
@@ -100,20 +67,44 @@ export default function BrandCampaignsPage() {
             if (response) toast.success(response?.message || "Successfully deleted campaign")
             await fetchCampaigns()
         } catch (error) {
-            console.error("Error deleting campaign:", error)
+            console.error(error)
         } finally {
             setIsModalOpen(false)
             setSelectedCampaignId(null)
             setLoading(false)
         }
     }
-
     const handleViewCampaign = (campaign: Campaign) => {
         router.push(`/brand/campaigns/${campaign.id}`)
     }
     const handleCancel = () => {
-        setEditingCampaign(null);
+        setEditingCampaign(null)
         setActiveTab("overview")
+    }
+
+    const handleFormSubmit = async (data: CampaignFormData) => {
+        setLoading(true)
+        try {
+            const payload = {
+                ...data,
+                image: data.image instanceof File ? data.image : null,
+            }
+            if (editingCampaign) {
+                await campaignService.updateCampaign(editingCampaign.id, payload)
+                toast.success("Successfully updated campaign")
+            } else {
+                await campaignService.createCampaign(payload)
+                toast.success("Successfully created campaign")
+            }
+            setEditingCampaign(null)
+            setActiveTab("overview")
+            await fetchCampaigns()
+        } catch (error) {
+            console.error(error)
+            toast.error("Failed to save campaign")
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -129,17 +120,19 @@ export default function BrandCampaignsPage() {
                             </Badge>
                         </div>
                         <h1 className="text-4xl font-bold text-slate-900 mb-2">Campaigns</h1>
-                        <p className="text-lg text-slate-600">Create, manage, and track your influencer marketing
-                            campaigns</p>
+                        <p className="text-lg text-slate-600">
+                            Create, manage, and track your influencer marketing campaigns
+                        </p>
                     </div>
                     <Button
                         onClick={() => {
-                            setEditingCampaign(null);
+                            setEditingCampaign(null)
                             setActiveTab("create")
                         }}
                         className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
                     >
-                        <Plus className="w-4 h-4 mr-2"/>Create Campaign
+                        <Plus className="w-4 h-4 mr-2"/>
+                        Create Campaign
                     </Button>
                 </div>
 
@@ -147,32 +140,48 @@ export default function BrandCampaignsPage() {
                     <TabsList className="glass-card p-1 h-12 border-0">
                         <TabsTrigger value="overview"
                                      className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                            <Eye className="w-4 h-4 mr-2"/>Overview
+                            <Eye className="w-4 h-4 mr-2"/>
+                            Overview
                         </TabsTrigger>
                         <TabsTrigger value="create"
                                      className="h-10 px-6 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                            <Plus className="w-4 h-4 mr-2"/>{editingCampaign ? "Edit Campaign" : "Create Campaign"}
+                            <Plus className="w-4 h-4 mr-2"/>
+                            {editingCampaign ? "Edit Campaign" : "Create Campaign"}
                         </TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="overview" className="space-y-6">
-                        <div className="glass-card p-6 border-0">
-                            <div className="relative flex-1">
-                                <Search
-                                    className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400"/>
-                                <Input
-                                    placeholder="Search campaigns..."
-                                    value={searchTerm}
-                                    onChange={e => setSearchTerm(e.target.value)}
-                                    className="pl-12 text-base border-slate-200 focus:border-violet-300 focus:ring-violet-200"
-                                    disabled={loading}
-                                />
+                        <div className="bg-white rounded-lg p-4 md:p-0 mb-8">
+                            <div className="flex flex-col lg:flex-row gap-4">
+                                <div className="relative flex-1">
+                                    <Search
+                                        className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 pointer-events-none"/>
+                                    <Input
+                                        placeholder="Search campaigns, brands, or keywords..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="pl-12 pr-10 text-base border-slate-300 focus:border-violet-500 focus:ring-violet-300"
+                                        aria-label="Search campaigns"
+                                    />
+                                    {isFetching && <Loader2
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-violet-600 animate-spin"/>}
+                                </div>
+                                <Button
+                                    className="px-6 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 flex items-center justify-center gap-2"
+                                    onClick={fetchCampaigns}
+                                    disabled={isFetching}
+                                >
+                                    {isFetching ? <Loader2 className="w-4 h-4 animate-spin"/> :
+                                        <Search className="w-4 h-4"/>}
+                                    {isFetching ? "Loading..." : "Search"}
+                                </Button>
                             </div>
                         </div>
-                        <div className="space-y-6 glass-card p-6 border-0 gap-6">
+
+                        <div className="space-y-6 glass-card border-0 gap-6">
                             {loading
                                 ? Array.from({length: 3}).map((_, i) => <CampaignCardSkeleton key={i}/>)
-                                : campaigns.map(c => (
+                                : campaigns.map((c) => (
                                     <CampaignCard
                                         key={c.id}
                                         campaign={c}
@@ -180,9 +189,9 @@ export default function BrandCampaignsPage() {
                                         onDeleteAction={openDeleteModal}
                                         onViewAction={handleViewCampaign}
                                     />
-                                ))
-                            }
+                                ))}
                         </div>
+
                         <div className="flex justify-center">
                             <CustomPagination currentPage={currentPage} totalPages={totalPages}
                                               onPageChangeAction={handlePageChange}/>

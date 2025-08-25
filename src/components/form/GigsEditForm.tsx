@@ -16,7 +16,6 @@ import FileInputField from "@/components/field/FileInputField";
 import MultiSelectField from "@/components/field/MultiSelectInputField";
 import {InferType} from "yup";
 import {useRouter} from "next/navigation";
-import Image from "next/image";
 import {Badge} from "@/components/ui/badge";
 import {AlertCircle, DollarSign, ImageIcon, Star, X} from "lucide-react";
 import {tagsService} from "@/services/tagsService";
@@ -210,9 +209,10 @@ const GigEditForm: React.FC<GigFormProps> = ({
                 formData.append("currency_id[]", String(tier.currency_id));
             });
 
-            if (data.image && Array.isArray(data.image)) {
-                formData.append("image", data.image[0]);
+            if (data.image) {
+                formData.append("image", data.image as any);
             }
+
             for (const pair of formData.entries()) {
                 console.log(`${pair}: ${pair}`);
             }
@@ -314,22 +314,15 @@ const GigEditForm: React.FC<GigFormProps> = ({
                         </div>
                         <p className="text-gray-600">Showcase your best work. You can upload images or videos.</p>
                         <FileInputField
-                            {...register("image")}
-                            label="Upload File"
+                            label="Gigs Image"
+                            placeholder=" Upload image"
                             accept="image/*"
-                            className="w-[70%]"
+                            error={errors.image?.message as string}
+                            onChangeAction={(files: File[]) => {
+                                const file = files[0] || null;
+                                setValue("image", file);
+                            }}
                         />
-                        {imagePreview && (
-                            <div className="flex items-center space-x-2">
-                                <Image
-                                    src={imagePreview}
-                                    alt={defaultValues?.title as string}
-                                    width={100}
-                                    height={100}
-                                    className="w-16 h-16 object-cover rounded-md"
-                                />
-                            </div>
-                        )}
                     </div>
                     <div className="space-y-6">
                         <div className="flex items-center gap-3">
@@ -465,7 +458,7 @@ const GigEditForm: React.FC<GigFormProps> = ({
                                                     />
                                                     <TextInputField
                                                         label="Delivery Time"
-                                                        type="datetime-local"
+                                                        type="date"
                                                         placeholder="Enter Delivery Time"
                                                         {...register(`pricing.${index}.delivery_time` as const)}
                                                         errors={errors}

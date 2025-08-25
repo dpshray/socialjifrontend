@@ -149,8 +149,7 @@ export default function BrandCampaignDetails() {
                                                 <div className="relative aspect-video w-full">
                                                     <Image
                                                         fill
-                                                        width={200}
-                                                        height={200}
+                                                        sizes="100vw"
                                                         src={media.original_url || "/placeholder.svg"}
                                                         alt={media.name}
                                                         className="object-cover w-full h-full"

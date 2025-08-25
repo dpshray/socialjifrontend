@@ -1,17 +1,20 @@
 'use client'
+
 import React, {useState} from "react"
 import {Label} from "@/components/ui/label"
+import {Input} from "@/components/ui/input"
 import {cn} from "@/lib/utils"
-import {Input} from "../ui/input"
 
 interface FileInputFieldProps {
-    name: string
+    name?: string
     label?: string
     placeholder?: string
     required?: boolean
+    multiple?: boolean
     className?: string
     error?: string
     accept?: string
+    onChangeAction?: (files: File[]) => void
 
     [key: string]: any
 }
@@ -24,21 +27,29 @@ export default function FileInputField({
                                            className,
                                            error,
                                            accept,
+                                           multiple = false,
+                                           onChangeAction,
                                            ...props
                                        }: FileInputFieldProps) {
-    const [selectedFile, setSelectedFile] = useState<File | null>(null)
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+    const [previews, setPreviews] = useState<string[]>([])
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files ? e.target.files[0] : null
-        setSelectedFile(file)
+        if (!e.target.files) return
+        const files = Array.from(e.target.files)
+        setSelectedFiles(files)
+        console.log(' Files Fetched from fileInput Field', files)
+        if (onChangeAction) onChangeAction(files)
 
+        const urls = files.map(file => URL.createObjectURL(file))
+        setPreviews(urls)
     }
 
     const errorId = `${name}-error`
     const hasError = !!error
 
     return (
-        <div className="space-y-2 w-full">
+        <div className="space-y-2">
             {label && (
                 <Label
                     htmlFor={name}
@@ -53,9 +64,10 @@ export default function FileInputField({
                 id={name}
                 name={name}
                 type="file"
+                multiple={multiple}
+                accept={accept}
                 className={cn(
-                    'w-full',
-                    ' px-0 py-0 file:border-r file:mr-2 file:* file:h-full  file:pr-1.5 file:pl-1.5 file:rounded-none file:bg-gray-200 file:text-sm file:font-medium file:text-gray-700 file:border-gray-300 hover:file:bg-gray-100 focus-visible:file:outline-none focus-visible:file:ring-0 focus-visible:file:ring-offset-0 focus-visible:file:ring-offset-0',
+                    'px-0 py-0 file:border-r file:mr-2 file:h-full file:pr-1.5 file:pl-1.5 file:rounded-none file:bg-gray-200 file:text-sm file:font-medium file:text-gray-700 file:border-gray-300 hover:file:bg-gray-100 focus-visible:file:outline-none focus-visible:file:ring-0 focus-visible:file:ring-offset-0',
                     hasError && "border-red-500 focus-visible:ring-red-500",
                     className
                 )}
@@ -69,17 +81,31 @@ export default function FileInputField({
                 {...props}
             />
 
-            {selectedFile && (
-                <p className="text-sm text-gray-500 mt-1">
-                    {selectedFile.name}
-                    { selectedFile.size > 1024 * 1024 && (
-                        <span className="text-red-500"> (File size limit: 1MB)</span>
-                    )}
-                </p>
+            {previews.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                    {previews.map((src, idx) => (
+                        <img
+                            key={idx}
+                            src={src}
+                            alt={selectedFiles[idx].name}
+                            className="h-20 w-20 object-cover rounded"
+                        />
+                    ))}
+                </div>
             )}
 
-
-
+            {selectedFiles.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-1">
+                    {selectedFiles.map((file) => (
+                        <p
+                            key={file.name + file.lastModified}
+                            className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded"
+                        >
+                            {file.name}
+                        </p>
+                    ))}
+                </div>
+            )}
 
             {hasError && (
                 <p id={errorId} className="text-sm text-red-500 mt-1">
