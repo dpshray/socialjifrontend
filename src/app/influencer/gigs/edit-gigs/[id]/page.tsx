@@ -29,13 +29,18 @@ export default function EditGigPage() {
                         ? data.pricings.map((pricing: any) => ({
                             pricing_tier_id: pricing.id,
                             price: parseFloat(pricing.price),
-                            delivery_time: pricing.delivery_time,
+                            // delivery_time: pricing.delivery_time,
+                            delivery_time: pricing.delivery_time
+                                ? pricing.delivery_time.split(" ")[0]
+                                : "",
                             tier_description: pricing.description,
                             tier_requirement: pricing.requirement,
                             currency_id: pricing.currency.id,
                         }))
                         : [],
                 };
+
+                console.log('formattedGigData', formattedGigData)
                 setGigData(formattedGigData);
             } catch (error: any) {
                 toast.error(error?.message || "Failed to fetch gig data");
