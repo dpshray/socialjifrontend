@@ -1,11 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 import Link from "next/link"
-import { Menu, Sparkles, X } from "lucide-react"
-import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import {Menu, Sparkles, X} from "lucide-react"
+import {usePathname} from "next/navigation"
+import {cn} from "@/lib/utils"
+import {Button} from "@/components/ui/button"
 
 interface NavLink {
     label: string
@@ -19,8 +19,10 @@ export default function Navbar() {
     const pathname = usePathname()
 
     const navLinks: NavLink[] = [
-        { label: "Insights", href: "/insights" },
-        { label: "Explore", href: "/explore" },
+        {label: "Insights", href: "/insights"},
+        {label: "Explore", href: "/explore"},
+        {label: "Contact", href: "/contact-us"},
+        {label: "FAQ", href: "/faq"}
     ]
 
     const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev)
@@ -79,7 +81,7 @@ export default function Navbar() {
                     {/* Desktop Menu */}
                     <div className="hidden lg:flex items-center gap-8">
                         <div className="flex gap-6 items-center">
-                            {navLinks.map(({ href, label }) => (
+                            {navLinks.map(({href, label}) => (
                                 <Link
                                     key={href}
                                     href={href}
@@ -91,7 +93,7 @@ export default function Navbar() {
                                     )}
                                 >
                                     {label}
-                                    {label === "Explore" && <Sparkles className="w-4 h-4" />}
+                                    {label === "Explore" && <Sparkles className="w-4 h-4"/>}
                                 </Link>
                             ))}
                         </div>
@@ -112,7 +114,7 @@ export default function Navbar() {
                     {/* Tablet Menu */}
                     <div className="hidden md:flex lg:hidden items-center gap-4">
                         <div className="flex gap-4 items-center">
-                            {navLinks.map(({ href, label }) => (
+                            {navLinks.map(({href, label}) => (
                                 <Link
                                     key={href}
                                     href={href}
@@ -123,7 +125,7 @@ export default function Navbar() {
                                             : "text-muted-foreground hover:text-foreground"
                                     )}
                                 >
-                                    {label === "Explore" && <Sparkles className="w-4 h-4" />}
+                                    {label === "Explore" && <Sparkles className="w-4 h-4"/>}
                                     {label}
                                 </Link>
                             ))}
@@ -151,7 +153,7 @@ export default function Navbar() {
                             aria-label="Toggle menu"
                             className="h-8 w-8 p-0"
                         >
-                            {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                            {isMobileMenuOpen ? <X className="w-4 h-4"/> : <Menu className="w-4 h-4"/>}
                         </Button>
                     </div>
                 </div>
@@ -167,7 +169,7 @@ export default function Navbar() {
             >
                 <div className="container mx-auto px-4 py-4 space-y-6 sm:px-6 sm:py-6">
                     <div className="space-y-4">
-                        {navLinks.map(({ href, label }) => (
+                        {navLinks.map(({href, label}) => (
                             <Link
                                 key={href}
                                 href={href}
@@ -179,7 +181,7 @@ export default function Navbar() {
                                         : "text-muted-foreground hover:text-foreground"
                                 )}
                             >
-                                {label === "Explore" && <Sparkles className="w-4 h-4" />}
+                                {label === "Explore" && <Sparkles className="w-4 h-4"/>}
                                 {label}
                             </Link>
                         ))}

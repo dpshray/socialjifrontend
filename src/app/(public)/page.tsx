@@ -15,8 +15,8 @@ import {
 import Image from 'next/image'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
-import HomeHeroSection from '@/components/landing/page'
-import {OpportunityCard} from '@/components/landing'
+import HomeHeroSection from '@/components/page/page'
+import {OpportunityCard} from '@/components/page'
 import {motion} from 'framer-motion'
 
 

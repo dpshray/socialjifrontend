@@ -74,7 +74,8 @@ class GigsService extends HttpServices {
                 url: `/influencer/gig/${id}`,
                 data,
                 config: {
-                    auth: true
+                    auth: true,
+                    file: true
                 }
             });
             return result?.data;

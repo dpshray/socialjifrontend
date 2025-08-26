@@ -17,9 +17,9 @@ const Footer = () => {
         {label: "Contact Us", link: "#"},
     ]
     const legal = [
-        {label: "Privacy Policy", link: "#"},
+        {label: "Privacy Policy", link: "/privacy-policy"},
         {label: "Licensing", link: "#"},
-        {label: "Terms & Conditions", link: "#"},
+        {label: "Terms & Conditions", link: "/terms-conditions"},
     ]
     const downloads = [
         {label: "iOS", link: "#"},
@@ -141,18 +141,17 @@ const Footer = () => {
                         <div className="text-center sm:text-left">
                             <p className="text-sm text-gray-600">© 2025 SocialJi, Inc. All rights reserved.</p>
                             <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-2">
-                                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-                                    Terms of Service
-                                </Link>
-                                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-                                    Privacy Policy
-                                </Link>
-                                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-                                    Cookies Policy
-                                </Link>
-                                <Link href="#" className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-                                    Accessibility
-                                </Link>
+                                {
+                                    legal.map((item, index) => (
+                                        <Link
+                                            key={index}
+                                            href={item.link}
+                                            className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
+                                            {item.label}
+                                        </Link>
+                                    ))
+
+                                }
                             </div>
                         </div>
 
