@@ -1,15 +1,13 @@
 'use client';
 
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {SearchIcon} from 'lucide-react';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
-import SelectInputField from '@/components/field/SelectField';
 import {brandService} from '@/services/brand.service';
 import {useDebounce} from '@/hooks/useDebounce';
 import CustomPagination from '@/components/Pagiantion/pagination';
-import {InfluencerProfileCard, InfluencerProfileCardSkeleton,} from '@/app/brand/hire-influencers/influencer-card';
-
+import {InfluencerProfileCard, InfluencerProfileCardSkeleton} from '@/app/brand/hire-influencers/influencer-card';
 import {useRouter} from "next/navigation";
 import {SocialProfile} from "@/types/common";
 
@@ -30,16 +28,6 @@ export default function GigSearchPage() {
     const [totalPages, setTotalPages] = useState(1);
     const debouncedSearchTerm = useDebounce(query, 500);
     const router = useRouter();
-    const categoryOptions = useMemo(
-        () => [
-            {label: 'All', value: '1'},
-            {label: 'Design', value: '2'},
-            {label: 'Development', value: '3'},
-            {label: 'Marketing', value: '4'},
-            {label: 'Writing', value: '5'},
-        ],
-        []
-    );
 
     const fetchGigs = useCallback(async () => {
         try {
@@ -76,29 +64,19 @@ export default function GigSearchPage() {
         setCurrentPage(1);
     };
 
-    const handleFilterChange = (value: string | number) => {
-        setCurrentPage(1);
-        setFilters((prev) => ({...prev, category: value}));
-    };
-
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
     const handleViewProfile = (id: number) => {
         router.push(`/brand/hire-influencers/${id}`);
-    }
-    return (
-        <main className="w-full min-h-screen p-4 md:p-6 max-w-7xl mx-auto" role="main">
-            <h1 className="text-2xl md:text-3xl font-semibold mb-6" tabIndex={-1}>
-                Search Gigs
-            </h1>
+    };
 
-            <form onSubmit={handleSubmit} role="search" aria-label="Search gigs form" className="space-y-6">
+    return (
+        <main className="w-full min-h-screen p-4 md:p-6 max-w-7xl mx-auto">
+            <h1 className="text-2xl md:text-3xl font-semibold mb-6">Search Gigs</h1>
+            <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="relative">
-                    <label htmlFor="search-input" className="sr-only">
-                        Search gigs
-                    </label>
                     <Input
                         id="search-input"
                         type="search"
@@ -106,72 +84,50 @@ export default function GigSearchPage() {
                         onChange={(e) => setQuery(e.target.value)}
                         placeholder="Search by title, tag, or influencer"
                         className="pr-28"
-                        aria-describedby="search-button"
                     />
                     <Button
                         type="submit"
-                        id="search-button"
                         className="absolute top-0 right-0 h-full rounded-l-none"
-                        aria-label="Submit search"
                     >
-                        <SearchIcon className="w-4 h-4 mr-1" aria-hidden="true"/>
+                        <SearchIcon className="w-4 h-4 mr-1"/>
                         Search
                     </Button>
                 </div>
-
-                <fieldset>
-                    <legend className="sr-only">Filter search results</legend>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                        <SelectInputField
-                            options={categoryOptions}
-                            placeholder="Category"
-                            aria-label="Category filter"
-                            value={filters.category || ''}
-                            onChangeAction={handleFilterChange}
-                        />
+                {query || Object.keys(filters).length > 0 ? (
+                    <div className="flex items-center justify-end gap-2">
+                        <Button onClick={handleClearFilters} variant="outline" className="flex items-center gap-2">
+                            Clear Filters
+                        </Button>
                     </div>
-                </fieldset>
-
-                {
-                    query || Object.keys(filters).length > 0 ? (
-                        <div className="flex items-center justify-end gap-2">
-                            <Button onClick={handleClearFilters} variant="outline" className="flex items-center gap-2">
-                                Clear Filters
-                            </Button>
-                        </div>
-                    ) : null
-                }
+                ) : null}
             </form>
-
-            <section aria-live="polite" aria-busy={loading} className="mt-10 space-y-4">
+            <section className="mt-10 space-y-4">
                 {loading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6" role="status">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                         {Array.from({length: 8}).map((_, index) => (
                             <InfluencerProfileCardSkeleton key={index}/>
                         ))}
                     </div>
                 )}
-
                 {!loading && influencers.length === 0 && (
                     <div className="min-h-[50vh] flex flex-col justify-center items-center space-y-4">
                         <p className="text-gray-500">No Creators found. Try adjusting your search.</p>
-                        <Button onClick={fetchGigs} aria-label="Try fetching gigs again">
-                            Try Again
-                        </Button>
+                        <Button onClick={fetchGigs}>Try Again</Button>
                     </div>
                 )}
-
                 {!loading && influencers.length > 0 && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                         {influencers.map((influencer) => (
-                            <InfluencerProfileCard key={influencer.id} influencer={influencer as any}
-                                                   onViewProfileAction={() => handleViewProfile(influencer.id)}/>
+                            <InfluencerProfileCard
+                                key={influencer.id}
+                                influencer={influencer as any}
+                                onViewProfileAction={() => handleViewProfile(influencer.id)}
+                            />
                         ))}
                     </div>
                 )}
             </section>
-
-            <nav aria-label="Pagination" className="mt-6 flex justify-center">
+            <nav className="mt-6 flex justify-center">
                 <CustomPagination
                     currentPage={currentPage}
                     totalPages={totalPages}

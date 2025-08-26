@@ -51,7 +51,7 @@ class CampaignService extends HttpsService {
         }
     }
 
-    async getInfluencerCampaigns(params?: { per_page?: number, page?: number }) {
+    async getInfluencerCampaigns(params?: { per_page?: number, page?: number, search?: string }) {
         try {
 
             const result: any = await this.getRequest({
@@ -70,8 +70,8 @@ class CampaignService extends HttpsService {
 
     async updateCampaign(id: number, data: any) {
         try {
-            const result: any = await this.putRequest({
-                url: `/campaign/${id}`,
+            const result: any = await this.postRequest({
+                url: `/update-campaign/${id}`,
                 data,
                 config: {
                     auth: true,

@@ -31,3 +31,7 @@ export function formatCompactNumber(value: number): string {
     }).format(value)
 }
 
+
+
+export const getBrandInitials = (firstName: string, lastName?: string) =>
+    lastName ? `${firstName[0]}${lastName[0]}`.toUpperCase() : firstName.slice(0, 2).toUpperCase()

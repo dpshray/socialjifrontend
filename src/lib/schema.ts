@@ -54,7 +54,8 @@ export const gigsSchema = yup.object().shape({
     requirements: yup.array().of(yup.string().required()).min(1),
     tags: yup.array().of(yup.number()).min(1, 'At least one tag is required'),
     status: yup.string().oneOf(['0', '1']).required('Status is required'),
-    image: yup.mixed().required('Image is required'),
+    image: yup.mixed().required('Image is required')
+    ,
     pricing: yup.array().of(
         yup.object().shape({
             pricing_tier_id: yup.number().required(),
@@ -63,6 +64,28 @@ export const gigsSchema = yup.object().shape({
             tier_description: yup.string().required(),
             tier_requirement: yup.string().required(),
             currency_id: yup.number().required(),
+        })
+    ),
+});
+
+export const gigsUpdateSchema = yup.object().shape({
+    id: yup.number().required("Gig ID is required"),
+    title: yup.string().required("Title is required"),
+    category: yup.string().required("Category is required"),
+    description: yup.string().required("Description is required"),
+    features: yup.array().of(yup.string().required("Feature is required")).min(1, "At least one feature is required"),
+    requirements: yup.array().of(yup.string().required("Requirement is required")).min(1, "At least one requirement is required"),
+    tags: yup.array().of(yup.number()).min(1, "At least one tag is required"),
+    status: yup.string().oneOf(["0", "1"]).required("Status is required"),
+    image: yup.mixed().notRequired(),
+    pricing: yup.array().of(
+        yup.object().shape({
+            pricing_tier_id: yup.number().required("Pricing tier is required"),
+            price: yup.number().required("Price is required"),
+            delivery_time: yup.string().required("Delivery time is required"),
+            tier_description: yup.string().required("Tier description is required"),
+            tier_requirement: yup.string().required("Tier requirement is required"),
+            currency_id: yup.number().required("Currency is required"),
         })
     ),
 });

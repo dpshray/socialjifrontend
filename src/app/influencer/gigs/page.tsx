@@ -9,10 +9,7 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import SelectInputField from "@/components/field/SelectField";
 import CustomPagination from "@/components/Pagiantion/pagination";
-import CategoryNav from "@/components/header/category-nav";
 import {DeleteModal} from "@/components/modal/delete-modal";
-
-import {categoriesHeader} from "@/data";
 import {gigsService} from "@/services/gigs.service";
 import globalService from "@/services/GlobalService";
 import {TagModal} from "@/components/modal/TagModal";
@@ -77,12 +74,12 @@ export default function GigsPage() {
         setIsDeleting(true);
         try {
             console.log('selectedGigId:', selectedGigId);
-           const response = await gigsService.DeleteGig(selectedGigId);
-           if (response) {
-               toast.success(response?.message || "Successfully deleted gig");
-               console.log('Response from DeleteGig:', response);
-               await fetchGigs();
-           }
+            const response = await gigsService.DeleteGig(selectedGigId);
+            if (response) {
+                toast.success(response?.message || "Successfully deleted gig");
+                console.log('Response from DeleteGig:', response);
+                await fetchGigs();
+            }
             setShowDeleteModal(false);
             setSelectedGigId(null);
         } catch (error) {
@@ -148,9 +145,6 @@ export default function GigsPage() {
                     </Button>
                 </div>
             </div>
-
-            <CategoryNav categories={categoriesHeader}/>
-
             <div className="flex flex-col md:flex-row justify-between gap-4">
                 <div className="flex gap-4">
                     <SelectInputField
