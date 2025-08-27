@@ -21,6 +21,21 @@ class GlobalService extends HttpsService {
         }
     };
 
+    profileUpdate = async (data: any) => {
+        try {
+            return await this.postRequest({
+                url: `/update-profile`,
+                data,
+                config: {
+                    auth: true,
+                    file: true
+                }
+            });
+        } catch (error: any) {
+            console.error("Error updating profile from profileUpdate:", error?.response?.data || error.message);
+            throw error;
+        }
+    }
 
 }
 

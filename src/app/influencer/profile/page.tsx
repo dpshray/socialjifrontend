@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage,} from "@/components/ui/avatar";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Separator} from "@/components/ui/separator";
@@ -10,13 +10,16 @@ import {Badge} from "@/components/ui/badge";
 import {Progress} from "@/components/ui/progress";
 import {Button} from "@/components/ui/button";
 import {SocialProfileCard} from "@/components/card/SocialMediaCard";
-import {SocialStatsCard} from "@/components/card/SocialStatsCard";
-import {Skeleton} from "@/components/ui/skeleton";
+import {SocialProfileCardSkeleton} from "@/components/Skeleton/SocialProfileCardSkeleton";
 import {AiFillProject} from "react-icons/ai";
 import useAuth from "@/hooks/useAuth";
-import {Award, BarChart3, Clock, Globe, Mail, Plus, Star, User} from "lucide-react";
-import {SocialProfileCardSkeleton} from "@/components/Skeleton/SocialProfileCardSkeleton";
+import {Award, BarChart3, Clock, Globe, Mail, Plus, Star, User,} from "lucide-react";
 import {ProfileForm} from "@/components/form/brand-profile-form";
+import globalService from "@/services/GlobalService";
+import {toast} from "sonner";
+import {SocialStatsCard} from "@/components/card/SocialStatsCard";
+import {reviewsService} from "@/services/reviewsService";
+import {Review, ReviewInfluencerCard} from "@/app/influencer/reviews/review-card";
 
 export interface SocialPlatform {
     name: string;
@@ -53,20 +56,40 @@ export default function InfluencerProfile() {
     const {user, loading} = useAuth();
     const router = useRouter();
     const isLoading = loading || !user || !user.social_profiles;
+    const [reviews, setReviews] = useState<Review[]>([]);
 
     const tabs = [
         {label: "Overview", value: "overview"},
         {label: "Social Profiles", value: "social-profiles"},
         {label: "Reviews", value: "reviews"},
-        {label: "Edit Profile", value: "edit-profile"}
+        {label: "Edit Profile", value: "edit-profile"},
     ];
 
-    const handleSubmit = (data: any) => {
-        console.log("Submit", data);
+    const handleSubmit = async (data: any) => {
+        try {
+            const response = await globalService.profileUpdate(data);
+            console.log('updated profile', response);
+            if (response) {
+                toast.success(response?.message || "Profile updated successfully");
+            }
+        } catch {
+            toast.error("Failed to update profile");
+        }
     };
 
+    useEffect(() => {
+        const getAllReviews = async () => {
+            const response = await reviewsService.getAllReview();
+            if (response) {
+                const reviewData = response.review_list?.data || [];
+                setReviews(reviewData);
+            }
+        };
+        getAllReviews();
+    }, []);
+
     const handleCancel = () => {
-        console.log("Cancel");
+        router.refresh();
     };
 
     return (
@@ -77,7 +100,7 @@ export default function InfluencerProfile() {
                     <div className="flex items-center gap-6">
                         <div className="relative">
                             {isLoading ? (
-                                <Skeleton className="w-24 h-24 rounded-full"/>
+                                <div className="w-24 h-24 rounded-full bg-slate-300 animate-pulse"/>
                             ) : (
                                 <Avatar className="w-20 h-20 sm:w-24 sm:h-24 border-4 border-white shadow-lg">
                                     <AvatarImage src={user?.image || "/placeholder.svg"}/>
@@ -97,9 +120,9 @@ export default function InfluencerProfile() {
                         <div>
                             {isLoading ? (
                                 <div className="space-y-2">
-                                    <Skeleton className="h-6 w-48"/>
-                                    <Skeleton className="h-4 w-32"/>
-                                    <Skeleton className="h-4 w-40"/>
+                                    <div className="h-6 w-48 bg-slate-300 animate-pulse rounded"/>
+                                    <div className="h-4 w-32 bg-slate-300 animate-pulse rounded"/>
+                                    <div className="h-4 w-40 bg-slate-300 animate-pulse rounded"/>
                                 </div>
                             ) : (
                                 <>
@@ -112,8 +135,10 @@ export default function InfluencerProfile() {
                                             className="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-3 py-1">
                                             {user?.roles}
                                         </Badge>
-                                        <Badge variant="outline"
-                                               className="border-green-200 text-green-700 bg-green-50 flex items-center gap-1">
+                                        <Badge
+                                            variant="outline"
+                                            className="border-green-200 text-green-700 bg-green-50 flex items-center gap-1"
+                                        >
                                             <div className="w-2 h-2 bg-green-500 rounded-full"/>
                                             Verified
                                         </Badge>
@@ -138,16 +163,20 @@ export default function InfluencerProfile() {
                         </div>
                     </div>
                     <div className="flex gap-3 flex-wrap">
-                        <Button variant="outline" className="border-slate-300 bg-transparent"
-                                onClick={() => router.push("/influencer/campaign")}>
-                            <AiFillProject className="w-4 h-4 mr-2"/>
-                            Projects
+                        <Button
+                            variant="outline"
+                            className="border-slate-300 bg-transparent"
+                            onClick={() => router.push("/influencer/gigs")}
+                        >
+                            <AiFillProject className="w-4 h-4"/>
+                            Gigs
                         </Button>
                         <Button
                             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 shadow-lg"
-                            onClick={() => router.push("/influencer/campaign")}>
-                            <Plus className="w-4 h-4 mr-2"/>
-                            Create Campaign
+                            onClick={() => router.push("/influencer/campaign")}
+                        >
+                            <Plus className="w-4 h-4"/>
+                            View Campaign
                         </Button>
                     </div>
                 </div>
@@ -159,8 +188,11 @@ export default function InfluencerProfile() {
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
                     <TabsList className="grid w-full grid-cols-5 bg-slate-50 rounded-xl p-1">
                         {tabs.map((tab) => (
-                            <TabsTrigger key={tab.value} value={tab.value}
-                                         className="rounded capitalize cursor-pointer data-[state=active]:bg-navyBlue/60 data-[state=active]:text-white data-[state=active]:shadow-sm">
+                            <TabsTrigger
+                                key={tab.value}
+                                value={tab.value}
+                                className="rounded capitalize cursor-pointer data-[state=active]:bg-navyBlue/60 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                            >
                                 {tab.label}
                             </TabsTrigger>
                         ))}
@@ -178,7 +210,7 @@ export default function InfluencerProfile() {
                             </CardHeader>
                             <CardContent className="space-y-6">
                                 {isLoading ? (
-                                    <Skeleton className="h-48 w-full rounded-xl"/>
+                                    <div className="h-48 w-full rounded-xl bg-slate-300 animate-pulse"/>
                                 ) : (
                                     <>
                                         <div className="space-y-4">
@@ -206,8 +238,10 @@ export default function InfluencerProfile() {
                                                 <h4 className="font-semibold text-slate-900">Profile Completion</h4>
                                                 <span className="text-sm font-medium text-slate-700">92%</span>
                                             </div>
-                                            <Progress value={92}
-                                                      className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-purple-600 [&>div]:to-blue-600"/>
+                                            <Progress
+                                                value={92}
+                                                className="h-2 [&>div]:bg-gradient-to-r [&>div]:from-purple-600 [&>div]:to-blue-600"
+                                            />
                                             <p className="text-xs text-slate-500 mt-2">Excellent profile
                                                 completeness</p>
                                         </div>
@@ -282,8 +316,17 @@ export default function InfluencerProfile() {
                     </Card>
                 </TabsContent>
 
+                <TabsContent value="reviews" className="space-y-4">
+                    {reviews.length === 0 ? (
+                        <div>No reviews available.</div>
+                    ) : (
+                        reviews.map((review, index) => <ReviewInfluencerCard review={review} key={index}/>)
+                    )}
+                </TabsContent>
+
                 <TabsContent value="edit-profile">
-                    <ProfileForm editingProfile={user} onSubmit={handleSubmit} onCancel={handleCancel}/>
+                    <ProfileForm editingProfile={user as any} onSubmitAction={handleSubmit}
+                                 onCancelAction={handleCancel}/>
                 </TabsContent>
             </Tabs>
         </div>

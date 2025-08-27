@@ -366,26 +366,36 @@ export default function GlobalHeader({
                     />
                 </div>
                 <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
-                    <SheetTrigger asChild className="md:hidden">
-                        <Button variant="ghost" size="icon" aria-label="Toggle menu">
-                            <Menu className="h-6 w-6 text-foreground"/>
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="right" className="w-80">
+                    <div className={' flex items-center space-x-3 md:hidden '}>
+                        {finalIconButtons.map((button, index) => (
+                            <IconButton key={`mobile-${button.label}-${index}`} {...button}
+                                        maxNotifications={maxNotifications}/>
+                        ))}
+                        <UserAvatar
+                            user={user}
+                            dropdownItems={dropdownItems}
+                            onLogout={handleLogout}
+                            showUserStatus={showUserStatus}
+                        />
+                        <SheetTrigger asChild className="md:hidden">
+                            <Button variant="ghost" size="icon" aria-label="Toggle menu">
+                                <Menu className="h-6 w-6 text-foreground"/>
+                            </Button>
+                        </SheetTrigger>
+                    </div>
+                    <SheetContent side="right" className="w-80 p-4">
                         <div className="flex flex-col gap-4 mt-8">
                             <div className="flex items-center gap-3 pb-4 border-b">
-                                {finalIconButtons.map((button, index) => (
-                                    <IconButton key={`mobile-${button.label}-${index}`} {...button}
-                                                maxNotifications={maxNotifications}/>
-                                ))}
-                                <UserAvatar
-                                    user={user}
-                                    dropdownItems={dropdownItems}
-                                    onLogout={handleLogout}
-                                    showUserStatus={showUserStatus}
+                                <Image
+                                    src={logoSrc || "/placeholder.svg"}
+                                    alt="Logo"
+                                    width={56}
+                                    height={56}
+                                    className="w-fit h-12 object-cover"
+                                    priority
                                 />
                             </div>
-                            <nav className="space-y-2">
+                            <nav className="space-y-2 ">
                                 {navItems.map(({label, href, disabled}) => (
                                     <Link
                                         key={label}

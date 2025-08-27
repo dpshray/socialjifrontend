@@ -55,6 +55,22 @@ class ReviewsService extends HttpServices {
         }
     }
 
+    async getAllReview(params?: ReviewQueryParams) {
+        try {
+            const response = await this.getRequest({
+                url: "/infuencer-gig-reviews",
+                config: {
+                    auth: true,
+                    params,
+                }
+            })
+            return response?.data;
+        } catch (error: any) {
+            console.error("Error fetching reviews from getAllReview:", error);
+            throw error;
+        }
+    }
+
 }
 
 export const reviewsService = new ReviewsService();

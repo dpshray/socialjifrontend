@@ -79,7 +79,7 @@ export function ProjectCard({
                 </div>
                 <Badge
                     variant="default"
-                    className="bg-green-700 hover:bg-green-800 text-white text-xs flex items-center gap-1.5 px-2 py-1"
+                    className="bg-green-700 hover:bg-green-800 text-white text-xs flex items-center "
                 >
                     <CheckCircle className="w-3.5 h-3.5"/>
                     {status}

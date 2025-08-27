@@ -74,23 +74,7 @@ export const UsersImages = [
     },
 ];
 
-export const categoriesHeader = [
-    {label: "All", href: "#"},
-    {label: "Design", href: "#"},
-    {label: "Development", href: "#"},
-    {label: "Finance", href: "#"},
-    {label: "Marketing", href: "#"},
-    {label: "Writing", href: "#"},
-    {label: "Photography", href: "#"},
-    {label: "Video Editing", href: "#"},
-    {label: "Music Production", href: "#"},
-    {label: "Voice Over", href: "#"},
-    {label: "Social Media Management", href: "#"},
-    {label: "Virtual Assistance", href: "#"},
-    {label: "Data Entry", href: "#"},
-    {label: "Translation", href: "#"},
-    {label: "SEO Services", href: "#"},
-];
+
 
 
 export const reviewsData: ReviewType[] = [

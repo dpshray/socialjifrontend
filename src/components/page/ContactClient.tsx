@@ -38,7 +38,7 @@ export default function ContactClient() {
 
     if (isSubmitted) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+            <div className="min-h-screen py-12 px-4">
                 <div className="max-w-4xl mx-auto">
                     <Card className="text-center py-12">
                         <CardContent>
@@ -55,8 +55,8 @@ export default function ContactClient() {
     }
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen py-12 px-4">
+            <div className="max-w-7xl mx-auto">
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -71,13 +71,13 @@ export default function ContactClient() {
 
                 <div className="grid lg:grid-cols-2 gap-12">
                     {/* Contact Form */}
-                    <Card className="shadow-lg">
+                    <Card className="shadow-lg h-fit">
                         <CardContent className="p-8">
                             <h2 className="text-2xl font-semibold text-gray-900 mb-6">Send us a message</h2>
                             <form onSubmit={handleSubmit} className="space-y-6">
                                 <div>
-                                    <Label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Name *
+                                    <Label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Full Name <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
@@ -92,8 +92,8 @@ export default function ContactClient() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Email *
+                                    <Label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Email <span className="text-red-500">*</span>
                                     </Label>
                                     <Input
                                         id="email"
@@ -108,7 +108,7 @@ export default function ContactClient() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="inquiryType" className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Label htmlFor="inquiryType" className="block text-sm font-semibold text-gray-700 mb-3">
                                         Inquiry Type
                                     </Label>
                                     <Select onValueChange={handleSelectChange} value={formData.inquiryType}>
@@ -127,7 +127,7 @@ export default function ContactClient() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                                    <Label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-3">
                                         Subject
                                     </Label>
                                     <Input
@@ -142,8 +142,8 @@ export default function ContactClient() {
                                 </div>
 
                                 <div>
-                                    <Label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                                        Message *
+                                    <Label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-3">
+                                        Message <span className="text-red-500">*</span>
                                     </Label>
                                     <Textarea
                                         id="message"
@@ -156,12 +156,14 @@ export default function ContactClient() {
                                     />
                                 </div>
 
-                                <Button
-                                    type="submit"
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3"
-                                >
-                                    Send Message
-                                </Button>
+                                <div className="flex justify-end">
+                                    <Button
+                                        type="submit"
+                                        className="bg-blue-600 hover:bg-blue-700 text-white py-3"
+                                    >
+                                        Send Message
+                                    </Button>
+                                </div>
                             </form>
                         </CardContent>
                     </Card>

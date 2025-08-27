@@ -10,7 +10,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {Separator} from "@/components/ui/separator"
 import campaignService from "@/services/campaign.service"
 import Image from "next/image"
-import {formatDate, getBrandInitials} from "@/lib/utils";
+import {formatDateCampaign, getBrandInitials} from "@/lib/utils";
 import {CampaignBidFormModal} from "@/components/modal/campaign-bid-form";
 import {toast} from "sonner";
 
@@ -123,7 +123,7 @@ export default function InfluencerCampaignDetails() {
                                     <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                                         <div className="flex items-center space-x-1">
                                             <CalendarDays className="h-4 w-4 flex-shrink-0"/>
-                                            <span>Created {formatDate(campaign.created_at)}</span>
+                                            <span>Created {formatDateCampaign(campaign.created_at)}</span>
                                         </div>
                                         <div className="flex items-center space-x-1">
                                             <DollarSign className="h-4 w-4 flex-shrink-0"/>
@@ -266,11 +266,11 @@ export default function InfluencerCampaignDetails() {
                             <div className="space-y-2">
                                 <div className="flex justify-between items-start">
                                     <span className="text-muted-foreground">Created</span>
-                                    <span className="text-right">{formatDate(campaign.created_at)}</span>
+                                    <span className="text-right">{formatDateCampaign(campaign.created_at)}</span>
                                 </div>
                                 <div className="flex justify-between items-start">
                                     <span className="text-muted-foreground">Last Updated</span>
-                                    <span className="text-right">{formatDate(campaign.updated_at)}</span>
+                                    <span className="text-right">{formatDateCampaign(campaign.updated_at)}</span>
                                 </div>
                             </div>
                         </CardContent>

@@ -158,15 +158,15 @@ export const GigsCard = ({
                     aria-label="Price range and rating"
                 >
                     <span className="font-semibold text-green-600 text-xs">{pricingRange}</span>
-                    <div className="flex items-center gap-1">
-                        {Array.from({length: 5}).map((_, index) => (
-                            <Star key={index} className="text-yellow-400" size={12} fill="currentColor"
-                                  aria-hidden="true"/>
-                        ))}
-                        <span className="text-xs text-gray-500 font-sans ml-1" aria-label="Rating score">
-              4.5
-            </span>
-                    </div>
+            {/*        <div className="flex items-center gap-1">*/}
+            {/*            {Array.from({length: 5}).map((_, index) => (*/}
+            {/*                <Star key={index} className="text-yellow-400" size={12} fill="currentColor"*/}
+            {/*                      aria-hidden="true"/>*/}
+            {/*            ))}*/}
+            {/*            <span className="text-xs text-gray-500 font-sans ml-1" aria-label="Rating score">*/}
+            {/*  4.5*/}
+            {/*</span>*/}
+            {/*        </div>*/}
                 </div>
             </CardContent>
 
