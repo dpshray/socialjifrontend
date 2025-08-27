@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react"
+import React, {useState} from "react"
 import Image from "next/image"
 import {Button} from "@/components/ui/button"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"
@@ -14,14 +14,14 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {formatCompactNumber} from "@/lib/utils"
 import {BrandProfileChart} from "@/components/chart/brand-profile-chart"
 import {ProfileForm} from "@/components/form/brand-profile-form"
+import globalService from "@/services/GlobalService";
+import {toast} from "sonner";
 
 export default function ProfilePage() {
     const {user} = useAuth()
     const [selectedTab, setSelectedTab] = useState("overview")
 
-    const handleSubmit = (data: any) => {
-        console.log("Submit", data)
-    }
+
 
     const handleCancel = () => {
         console.log("Cancel")
@@ -32,6 +32,17 @@ export default function ProfilePage() {
         {value: "social-media", label: "Social Media"},
         {value: "edit-profile", label: "Edit Profile"},
     ]
+    const handleSubmit = async (data: any) => {
+        try {
+            const response = await globalService.profileUpdate(data);
+            console.log('updated profile', response);
+            if (response) {
+                toast.success(response?.message || "Profile updated successfully");
+            }
+        } catch {
+            toast.error("Failed to update profile");
+        }
+    };
 
     return (
         <div className="min-h-screen">
@@ -316,7 +327,8 @@ export default function ProfilePage() {
                         </Card>
                     </TabsContent>
                     <TabsContent value="edit-profile">
-                        <ProfileForm editingProfile={user} onSubmit={handleSubmit} onCancel={handleCancel}/>
+                        <ProfileForm editingProfile={user as any} onSubmitAction={handleSubmit}
+                                     onCancelAction={handleCancel}/>
                     </TabsContent>
                 </Tabs>
             </div>

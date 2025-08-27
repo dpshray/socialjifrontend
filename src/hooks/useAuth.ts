@@ -60,9 +60,9 @@ const useAuth = (): UseAuthReturn => {
             setError(null)
 
             const response = await authService.getLoggedInUser()
-            console.log("Response:", response)
+            console.log("Response from useAuth:", response)
 
-            if (response ){
+            if (response) {
                 setUser(response)
             } else {
                 setUser(null)

@@ -5,7 +5,6 @@ import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {SearchIcon} from "lucide-react";
 import CategoryNav from "@/components/header/category-nav";
-import {categoriesHeader} from "@/data";
 import SelectInputField from "@/components/field/SelectField";
 import {ProjectCard, ProjectCardSkeleton} from "@/components/card/brand/ProjectCard";
 import {brandService} from "@/services/brand.service";
@@ -15,7 +14,6 @@ import {Gig} from "@/types/gigs";
 import {useRouter} from "next/navigation";
 import {toast} from "sonner";
 import paymentService from "@/services/paymentService";
-import {User} from "@/types/user";
 
 type SearchOption = {
     value: string;
@@ -120,7 +118,7 @@ export default function DiscoverCreators() {
 
     return (
         <section className="w-full py-6 space-y-6" aria-labelledby="discover-heading">
-            <CategoryNav categories={categoriesHeader}/>
+            <CategoryNav/>
 
             <div>
                 <h1 id="discover-heading" className="text-3xl font-bold font-inter text-gray-900">

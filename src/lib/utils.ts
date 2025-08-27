@@ -31,6 +31,12 @@ export function formatCompactNumber(value: number): string {
     }).format(value)
 }
 
+export function formatDateCampaign(dateString?: string | null) {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return "N/A";
+    return date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
 
 
 export const getBrandInitials = (firstName: string, lastName?: string) =>

@@ -75,6 +75,7 @@ export default function GigsPage() {
         try {
             console.log('selectedGigId:', selectedGigId);
             const response = await gigsService.DeleteGig(selectedGigId);
+
             if (response) {
                 toast.success(response?.message || "Successfully deleted gig");
                 console.log('Response from DeleteGig:', response);
@@ -145,35 +146,7 @@ export default function GigsPage() {
                     </Button>
                 </div>
             </div>
-            <div className="flex flex-col md:flex-row justify-between gap-4">
-                <div className="flex gap-4">
-                    <SelectInputField
-                        label="Filter"
-                        placeholder="Filter"
-                        options={FILTERS}
-                        onChangeAction={(val) => console.log("Filter:", val)}
-                    />
-                    <SelectInputField
-                        label="Industry"
-                        placeholder="Industry"
-                        options={FILTERS}
-                        onChangeAction={(val) => console.log("Industry:", val)}
-                    />
-                    <SelectInputField
-                        label="Price range"
-                        placeholder="Price range"
-                        options={FILTERS}
-                        onChangeAction={(val) => console.log("Price:", val)}
-                    />
-                </div>
-                <div className={'flex gap-4'}>
-                    <Button onClick={() => router.push("/influencer/gigs/add-gigs")}
-                            className={'btn-gradient'}>
-                        Add New Gig
-                    </Button>
-                    <TagModal/>
-                </div>
-            </div>
+
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
                 {loading

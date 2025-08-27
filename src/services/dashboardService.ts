@@ -18,7 +18,6 @@ class DashboardService extends HttpsService {
     async explorerBrand(params: { per_page?: number, page?: number }) {
         try {
             return await this.getRequest({
-                //client/explorer/influencer?per_page=10&page=1
                 url: "/client/explorer/brand",
                 config: {
                     params
