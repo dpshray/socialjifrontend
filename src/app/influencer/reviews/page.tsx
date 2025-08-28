@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button";
 import {cn} from "@/lib/utils";
 import {Progress} from "@/components/ui/progress";
 import {reviewsService} from "@/services/reviewsService";
-import {Review, ReviewInfluencerCard} from "@/app/influencer/reviews/review-card";
+import {Review, ReviewInfluencerCard, ReviewInfluencerCardSkeleton} from "@/app/influencer/reviews/review-card";
 
 interface RatingCount {
     no_of_user_count: number;
@@ -26,6 +26,7 @@ export default function InfluencerReviews() {
     const [showAllReviews, setShowAllReviews] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [ratingCounts, setRatingCounts] = useState<RatingCount[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const handleNext = () => {
         if ((currentPage + 1) * reviewsPerPage < reviews.length) setCurrentPage(currentPage + 1);
@@ -37,23 +38,30 @@ export default function InfluencerReviews() {
 
     useEffect(() => {
         const getAllReviews = async () => {
+            setLoading(true);
             const response = await reviewsService.getAllReview();
             if (response) {
                 const reviewData = response.review_list?.data || [];
                 const ratingData = response.user_rating_count || [];
                 setReviews(reviewData);
                 setRatingCounts(ratingData);
-                console.log(' Re')
             }
+            setLoading(false);
         };
         getAllReviews();
     }, []);
 
-    const totalRatings = useMemo(() => ratingCounts.reduce((acc, r) => acc + r.no_of_user_count, 0), [ratingCounts]);
+    const totalRatings = useMemo(
+        () => ratingCounts.reduce((acc, r) => acc + r.no_of_user_count, 0),
+        [ratingCounts]
+    );
 
     const averageRating = useMemo(() => {
         if (totalRatings === 0) return 0;
-        const totalScore = ratingCounts.reduce((acc, r) => acc + r.rating * r.no_of_user_count, 0);
+        const totalScore = ratingCounts.reduce(
+            (acc, r) => acc + r.rating * r.no_of_user_count,
+            0
+        );
         return Number((totalScore / totalRatings).toFixed(1));
     }, [ratingCounts, totalRatings]);
 
@@ -73,7 +81,10 @@ export default function InfluencerReviews() {
                 <h2 className="text-2xl font-semibold">Total reviews</h2>
                 <div className="flex justify-center items-center gap-1 mt-1">
                     {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 text-[#FFB400] fill-yellow-500"/>
+                        <Star
+                            key={i}
+                            className="w-4 h-4 text-[#FFB400] fill-yellow-500"
+                        />
                     ))}
                     <p className="text-lg font-montserrat font-medium">{averageRating} out of 5</p>
                 </div>
@@ -123,9 +134,13 @@ export default function InfluencerReviews() {
             </div>
 
             <div className="space-y-4">
-                {currentReviews.map((review, index) => (
-                    <ReviewInfluencerCard review={review as any} key={index}/>
-                ))}
+                {loading
+                    ? [...Array(reviewsPerPage)].map((_, idx) => (
+                        <ReviewInfluencerCardSkeleton key={idx}/>
+                    ))
+                    : currentReviews.map((review, index) => (
+                        <ReviewInfluencerCard review={review as any} key={index}/>
+                    ))}
             </div>
         </section>
     );

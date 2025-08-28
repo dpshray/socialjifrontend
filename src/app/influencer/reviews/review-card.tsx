@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
-import { cn } from "@/lib/utils";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Badge} from "@/components/ui/badge";
+import {Star} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {Skeleton} from "@/components/ui/skeleton"
 
 export interface Reviewer {
     id: number;
@@ -29,7 +30,7 @@ interface ReviewCardProps {
     review: Review;
 }
 
-export function ReviewInfluencerCard({ review }: ReviewCardProps) {
+export function ReviewInfluencerCard({review}: ReviewCardProps) {
     const {
         rating,
         reviewed_at,
@@ -50,7 +51,7 @@ export function ReviewInfluencerCard({ review }: ReviewCardProps) {
                 <div className="flex items-center gap-4">
                     <Avatar className="w-16 h-16">
                         {image ? (
-                            <AvatarImage src={image} alt={nick_name || fullName} />
+                            <AvatarImage src={image} alt={nick_name || fullName}/>
                         ) : (
                             <AvatarFallback>{nick_name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
                         )}
@@ -83,4 +84,34 @@ export function ReviewInfluencerCard({ review }: ReviewCardProps) {
             <CardContent>{review.comment && <p className="text-slate-700">{review.comment}</p>}</CardContent>
         </Card>
     );
+}
+
+export function ReviewInfluencerCardSkeleton() {
+    return (
+        <Card className="w-full p-3 gap-2">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-6">
+                <div className="flex items-center gap-4">
+                    <Skeleton className="h-16 w-16 rounded-full"/>
+                    <div className="space-y-2">
+                        <Skeleton className="h-4 w-32"/>
+                        <Skeleton className="h-3 w-20"/>
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                    <div className="flex gap-1">
+                        {Array.from({length: 5}).map((_, idx) => (
+                            <Skeleton key={idx} className="h-5 w-5 rounded-sm"/>
+                        ))}
+                    </div>
+                    <Skeleton className="h-6 w-24 rounded-md"/>
+                </div>
+            </CardHeader>
+
+            <CardContent>
+                <Skeleton className="h-4 w-full mb-2"/>
+                <Skeleton className="h-4 w-3/4"/>
+            </CardContent>
+        </Card>
+    )
 }

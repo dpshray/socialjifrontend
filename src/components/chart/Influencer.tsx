@@ -33,15 +33,26 @@ const campaignConfig = {
     campaigns: {label: "Campaigns Published", color: "#BE50C8"},
 }
 
+const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
 interface InfluencerChartProps {
-    gigsData: {month: string; gigs: number}[]
-    campaignData: {month: string; campaigns: number}[]
+    gigsData: { month: number; gigs: number }[]
+    campaignData: { month: number; campaigns: number }[]
     className?: string
 }
 
-const InfluencerChart: React.FC<InfluencerChartProps> = ({gigsData, campaignData, className}) => {
+const formatMonth = (monthNum: number) => monthNames[monthNum - 1] || ""
+
+const InfluencerChart: React.FC<InfluencerChartProps> = ({
+                                                             gigsData,
+                                                             campaignData,
+                                                             className,
+                                                         }) => {
     return (
-        <section className={cn("w-full rounded-xl bg-transparent shadow-none", className)} aria-label="Influencers Analytics">
+        <section
+            className={cn("w-full rounded-xl bg-transparent shadow-none", className)}
+            aria-label="Influencers Analytics"
+        >
             <Tabs defaultValue="gigs" className="w-full px-4 pt-4">
                 <ScrollArea className="w-full">
                     <TabsList
@@ -79,12 +90,26 @@ const InfluencerChart: React.FC<InfluencerChartProps> = ({gigsData, campaignData
                         <h3 className="text-lg font-semibold">Gigs Published</h3>
                         <p className="text-sm text-muted-foreground">Monthly gigs published this year</p>
                     </div>
-                    <ChartContainer config={gigsConfig}
-                                    className="aspect-auto h-[300px] w-full bg-transparent shadow-none">
+                    <ChartContainer
+                        config={gigsConfig}
+                        className="aspect-auto h-[300px] w-full bg-transparent shadow-none"
+                    >
                         <LineChart data={gigsData}>
                             <CartesianGrid vertical={false} strokeDasharray="3 3"/>
-                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8}/>
-                            <YAxis tickLine={false} axisLine={false} tickMargin={8}/>
+                            <XAxis
+                                dataKey="month"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tickFormatter={formatMonth}
+                            />
+                            <YAxis
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                ticks={[5, 10, 15]}
+                                domain={[0, 15]}
+                            />
                             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line"/>}/>
                             <Line
                                 dataKey="gigs"
@@ -104,12 +129,26 @@ const InfluencerChart: React.FC<InfluencerChartProps> = ({gigsData, campaignData
                         <h3 className="text-lg font-semibold">Campaigns Published</h3>
                         <p className="text-sm text-muted-foreground">Monthly campaigns published this year</p>
                     </div>
-                    <ChartContainer config={campaignConfig}
-                                    className="aspect-auto h-[300px] w-full bg-transparent shadow-none">
+                    <ChartContainer
+                        config={campaignConfig}
+                        className="aspect-auto h-[300px] w-full bg-transparent shadow-none"
+                    >
                         <BarChart data={campaignData}>
                             <CartesianGrid vertical={false} strokeDasharray="3 3"/>
-                            <XAxis dataKey="month" tickLine={false} axisLine={false} tickMargin={8}/>
-                            <YAxis tickLine={false} axisLine={false} tickMargin={8}/>
+                            <XAxis
+                                dataKey="month"
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                tickFormatter={formatMonth}
+                            />
+                            <YAxis
+                                tickLine={false}
+                                axisLine={false}
+                                tickMargin={8}
+                                ticks={[5, 10, 15]}
+                                domain={[0, 15]}
+                            />
                             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed"/>}/>
                             <Bar dataKey="campaigns" fill="var(--color-campaigns)" radius={[4, 4, 0, 0]}/>
                             <ChartLegend content={<ChartLegendContent/>}/>

@@ -67,6 +67,7 @@ export default function InfluencerDashboard() {
         { title: 'Reviews Given', value: dashboardData?.total_reviews_given_count?.toString() ?? '0', icon: DollarSign },
         { title: 'Campaign Bids', value: dashboardData?.total_bidded_on_campaign_count?.toString() ?? '0', icon: TrendingUp },
     ]
+    console.log('campaignChartData',campaignChartData)
 
     const isConnected = (platformType: string) =>
         dashboardData?.social_followers?.some(
