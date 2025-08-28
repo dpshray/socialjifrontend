@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { BriefcaseIcon, DollarSign, Plus, TrendingUp } from 'lucide-react'
+import React, {useEffect, useState} from 'react'
+import {BriefcaseIcon, DollarSign, Plus, TrendingUp} from 'lucide-react'
 import Image from 'next/image'
-import InfluencerChart from '@/components/chart/Influencer'
+import InfluencerChart, {DataPoint} from '@/components/chart/Influencer'
 import LatestGigsTable from '@/components/table/userTable'
-import { Button } from '@/components/ui/button'
-import { ComingStatsCard, InfluencerStatsCard } from '@/components/card/influencer/influencer-dashboard'
+import {Button} from '@/components/ui/button'
+import {ComingStatsCard, InfluencerStatsCard} from '@/components/card/influencer/influencer-dashboard'
 import influencerService from '@/services/InfluencerService'
-import { DashboardUserCard } from '@/components/card/card'
-import { toast } from 'sonner'
+import {DashboardUserCard} from '@/components/card/card'
+import {toast} from 'sonner'
 
 interface SocialMediaIcon {
     image: string
@@ -19,15 +19,37 @@ interface SocialMediaIcon {
 }
 
 const socialMediaIcons: SocialMediaIcon[] = [
-    { image: '/instagram.png', title: 'Instagram', description: 'Connect Account', type: 'instagram' },
-    { image: '/facebook1.png', title: 'Facebook', description: 'Connect Account', type: 'facebook' },
+    {image: '/instagram.png', title: 'Instagram', description: 'Connect Account', type: 'instagram'},
+    {image: '/facebook1.png', title: 'Facebook', description: 'Connect Account', type: 'facebook'},
 ]
+// const sampleGigsData: any[] = [
+//     {month: 1, gigs: 850},
+//     {month: 2, gigs: 1200},
+//     {month: 3, gigs: 980},
+//     {month: 4, gigs: 1450},
+//     {month: 5, gigs: 1800},
+//     {month: 6, gigs: 1650},
+//     {month: 7, gigs: 2100},
+//     {month: 8, gigs: 1950}
+// ]
+//
+// const sampleCampaignData: any[] = [
+//     {month: 1, campaigns: 120},
+//     {month: 2, campaigns: 180},
+//     {month: 3, campaigns: 145},
+//     {month: 4, campaigns: 220},
+//     {month: 5, campaigns: 280},
+//     {month: 6, campaigns: 245},
+//     {month: 7, campaigns: 310},
+//     {month: 8, campaigns: 290}
+// ]
+
 
 export default function InfluencerDashboard() {
     const [loadingType, setLoadingType] = useState<string | null>(null)
     const [dashboardData, setDashboardData] = useState<any>(null)
-    const [gigChartData, setGigChartData] = useState<any[]>([])
-    const [campaignChartData, setCampaignChartData] = useState<any[]>([])
+    const [gigChartData, setGigChartData] = useState<DataPoint[]>([])
+    const [campaignChartData, setCampaignChartData] = useState<DataPoint[]>([])
     const [loadingDashboard, setLoadingDashboard] = useState(true)
 
     const handleConnect = (type: string) => {
@@ -62,12 +84,20 @@ export default function InfluencerDashboard() {
     }, [])
 
     const statsData = [
-        { title: 'Total Gigs', value: dashboardData?.total_gigs_count?.toString() ?? '0', icon: BriefcaseIcon },
-        { title: 'Reviews Received', value: dashboardData?.total_reviews_received_from_gigs_count?.toString() ?? '0', icon: TrendingUp },
-        { title: 'Reviews Given', value: dashboardData?.total_reviews_given_count?.toString() ?? '0', icon: DollarSign },
-        { title: 'Campaign Bids', value: dashboardData?.total_bidded_on_campaign_count?.toString() ?? '0', icon: TrendingUp },
+        {title: 'Total Gigs', value: dashboardData?.total_gigs_count?.toString() ?? '0', icon: BriefcaseIcon},
+        {
+            title: 'Reviews Received',
+            value: dashboardData?.total_reviews_received_from_gigs_count?.toString() ?? '0',
+            icon: TrendingUp
+        },
+        {title: 'Reviews Given', value: dashboardData?.total_reviews_given_count?.toString() ?? '0', icon: DollarSign},
+        {
+            title: 'Campaign Bids',
+            value: dashboardData?.total_bidded_on_campaign_count?.toString() ?? '0',
+            icon: TrendingUp
+        },
     ]
-    console.log('campaignChartData',campaignChartData)
+    console.log('campaignChartData', campaignChartData)
 
     const isConnected = (platformType: string) =>
         dashboardData?.social_followers?.some(
@@ -84,22 +114,26 @@ export default function InfluencerDashboard() {
             <div className="max-w-7xl mx-auto">
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
-                    <p className="text-gray-600 dark:text-gray-400 mt-2">Welcome back! Here&#39;s your performance overview.</p>
+                    <p className="text-gray-600 dark:text-gray-400 mt-2">Welcome back! Here&#39;s your performance
+                        overview.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="md:col-span-3 space-y-6">
                         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
                             {loadingDashboard
-                                ? Array.from({ length: 4 }).map((_, idx) => <InfluencerStatsCard key={idx} title="" value="" icon={BriefcaseIcon} />)
+                                ? Array.from({length: 4}).map((_, idx) => <InfluencerStatsCard key={idx} title=""
+                                                                                               value=""
+                                                                                               icon={BriefcaseIcon}/>)
                                 : statsData.map((stat, idx) => (
-                                    <InfluencerStatsCard key={idx} title={stat.title} value={stat.value} icon={stat.icon} />
+                                    <InfluencerStatsCard key={idx} title={stat.title} value={stat.value}
+                                                         icon={stat.icon}/>
                                 ))}
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                             {loadingDashboard
-                                ? Array.from({ length: 4 }).map((_, idx) => <ComingStatsCard key={idx} />)
-                                : Array.from({ length: 4 }).map((_, idx) => <ComingStatsCard key={idx} />)}
+                                ? Array.from({length: 4}).map((_, idx) => <ComingStatsCard key={idx}/>)
+                                : Array.from({length: 4}).map((_, idx) => <ComingStatsCard key={idx}/>)}
                         </div>
                     </div>
 
@@ -152,13 +186,15 @@ export default function InfluencerDashboard() {
                                     </div>
                                 )
                             })}
-                            <div className="flex items-center space-x-3 p-3 border rounded-lg border-dashed dark:border-gray-600 bg-white dark:bg-gray-800">
+                            <div
+                                className="flex items-center space-x-3 p-3 border rounded-lg border-dashed dark:border-gray-600 bg-white dark:bg-gray-800">
                                 <Button variant="outline" size="sm" className="w-6 h-6 p-0 bg-transparent" disabled>
-                                    <Plus className="w-4 h-4" />
+                                    <Plus className="w-4 h-4"/>
                                 </Button>
                                 <div className="flex-1 min-w-0">
                                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Add Platform</p>
-                                    <p className="text-xs text-gray-600 dark:text-gray-400">Connect more social media</p>
+                                    <p className="text-xs text-gray-600 dark:text-gray-400">Connect more social
+                                        media</p>
                                 </div>
                             </div>
                         </div>
@@ -168,9 +204,9 @@ export default function InfluencerDashboard() {
                 <div className="mt-10 grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div className="md:col-span-3 bg-white dark:bg-gray-900 rounded-lg p-4 shadow-sm">
                         {loadingDashboard ? (
-                            <div className="h-[300px] w-full bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg" />
+                            <div className="h-[300px] w-full bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg"/>
                         ) : (
-                            <InfluencerChart gigsData={gigChartData} campaignData={campaignChartData} />
+                            <InfluencerChart gigsData={gigChartData} campaignData={campaignChartData}/>
                         )}
                     </div>
 
@@ -178,8 +214,9 @@ export default function InfluencerDashboard() {
                         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Influencers</h2>
                         <div className="space-y-3">
                             {loadingDashboard
-                                ? Array.from({ length: 3 }).map((_, idx) => (
-                                    <div key={idx} className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+                                ? Array.from({length: 3}).map((_, idx) => (
+                                    <div key={idx}
+                                         className="h-16 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"/>
                                 ))
                                 : dashboardData?.top_influencer_with_max_followers_count?.slice(0, 3).map((influencer: any) => (
                                     <DashboardUserCard
@@ -196,7 +233,7 @@ export default function InfluencerDashboard() {
                 </div>
 
                 <div className="mt-10">
-                    <LatestGigsTable />
+                    <LatestGigsTable/>
                 </div>
             </div>
         </section>

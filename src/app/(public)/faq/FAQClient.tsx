@@ -53,7 +53,7 @@ const brandFAQs: FAQItem[] = [
                 with the delivered content, you can request a revision or open a dispute before the payment is released.
                 SocialJi&apos;s team will step in to help mediate any issues. If ultimately the content isn&apos;t delivered as agreed,
                 you are eligible for a <strong>refund</strong> as per our{" "}
-                <Link href="/terms-and-conditions" className="text-blue-600 hover:text-blue-800 underline">
+                <Link href="/terms-conditions" className="text-blue-600 hover:text-blue-800 underline">
                     Terms
                 </Link>
                 . This system protects both you and the creator.
@@ -177,7 +177,7 @@ const creatorFAQs: FAQItem[] = [
         answer: (
             <p>
                 When a brand and creator agree to a project on SocialJi, the{" "}
-                <Link href="/terms-and-conditions" className="text-blue-600 hover:text-blue-800 underline">
+                <Link href="/terms-conditions" className="text-blue-600 hover:text-blue-800 underline">
                     Terms of Use
                 </Link>{" "}
                 and the specifics in your project chat act as the binding agreement. There isn&apos;t a separate paper contract to
@@ -298,7 +298,7 @@ export default function FAQClient() {
                         </p>
                         <p className="mt-4 text-xs sm:text-lg text-gray-200 font-medium">
                             If you don&apos;t see your question here, feel free to{" "}
-                            <Link href="/contact" className="text-white underline hover:text-gray-200 font-semibold">
+                            <Link href="/contact-us" className="text-white underline hover:text-gray-200 font-semibold">
                                 contact us
                             </Link>
                             .
@@ -373,7 +373,7 @@ export default function FAQClient() {
                     <h3 className="text-xl font-semibold text-gray-900 mb-2">Still have questions?</h3>
                     <p className="text-gray-600 mb-4">Our support team is here to help you succeed on SocialJi.</p>
                     <Link
-                        href="/contact"
+                        href="/contact-us"
                         className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                         <HelpCircle className="h-4 w-4" />

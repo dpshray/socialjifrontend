@@ -7,13 +7,12 @@ import {SearchIcon} from "lucide-react";
 import {GigsCard, GigsCardSkeleton} from "@/components/card/influencer/GigsCard";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
-import SelectInputField from "@/components/field/SelectField";
 import CustomPagination from "@/components/Pagiantion/pagination";
 import {DeleteModal} from "@/components/modal/delete-modal";
 import {gigsService} from "@/services/gigs.service";
 import globalService from "@/services/GlobalService";
-import {TagModal} from "@/components/modal/TagModal";
 import {toast} from "sonner";
+import TagModal from "@/components/modal/TagModal";
 
 const FILTERS = [
     {label: "All", value: "1"},
@@ -92,7 +91,7 @@ export default function GigsPage() {
 
     return (
         <section className="w-full min-h-screen border-t border-border bg-background py-6 space-y-6 container mx-auto">
-            <div className="flex justify-end">
+            <div className="flex justify-between">
                 <div className="relative flex-1 max-w-xl h-10">
                     <Input
                         type="text"
@@ -144,6 +143,15 @@ export default function GigsPage() {
                             </>
                         )}
                     </Button>
+                </div>
+                <div className={' flex gap-2'}>
+                    <Button
+                        onClick={() => router.push("/influencer/gigs/add-gigs")}
+                        className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-400 hover:to-pink-400">
+                        Create New Gig
+                    </Button>
+                    <TagModal/>
+
                 </div>
             </div>
 

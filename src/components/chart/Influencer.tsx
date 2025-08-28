@@ -1,159 +1,200 @@
 "use client"
 
-import type React from "react"
-import {HomeIcon as HouseIcon, PanelsTopLeftIcon} from "lucide-react"
-import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area"
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-import {Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis} from "recharts"
+import React, { FC } from "react"
+import { Home, PanelsTopLeft } from "lucide-react"
 import {
-    ChartContainer,
-    ChartLegend,
-    ChartLegendContent,
-    ChartTooltip,
-    ChartTooltipContent,
-} from "@/components/ui/chart"
-import {cn} from "@/lib/utils"
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Line,
+    LineChart,
+    XAxis,
+    YAxis,
+    Tooltip,
+    Legend,
+    ResponsiveContainer,
+} from "recharts"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 
-type Tab = {
-    value: string
-    label: string
-    icon: React.ComponentType<{ size?: number; className?: string }>
+export type DataPoint = {
+    month: number
+    gigs?: number
+    campaigns?: number
 }
 
-const tabsData: Tab[] = [
-    {value: "gigs", label: "Gigs", icon: PanelsTopLeftIcon},
-    {value: "campaigns", label: "Campaigns", icon: HouseIcon},
-]
-
-const gigsConfig = {
-    gigs: {label: "Gigs Published", color: "#6C5DD3"},
-}
-
-const campaignConfig = {
-    campaigns: {label: "Campaigns Published", color: "#BE50C8"},
+type InfluencerChartProps = {
+    gigsData?: DataPoint[]
+    campaignData?: DataPoint[]
+    className?: string
 }
 
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
-interface InfluencerChartProps {
-    gigsData: { month: number; gigs: number }[]
-    campaignData: { month: number; campaigns: number }[]
-    className?: string
-}
-
 const formatMonth = (monthNum: number) => monthNames[monthNum - 1] || ""
 
-const InfluencerChart: React.FC<InfluencerChartProps> = ({
-                                                             gigsData,
-                                                             campaignData,
-                                                             className,
-                                                         }) => {
-    return (
-        <section
-            className={cn("w-full rounded-xl bg-transparent shadow-none", className)}
-            aria-label="Influencers Analytics"
-        >
-            <Tabs defaultValue="gigs" className="w-full px-4 pt-4">
-                <ScrollArea className="w-full">
-                    <TabsList
-                        className={cn(
-                            "mb-4 flex w-fit items-center gap-2 rounded-lg border border-[#BE50C8] bg-background p-1"
-                        )}
-                    >
-                        {tabsData.map((tab) => (
-                            <TabsTrigger
-                                key={tab.value}
-                                value={tab.value}
-                                className={cn(
-                                    "group flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium",
-                                    "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                                    "hover:bg-muted/80 data-[state=active]:bg-[#BE50C8] data-[state=active]:text-white",
-                                    "data-[state=active]:shadow-sm data-[state=active]:border-none",
-                                    "cursor-pointer"
-                                )}
-                                aria-label={tab.label}
-                            >
-                                <tab.icon
-                                    size={16}
-                                    className="opacity-70 group-hover:opacity-100 data-[state=active]:opacity-100"
-                                    aria-hidden="true"
-                                />
-                                <span>{tab.label}</span>
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
-                    <ScrollBar orientation="horizontal" className="h-1.5"/>
-                </ScrollArea>
+const formatNumber = (value: number): string => {
+    if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`
+    if (value >= 1_000) return `${Math.round(value / 1_000)}k`
+    return value.toString()
+}
 
-                <TabsContent value="gigs" className="focus:outline-none shadow-none">
-                    <div className="mb-4">
-                        <h3 className="text-lg font-semibold">Gigs Published</h3>
-                        <p className="text-sm text-muted-foreground">Monthly gigs published this year</p>
-                    </div>
-                    <ChartContainer
-                        config={gigsConfig}
-                        className="aspect-auto h-[300px] w-full bg-transparent shadow-none"
+const generateTicks = (maxValue: number, step: number): number[] => {
+    if (maxValue <= 0) return [0, 1, 5, 10, 15]
+    const ticks = [0]
+    for (let i = step; i <= maxValue; i += step) {
+        ticks.push(i)
+    }
+    return ticks
+}
+
+const CustomTooltip: FC<any> = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null
+    return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+            <p className="font-medium">{formatMonth(label)}</p>
+            {payload.map((entry: any, i: number) => (
+                <p key={i} style={{ color: entry.color }}>
+                    {entry.name}: {formatNumber(entry.value ?? 0)}
+                </p>
+            ))}
+        </div>
+    )
+}
+
+const InfluencerChart: FC<InfluencerChartProps> = ({
+                                                       gigsData = [],
+                                                       campaignData = [],
+                                                       className = "",
+                                                   }) => {
+    const purpleColor = "#6C5DD3"
+    const purpleFill = "#BE50C8"
+
+    const maxGigs = Math.max(...gigsData.map(d => d.gigs ?? 0), 0)
+    const maxCampaigns = Math.max(...campaignData.map(d => d.campaigns ?? 0), 0)
+    const maxValue = Math.max(maxGigs, maxCampaigns)
+
+    const step = 5
+    const yTicks = generateTicks(maxValue + step, step)
+
+    return (
+        <section className={`w-full mx-auto rounded-xl bg-white shadow-lg p-6 ${className}`}>
+            <Tabs defaultValue="gigs" className="w-full">
+                <TabsList className="mb-6 flex w-full sm:w-fit flex-wrap justify-start sm:justify-center rounded-lg border-2 border-purple-700 bg-gray-50 p-1">
+                    <TabsTrigger
+                        value="gigs"
+                        className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-purple-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
                     >
-                        <LineChart data={gigsData}>
-                            <CartesianGrid vertical={false} strokeDasharray="3 3"/>
-                            <XAxis
-                                dataKey="month"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={formatMonth}
-                            />
-                            <YAxis
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                ticks={[5, 10, 15]}
-                                domain={[0, 15]}
-                            />
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line"/>}/>
-                            <Line
-                                dataKey="gigs"
-                                type="monotone"
-                                stroke="var(--color-gigs)"
-                                strokeWidth={2}
-                                dot={{fill: "var(--color-gigs)", r: 4}}
-                                activeDot={{r: 6}}
-                            />
-                            <ChartLegend content={<ChartLegendContent/>}/>
-                        </LineChart>
-                    </ChartContainer>
+                        <PanelsTopLeft size={16} />
+                        <span>Gigs</span>
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="campaigns"
+                        className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-purple-700 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                    >
+                        <Home size={16} />
+                        <span>Campaigns</span>
+                    </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="gigs" className="w-full">
+                    <div className="mb-6">
+                        <h3 className="text-xl font-semibold text-gray-900">Gigs Published</h3>
+                        <p className="text-sm text-gray-600 mt-1">Monthly gigs published this year</p>
+                    </div>
+                    <div className="w-full h-72 sm:h-80">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <LineChart data={gigsData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
+                                <XAxis
+                                    dataKey="month"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={8}
+                                    tickFormatter={formatMonth}
+                                    stroke="#666"
+                                />
+                                <YAxis
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={8}
+                                    ticks={yTicks}
+                                    tickFormatter={formatNumber}
+                                    stroke="#666"
+                                />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Line
+                                    dataKey="gigs"
+                                    type="monotone"
+                                    stroke={purpleColor}
+                                    strokeWidth={3}
+                                    dot={{ fill: purpleColor, strokeWidth: 2, r: 4 }}
+                                    activeDot={{ r: 6, fill: purpleColor, strokeWidth: 2 }}
+                                    name="Gigs Published"
+                                />
+                                <Legend
+                                    content={({ payload }) => (
+                                        <div className="flex justify-center mt-4 flex-wrap gap-3">
+                                            {payload?.map((entry: any, i: number) => (
+                                                <span key={i} className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                                                    {entry.value}
+                        </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
                 </TabsContent>
 
-                <TabsContent value="campaigns" className="focus:outline-none shadow-none">
-                    <div className="mb-4">
-                        <h3 className="text-lg font-semibold">Campaigns Published</h3>
-                        <p className="text-sm text-muted-foreground">Monthly campaigns published this year</p>
+                <TabsContent value="campaigns" className="w-full">
+                    <div className="mb-6">
+                        <h3 className="text-xl font-semibold text-gray-900">Campaigns Published</h3>
+                        <p className="text-sm text-gray-600 mt-1">Monthly campaigns published this year</p>
                     </div>
-                    <ChartContainer
-                        config={campaignConfig}
-                        className="aspect-auto h-[300px] w-full bg-transparent shadow-none"
-                    >
-                        <BarChart data={campaignData}>
-                            <CartesianGrid vertical={false} strokeDasharray="3 3"/>
-                            <XAxis
-                                dataKey="month"
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                tickFormatter={formatMonth}
-                            />
-                            <YAxis
-                                tickLine={false}
-                                axisLine={false}
-                                tickMargin={8}
-                                ticks={[5, 10, 15]}
-                                domain={[0, 15]}
-                            />
-                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed"/>}/>
-                            <Bar dataKey="campaigns" fill="var(--color-campaigns)" radius={[4, 4, 0, 0]}/>
-                            <ChartLegend content={<ChartLegendContent/>}/>
-                        </BarChart>
-                    </ChartContainer>
+                    <div className="w-full h-72 sm:h-80">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={campaignData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                                <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" vertical={false} />
+                                <XAxis
+                                    dataKey="month"
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={8}
+                                    tickFormatter={formatMonth}
+                                    stroke="#666"
+                                />
+                                <YAxis
+                                    tickLine={false}
+                                    axisLine={false}
+                                    tickMargin={8}
+                                    ticks={yTicks}
+                                    tickFormatter={formatNumber}
+                                    stroke="#666"
+                                />
+                                <Tooltip content={<CustomTooltip />} />
+                                <Bar
+                                    dataKey="campaigns"
+                                    fill={purpleFill}
+                                    radius={[4, 4, 0, 0]}
+                                    name="Campaigns Published"
+                                />
+                                <Legend
+                                    content={({ payload }) => (
+                                        <div className="flex justify-center mt-4 flex-wrap gap-3">
+                                            {payload?.map((entry: any, i: number) => (
+                                                <span key={i} className="flex items-center gap-2 text-sm text-gray-600">
+                          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: entry.color }} />
+                                                    {entry.value}
+                        </span>
+                                            ))}
+                                        </div>
+                                    )}
+                                />
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </TabsContent>
             </Tabs>
         </section>

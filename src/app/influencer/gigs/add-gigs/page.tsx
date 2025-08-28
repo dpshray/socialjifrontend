@@ -1,7 +1,7 @@
 'use client';
 
 import {Lightbulb, Plus, Rocket, Star, Target} from 'lucide-react';
-import GigsEditForm from "@/components/form/GigsEditForm";
+import GigCreateForm from "@/components/form/gig-from/GigCreateForm";
 
 export default function CreateGigsPage() {
     return (
@@ -132,7 +132,8 @@ export default function CreateGigsPage() {
 
             {/* Form */}
             <div className="mt-10 container mx-auto">
-                <GigsEditForm mode="create"/>
+                {/*<GigsEditForm mode="create"/>*/}
+                <GigCreateForm/>
             </div>
         </section>
     );
