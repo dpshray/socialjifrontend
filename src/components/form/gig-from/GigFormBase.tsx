@@ -50,14 +50,14 @@ const GigFormBase: React.FC<GigFormBaseProps> = ({ mode, defaultValues, onSubmit
         reset,
         formState: { errors, isSubmitting, isValid },
     } = useForm<GigFormData>({
-        resolver: yupResolver(mode === "edit" ? gigsUpdateSchema : gigsSchema) as any,
+        resolver: yupResolver((mode === "edit" ? gigsUpdateSchema : gigsSchema) as any),
         mode: "onBlur",
         defaultValues: {
             title: "",
             category: "",
             description: "",
-            features: [""],
-            requirements: [""],
+            features:"" ,
+            requirements: "",
             tags: [],
             status: "0",
             pricing: [],
@@ -248,15 +248,15 @@ const GigFormBase: React.FC<GigFormBaseProps> = ({ mode, defaultValues, onSubmit
                         <TextInputField
                             label="Key Feature"
                             placeholder="What's the main benefit?"
-                            {...register("features.0")}
-                            error={errors.features?.[0]?.message}
+                            {...register("features")}
+                            error={errors.features?.message}
                             required
                         />
                         <TextInputField
                             label="Main Requirement"
                             placeholder="What do you need from the client?"
-                            {...register("requirements.0")}
-                            error={errors.requirements?.[0]?.message}
+                            {...register("requirements")}
+                            error={errors.requirements?.message}
                             required
                         />
                         <input type="hidden" {...register("status")} value="0" />

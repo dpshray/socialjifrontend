@@ -18,8 +18,8 @@ const GigCreateForm: React.FC<{ onSuccess?: () => void }> = ({onSuccess}) => {
         formData.append("title", data.title ?? "");
         formData.append("category", data.category ?? "");
         formData.append("description", data.description ?? "");
-        formData.append("requirements", data.requirements?.[0] ?? "");
-        formData.append("features", data.features?.[0] ?? "");
+        formData.append("requirements", data.requirements ?? "");
+        formData.append("features", data.features ?? "");
         data.tags?.forEach((tag: any) =>
             formData.append("tag_id[]", String(typeof tag === "object" ? tag.id : tag))
         );

@@ -34,6 +34,7 @@ export default function EditGigPage() {
                         : [],
                 };
                 setGigData(formattedGigData);
+                console.log('formattedData',formattedGigData);
             } catch (error: any) {
                 toast.error(error?.message || "Failed to fetch gig data");
             } finally {

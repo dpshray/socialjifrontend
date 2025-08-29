@@ -50,8 +50,8 @@ export const gigsSchema = yup.object().shape({
     title: yup.string().required("Title is required"),
     category: yup.string().required("Category is required"),
     description: yup.string().required("Description is required"),
-    features: yup.array().of(yup.string().required()).min(1),
-    requirements: yup.array().of(yup.string().required()).min(1),
+    features: yup.string().required("Features is required"),
+    requirements: yup.string().required("Requirements is required"),
     tags: yup.array().of(yup.number()).min(1, "At least one tag is required"),
     status: yup.string().oneOf(["0", "1"]).required("Status is required"),
     image: yup.mixed().required("Image is required"),
@@ -67,24 +67,27 @@ export const gigsSchema = yup.object().shape({
     ),
 });
 
-export const gigsUpdateSchema = yup.object().shape({
-    id: yup.number().optional(),
-    title: yup.string().optional(),
-    category: yup.string().optional(),
-    description: yup.string().optional(),
-    features: yup.array().of(yup.string().optional()).optional(),
-    requirements: yup.array().of(yup.string().optional()).optional(),
-    tags: yup.array().of(yup.number().optional()).optional(),
-    status: yup.string().oneOf(["0", "1"]).optional(),
-    image: yup.mixed().nullable(),
-    pricing: yup.array().of(
-        yup.object().shape({
-            pricing_tier_id: yup.number().optional(),
-            price: yup.number().optional(),
-            delivery_time: yup.string().optional(),
-            tier_description: yup.string().optional(),
-            tier_requirement: yup.string().optional(),
-            currency_id: yup.number().optional(),
-        })
-    ).optional(),
+export const gigsUpdateSchema = gigsSchema.shape({
+    id: yup.number().required("ID is required"),
+    title: yup.string().notRequired(),
+    category: yup.string().notRequired(),
+    description: yup.string().notRequired(),
+    features: yup.string().notRequired(),
+    requirements: yup.string().notRequired(),
+    tags: yup.array().of(yup.number()).min(1).notRequired(),
+    status: yup.string().oneOf(["0", "1"]).notRequired(),
+    image: yup.mixed().notRequired(),
+    pricing: yup
+        .array()
+        .of(
+            yup.object().shape({
+                pricing_tier_id: yup.number().required(),
+                price: yup.number().required(),
+                delivery_time: yup.string().required(),
+                tier_description: yup.string().required(),
+                tier_requirement: yup.string().required(),
+                currency_id: yup.number().required(),
+            })
+        )
+        .notRequired(),
 });
