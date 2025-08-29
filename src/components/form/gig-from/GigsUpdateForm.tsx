@@ -25,23 +25,9 @@ const GigsUpdateForm: React.FC<GigEditFormProps> = ({defaultValues, onSuccess}) 
         formData.append("title", data.title?.trim() ?? "");
         formData.append("category", data.category?.trim() ?? "");
         formData.append("description", data.description?.trim() ?? "");
+        formData.append("features", data.features ?? "");
 
-        if (data.requirements && data.requirements.length > 0) {
-            data.requirements.forEach((req, index) => {
-                formData.append(`requirements[${index}]`, req ?? "");
-            });
-        } else {
-            formData.append("requirements[]", "");
-        }
-
-        if (data.features && data.features.length > 0) {
-            data.features.forEach((feat, index) => {
-                formData.append(`features[${index}]`, feat ?? "");
-            });
-        } else {
-            formData.append("features[]", "");
-        }
-
+        formData.append("requirements", data.requirements ?? "");
         data.tags?.forEach((tag: any) =>
             formData.append("tag_id[]", String(typeof tag === "object" ? tag.id : tag))
         );
@@ -72,9 +58,10 @@ const GigsUpdateForm: React.FC<GigEditFormProps> = ({defaultValues, onSuccess}) 
 
         try {
             const response = await gigsService.updateGig(defaultValues.id, formData);
+            router.push("/influencer/gigs");
             if (response) {
                 toast.success("Gig updated successfully");
-                router.push("/influencer/gigs");
+
             }
 
         } catch (error: any) {

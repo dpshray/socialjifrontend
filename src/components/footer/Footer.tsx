@@ -5,10 +5,11 @@ import Image from "next/image"
 
 const Footer = () => {
     const company = [
-        {label: "About", link: "#"},
-        {label: "Careers", link: "#"},
-        {label: "Brand Center", link: "#"},
-        {label: "Blog", link: "#"},
+        {label: "Explore", link: "/explore"},
+        {label: "Insight", link: "/insight"},
+        {label: "How it works", link: "/how-it-works"},
+        {label: "Faq", link: "/faq"},
+
     ]
     const helpCenter = [
         {label: "Join our Discord Server", link: "#"},
@@ -18,7 +19,6 @@ const Footer = () => {
     ]
     const legal = [
         {label: "Privacy Policy", link: "/privacy-policy"},
-        {label: "Licensing", link: "#"},
         {label: "Terms & Conditions", link: "/terms-conditions"},
     ]
     const downloads = [
@@ -28,9 +28,9 @@ const Footer = () => {
         {label: "MacOS", link: "#"},
     ]
     const socialLinks = [
-        {href: "#", label: "Facebook", Icon: Facebook},
-        {href: "#", label: "LinkedIn", Icon: Linkedin},
-        {href: "#", label: "Twitter", Icon: Twitter},
+        {href: process.env.NEXT_PUBLIC_FACEBOOK_URL, label: "Facebook", Icon: Facebook},
+        {href: process.env.NEXT_PUBLIC_LINKEDIN_URL, label: "LinkedIn", Icon: Linkedin},
+        {href: process.env.NEXT_PUBLIC_TWITTER_URL, label: "Twitter", Icon: Twitter},
     ]
     return (
         <footer className="bg-white border-t border-gray-200 font-montserrat mt-12">
@@ -157,7 +157,7 @@ const Footer = () => {
 
                         <div className="flex space-x-3">
                             {socialLinks.map(({href, label, Icon}, index) => (
-                                <Link
+                                <a
                                     key={index}
                                     href={href}
                                     aria-label={`Visit our ${label} page`}
@@ -167,7 +167,7 @@ const Footer = () => {
                                         size={18}
                                         className="text-purple-600 group-hover:text-purple-700 transition-colors duration-200"
                                     />
-                                </Link>
+                                </a>
                             ))}
                         </div>
                     </div>

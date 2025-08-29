@@ -3,11 +3,8 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Image from 'next/image';
 import {Button} from '@/components/ui/button';
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
-import {LineChart} from '@/components/chart/chart';
 import {cn} from '@/lib/utils';
-import {DashboardUserCard, VertCard} from '@/components/card/card';
-import {UsersImages} from '@/data';
+import {DashboardUserCard} from '@/components/card/card';
 import {brandService} from '@/services/brand.service';
 import {InfluencerStatsCard} from '@/components/card/influencer/influencer-dashboard';
 import {Briefcase, Star, ThumbsUp, Users} from 'lucide-react';
@@ -15,6 +12,7 @@ import SocialMediaConnect from '@/app/influencer/dashboard/social-medai-connect'
 import {toast} from 'sonner';
 import InfluencerInsightsCard, {InfluencerInsight} from "@/components/card/influencer/influencer-card";
 import dashboardService from "@/services/dashboardService";
+import BrandDashboardChart from "@/components/chart/brand-dashboard-chart";
 
 interface BrandCardProps {
     title?: React.ReactNode;
@@ -65,7 +63,6 @@ const BrandCard: React.FC<BrandCardProps> = ({
 );
 
 export default function BrandDashboard() {
-    const [activeTab, setActiveTab] = useState<string>('tab-1');
     const [dashboardData, setDashboardData] = useState<any>(null);
     const [influencers, setInfluencers] = useState<InfluencerInsight[]>([])
 
@@ -84,26 +81,6 @@ export default function BrandDashboard() {
         fetchData()
     }, [])
 
-    const profileData = useMemo(
-        () => [
-            {
-                image: 'https://flowbite.com/docs/images/people/profile-picture-3.jpg',
-                name: 'Vercel',
-                email: 'laboanovskiy@gmail.com',
-            },
-            {
-                image: 'https://flowbite.com/docs/images/people/profile-picture-3.jpg',
-                name: 'Vercel',
-                email: 'laboanovskiy@gmail.com',
-            },
-            {
-                image: 'https://flowbite.com/docs/images/people/profile-picture-3.jpg',
-                name: 'Anton Tkachevet',
-                email: 'laboanovskiy@gmail.com',
-            },
-        ],
-        []
-    );
 
     useEffect(() => {
         (async () => {
@@ -213,40 +190,7 @@ export default function BrandDashboard() {
                     </div>
 
                     <section className="my-4">
-                        <Tabs value={activeTab} onValueChange={setActiveTab}>
-                            <TabsList className="flex flex-wrap gap-4 bg-white dark:bg-gray-800 rounded-md p-2">
-                                {['Total Influencer', 'Top Project', 'Operating Status'].map((tab, idx) => (
-                                    <TabsTrigger
-                                        key={idx}
-                                        value={`tab-${idx + 1}`}
-                                        className={cn(
-                                            'bg-transparent text-gray-500 dark:text-gray-400 px-3 py-1 cursor-pointer relative',
-                                            'data-[state=active]:text-black data-[state=active]:font-semibold dark:data-[state=active]:text-white',
-                                            'after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 data-[state=active]:after:bg-primary'
-                                        )}
-                                    >
-                                        {tab}
-                                    </TabsTrigger>
-                                ))}
-                                <span className="mx-4 hidden sm:inline-block">|</span>
-                                <div className="hidden sm:flex items-center font-inter gap-4 text-sm">
-                                    <p className="text-black dark:text-white flex items-center gap-1">
-                                        <span className="h-2 w-2 bg-black dark:bg-white rounded-full"/>
-                                        This Year
-                                    </p>
-                                    <p className="text-gray-400 dark:text-gray-400 flex items-center gap-1">
-                                        <span className="h-2 w-2 bg-[#AEC7ED] rounded-full"/>
-                                        Last Year
-                                    </p>
-                                </div>
-                            </TabsList>
-                            {[...Array(3)].map((_, idx) => (
-                                <TabsContent key={idx} value={`tab-${idx + 1}`}
-                                             className="w-full min-h-[300px] px-2 py-4 sm:px-4">
-                                    <LineChart/>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
+                        <BrandDashboardChart/>
                     </section>
                 </div>
 
@@ -288,20 +232,20 @@ export default function BrandDashboard() {
                 </aside>
             </div>
 
-            <div  className={' bg-white p-2'}>
-               <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-                   {
-                       influencers.length > 0 ? influencers.map((influencer: any, index: number) => (
-                               <InfluencerInsightsCard
-                                   key={influencer.id || index}
-                                   {...influencer}
+            <div className={' bg-white p-2'}>
+                <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {
+                        influencers.length > 0 ? influencers.map((influencer: any, index: number) => (
+                                <InfluencerInsightsCard
+                                    key={influencer.id || index}
+                                    {...influencer}
 
-                               />
-                           ))
-                           : <p>No influencers found</p>
+                                />
+                            ))
+                            : <p>No influencers found</p>
 
-                   }
-               </div>
+                    }
+                </div>
             </div>
         </section>
     );
