@@ -38,7 +38,7 @@ const SocialMediaConnect: React.FC<SocialMediaConnectProps> = ({
                                                                    onConnect,
                                                                    onManage,
                                                                    connectButtonText = { default: 'Connect', loading: 'Connecting...' },
-                                                                   manageButtonText = 'Manage',
+                                                                   manageButtonText = 'Reconnect',
                                                                    className = '',
                                                                }) => {
     return (
