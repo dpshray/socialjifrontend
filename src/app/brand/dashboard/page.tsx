@@ -5,7 +5,6 @@ import Image from 'next/image';
 import {Button} from '@/components/ui/button';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
 import {LineChart} from '@/components/chart/chart';
-import {Card, CardContent} from '@/components/ui/card';
 import {cn} from '@/lib/utils';
 import {DashboardUserCard, VertCard} from '@/components/card/card';
 import {UsersImages} from '@/data';
@@ -14,6 +13,8 @@ import {InfluencerStatsCard} from '@/components/card/influencer/influencer-dashb
 import {Briefcase, Star, ThumbsUp, Users} from 'lucide-react';
 import SocialMediaConnect from '@/app/influencer/dashboard/social-medai-connect';
 import {toast} from 'sonner';
+import InfluencerInsightsCard, {InfluencerInsight} from "@/components/card/influencer/influencer-card";
+import dashboardService from "@/services/dashboardService";
 
 interface BrandCardProps {
     title?: React.ReactNode;
@@ -66,6 +67,22 @@ const BrandCard: React.FC<BrandCardProps> = ({
 export default function BrandDashboard() {
     const [activeTab, setActiveTab] = useState<string>('tab-1');
     const [dashboardData, setDashboardData] = useState<any>(null);
+    const [influencers, setInfluencers] = useState<InfluencerInsight[]>([])
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const params = {per_page: 6, page: 1}
+            try {
+                const response = await dashboardService.explorerInfluencer(params)
+                console.log('Response', response)
+                setInfluencers(response.data)
+            } catch (error) {
+                console.error("Error fetching influencers:", error)
+                toast.error("Error fetching influencers")
+            }
+        }
+        fetchData()
+    }, [])
 
     const profileData = useMemo(
         () => [
@@ -234,8 +251,10 @@ export default function BrandDashboard() {
                 </div>
 
                 <aside className="lg:col-span-1 flex flex-col space-y-6">
-                    <section className="h-[280px] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-sm p-4">
-                        <h3 className="text-lg font-semibold font-inter text-black dark:text-gray-100 mb-6">Social Media
+                    <section
+                        className="h-[280px] overflow-y-auto bg-white dark:bg-gray-900 rounded-lg shadow-sm p-4">
+                        <h3 className="text-lg font-semibold font-inter text-black dark:text-gray-100 mb-6">Social
+                            Media
                             Accounts</h3>
                         <SocialMediaConnect
                             icons={socialMediaIcons}
@@ -245,6 +264,7 @@ export default function BrandDashboard() {
                             manageButtonText="Manage"
                             loadingType={null}
                             onConnect={handleSocialConnect}
+                            onManage={handleSocialConnect}
                         />
                     </section>
 
@@ -264,61 +284,24 @@ export default function BrandDashboard() {
                         </div>
                     </section>
 
-                    <VertCard users={UsersImages}/>
+                    {/*<VertCard users={UsersImages}/>*/}
                 </aside>
             </div>
 
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card className="w-full md:max-w-lg mx-auto border border-[#BE50C8] dark:border-purple-600">
-                    <CardContent className="p-4 bg-white dark:bg-gray-900 rounded-lg">
-                        <div className="flex items-center justify-between pb-4">
-                            <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">Latest
-                                Influencers</h2>
-                        </div>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full text-sm text-gray-700 dark:text-gray-300">
-                                <thead>
-                                <tr className="bg-gray-100 dark:bg-gray-800">
-                                    <th className="px-2 py-3 text-left">#</th>
-                                    <th className="px-2 py-3 text-left">Name</th>
-                                    <th className="px-2 py-3 text-left">Role</th>
-                                    <th className="px-2 py-3 text-left">Date</th>
-                                    <th className="px-2 py-3 text-left">Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {profileData.map((profile, idx) => (
-                                    <tr
-                                        key={idx}
-                                        className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150"
-                                    >
-                                        <td className="px-2 py-3">{idx + 1}</td>
-                                        <td className="px-2 py-3">
-                                            <div className="flex items-center gap-2">
-                                                <Image
-                                                    className="h-8 w-8 rounded-full"
-                                                    src={profile.image}
-                                                    width={32}
-                                                    height={32}
-                                                    alt={`Avatar of ${profile.name}`}
-                                                />
-                                                <span>{profile.name}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-2 py-3">Role</td>
-                                        <td className="px-2 py-3 text-xs">Sep 28, 2022</td>
-                                        <td className="px-2 py-3">
-                        <span className="bg-green-200 text-green-900 text-xs font-semibold px-2 py-1 rounded-full">
-                          Active
-                        </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </CardContent>
-                </Card>
+            <div  className={' bg-white p-2'}>
+               <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
+                   {
+                       influencers.length > 0 ? influencers.map((influencer: any, index: number) => (
+                               <InfluencerInsightsCard
+                                   key={influencer.id || index}
+                                   {...influencer}
+
+                               />
+                           ))
+                           : <p>No influencers found</p>
+
+                   }
+               </div>
             </div>
         </section>
     );

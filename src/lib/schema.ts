@@ -47,15 +47,14 @@ export const ForgotPasswordSchema = yup.object({
 
 export const gigsSchema = yup.object().shape({
     id: yup.number(),
-    title: yup.string().required('Title is required'),
-    category: yup.string().required('Category is required'),
-    description: yup.string().required('Description is required'),
+    title: yup.string().required("Title is required"),
+    category: yup.string().required("Category is required"),
+    description: yup.string().required("Description is required"),
     features: yup.array().of(yup.string().required()).min(1),
     requirements: yup.array().of(yup.string().required()).min(1),
-    tags: yup.array().of(yup.number()).min(1, 'At least one tag is required'),
-    status: yup.string().oneOf(['0', '1']).required('Status is required'),
-    image: yup.mixed().required('Image is required')
-    ,
+    tags: yup.array().of(yup.number()).min(1, "At least one tag is required"),
+    status: yup.string().oneOf(["0", "1"]).required("Status is required"),
+    image: yup.mixed().required("Image is required"),
     pricing: yup.array().of(
         yup.object().shape({
             pricing_tier_id: yup.number().required(),
@@ -77,7 +76,7 @@ export const gigsUpdateSchema = yup.object().shape({
     requirements: yup.array().of(yup.string().optional()).optional(),
     tags: yup.array().of(yup.number().optional()).optional(),
     status: yup.string().oneOf(["0", "1"]).optional(),
-    image: yup.mixed().optional(),
+    image: yup.mixed().nullable(),
     pricing: yup.array().of(
         yup.object().shape({
             pricing_tier_id: yup.number().optional(),

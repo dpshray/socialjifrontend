@@ -70,7 +70,7 @@ class GigsService extends HttpServices {
 
     async updateGig(id: number, data: any) {
         try {
-            const result: any = await this.putRequest({
+            const result: any = await this.postRequest({
                 url: `/influencer/gig/${id}`,
                 data,
                 config: {

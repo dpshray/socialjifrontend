@@ -21,8 +21,8 @@ import {Label} from "@/components/ui/label"
 import {Input} from "@/components/ui/input"
 import {ScrollArea} from "@/components/ui/scroll-area"
 
-import {cn} from "@/lib/utils";
-import {tagsService} from "@/services/tagsService";
+import {cn} from "@/lib/utils"
+import {tagsService} from "@/services/tagsService"
 
 type TagFormValues = {
     tag: string
@@ -32,12 +32,10 @@ const validationSchema = Yup.object({
     tag: Yup.string().required("Tag is required").min(2, "Tag must be at least 2 characters"),
 })
 
-
-export const TagModal = React.memo(() => {
+export default function TagModal() {
     const [tags, setTags] = useState<string[]>([])
     const [loading, setLoading] = useState<boolean>(false)
     const [submitting, setSubmitting] = useState<boolean>(false)
-    const [selectedTags, setSelectedTags] = useState<string[]>([])
 
     const {
         register,
@@ -79,10 +77,6 @@ export const TagModal = React.memo(() => {
         }
     }
 
-    const toggleTagSelection = useCallback((tag: string) => {
-        setSelectedTags((prev) => (prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]))
-    }, [])
-
     useEffect(() => {
         getAvailableTags()
     }, [getAvailableTags])
@@ -96,20 +90,21 @@ export const TagModal = React.memo(() => {
         return filteredTags.map((tag) => (
             <Badge
                 key={tag}
-                variant={selectedTags.includes(tag) ? "default" : "secondary"}
-                className="capitalize cursor-pointer transition-all duration-200 rounded-full px-3 py-1.5 text-xs sm:text-sm bg-muted hover:bg-muted/80 hover:scale-105 active:scale-95 select-none"
-                onClick={() => toggleTagSelection(tag)}
+                variant="secondary"
+                className="capitalize cursor-default rounded-full px-3 py-1.5 text-xs sm:text-sm bg-muted select-none"
             >
                 {tag}
             </Badge>
         ))
-    }, [filteredTags, selectedTags, toggleTagSelection])
+    }, [filteredTags])
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline"
-                        className="font-semibold text-sm !text-white sm:text-base bg-gradient-to-br from-blue-500 to-purple-600 ">
+                <Button
+                    variant="outline"
+                    className="font-semibold text-sm !text-white sm:text-base bg-gradient-to-br from-blue-500 to-purple-600 flex items-center gap-1"
+                >
                     <Plus size={16}/>
                     <span className="hidden xs:inline">Add Tags</span>
                     <span className="xs:hidden">Tags</span>
@@ -118,7 +113,6 @@ export const TagModal = React.memo(() => {
 
             <DialogContent className="w-[95vw] max-w-md sm:max-w-lg md:max-w-xl mx-auto">
                 <div className="flex flex-col items-center gap-3 sm:gap-4">
-                    {/* Icon/Image Container */}
                     <div
                         className="flex size-12 sm:size-14 items-center justify-center rounded-full border bg-background overflow-hidden">
                         <div
@@ -136,7 +130,6 @@ export const TagModal = React.memo(() => {
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5 mt-2 sm:mt-4">
-                    {/* Tag Input Field */}
                     <div className="space-y-2">
                         <Label htmlFor="tag" className="text-sm font-medium">
                             New Tag
@@ -150,22 +143,14 @@ export const TagModal = React.memo(() => {
                                 type="text"
                                 placeholder="Enter a new tag..."
                                 className="pl-10 text-sm sm:text-base"
+                                autoComplete="off"
                             />
                         </div>
                         {errors.tag && <p className="text-sm text-destructive">{errors.tag.message}</p>}
                     </div>
 
-                    {/* Available Tags Section */}
                     <div className="space-y-2 sm:space-y-3">
-                        <div className="flex items-center justify-between">
-                            <Label className="text-sm font-medium">Available Tags</Label>
-                            {selectedTags.length > 0 && (
-                                <Badge variant="outline" className="text-xs">
-                                    {selectedTags.length} selected
-                                </Badge>
-                            )}
-                        </div>
-
+                        <Label className="text-sm font-medium">Available Tags</Label>
                         <ScrollArea className="h-32 sm:h-40 w-full rounded-md border p-3 sm:p-4">
                             {loading ? (
                                 <div className="flex items-center justify-center h-full">
@@ -184,26 +169,7 @@ export const TagModal = React.memo(() => {
                         </ScrollArea>
                     </div>
 
-                    {/* Selected Tags Preview */}
-                    {selectedTags.length > 0 && (
-                        <div className="space-y-2">
-                            <Label className="text-sm font-medium">Selected Tags</Label>
-                            <div className="flex flex-wrap gap-1.5 sm:gap-2 p-2 sm:p-3 bg-muted/50 rounded-md">
-                                {selectedTags.map((tag) => (
-                                    <Badge key={tag} variant="default" className="text-xs">
-                                        {tag}
-                                    </Badge>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Submit Button */}
-                    <Button
-                        type="submit"
-                        className={cn('bg-navyBlue')}
-                        disabled={submitting}
-                    >
+                    <Button type="submit" className={cn("bg-navyBlue")} disabled={submitting}>
                         {submitting ? (
                             <>
                                 <Loader2 className="w-4 h-4 animate-spin mr-2"/>
@@ -217,6 +183,4 @@ export const TagModal = React.memo(() => {
             </DialogContent>
         </Dialog>
     )
-})
-
-TagModal.displayName = "AddModal"
+}

@@ -37,6 +37,17 @@ class GlobalService extends HttpsService {
         }
     }
 
+    contactUs = async (data: any) => {
+        try {
+            return await this.postRequest({
+                url: `/client/contact-us`,
+                data,
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
 }
 
 
