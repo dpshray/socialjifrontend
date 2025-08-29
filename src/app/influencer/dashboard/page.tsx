@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 import {BriefcaseIcon, DollarSign, Plus, TrendingUp} from 'lucide-react'
 import Image from 'next/image'
-import InfluencerChart, {DataPoint} from '@/components/chart/Influencer'
+import InfluencerChart from '@/components/chart/Influencer'
 import LatestGigsTable from '@/components/table/userTable'
 import {Button} from '@/components/ui/button'
 import {ComingStatsCard, InfluencerStatsCard} from '@/components/card/influencer/influencer-dashboard'
@@ -22,34 +22,12 @@ const socialMediaIcons: SocialMediaIcon[] = [
     {image: '/instagram.png', title: 'Instagram', description: 'Connect Account', type: 'instagram'},
     {image: '/facebook1.png', title: 'Facebook', description: 'Connect Account', type: 'facebook'},
 ]
-// const sampleGigsData: any[] = [
-//     {month: 1, gigs: 850},
-//     {month: 2, gigs: 1200},
-//     {month: 3, gigs: 980},
-//     {month: 4, gigs: 1450},
-//     {month: 5, gigs: 1800},
-//     {month: 6, gigs: 1650},
-//     {month: 7, gigs: 2100},
-//     {month: 8, gigs: 1950}
-// ]
-//
-// const sampleCampaignData: any[] = [
-//     {month: 1, campaigns: 120},
-//     {month: 2, campaigns: 180},
-//     {month: 3, campaigns: 145},
-//     {month: 4, campaigns: 220},
-//     {month: 5, campaigns: 280},
-//     {month: 6, campaigns: 245},
-//     {month: 7, campaigns: 310},
-//     {month: 8, campaigns: 290}
-// ]
 
 
 export default function InfluencerDashboard() {
     const [loadingType, setLoadingType] = useState<string | null>(null)
     const [dashboardData, setDashboardData] = useState<any>(null)
-    const [gigChartData, setGigChartData] = useState<DataPoint[]>([])
-    const [campaignChartData, setCampaignChartData] = useState<DataPoint[]>([])
+
     const [loadingDashboard, setLoadingDashboard] = useState(true)
 
     const handleConnect = (type: string) => {
@@ -72,8 +50,6 @@ export default function InfluencerDashboard() {
             try {
                 const response = await influencerService.influencerDashboard()
                 setDashboardData(response)
-                setGigChartData(response?.no_of_gigs_published_on_current_year || [])
-                setCampaignChartData(response?.campaign_published_on_current_year || [])
             } catch {
                 setDashboardData(null)
             } finally {
@@ -97,7 +73,6 @@ export default function InfluencerDashboard() {
             icon: TrendingUp
         },
     ]
-    console.log('campaignChartData', campaignChartData)
 
     const isConnected = (platformType: string) =>
         dashboardData?.social_followers?.some(
@@ -179,8 +154,9 @@ export default function InfluencerDashboard() {
                                             </Button>
                                         )}
                                         {connected && (
-                                            <Button variant="secondary" size="sm">
-                                                Manage
+                                            <Button variant="secondary" size="sm"
+                                                    onClick={() => handleConnect(icon.type)}>
+                                                Reconnect
                                             </Button>
                                         )}
                                     </div>
@@ -206,7 +182,7 @@ export default function InfluencerDashboard() {
                         {loadingDashboard ? (
                             <div className="h-[300px] w-full bg-gray-200 dark:bg-gray-700 animate-pulse rounded-lg"/>
                         ) : (
-                            <InfluencerChart gigsData={gigChartData} campaignData={campaignChartData}/>
+                            <InfluencerChart/>
                         )}
                     </div>
 

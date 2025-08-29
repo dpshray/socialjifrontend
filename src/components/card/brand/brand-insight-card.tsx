@@ -18,7 +18,6 @@ export interface SocialProfile {
     follower_count: number | string
 }
 
-// Updated Brand interface to correctly type category_name
 export interface Brand {
     id: number
     first_name: string
@@ -33,7 +32,7 @@ export interface Brand {
         id: number
         name: string
         slug: string
-    } | null // Changed to object or null
+    } | null
     rating: number
     social_profiles: SocialProfile[]
 }
@@ -138,16 +137,20 @@ export default function BrandInsightsCard({brand, onViewCampaigns, className}: B
                         </div>
                     </div>
                 )}
-                <div className="mt-auto pt-3 sm:pt-4 border-t border-slate-100">
-                    <Button
-                        onClick={onViewCampaigns}
-                        size="sm"
-                        className="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
-                    >
-                        View Campaigns
-                        <ArrowUpRight className="w-3 h-3 ml-1"/>
-                    </Button>
-                </div>
+                {
+                    onViewCampaigns && (
+                        <div className="mt-auto pt-3 sm:pt-4 border-t border-slate-100">
+                            <Button
+                                onClick={onViewCampaigns}
+                                size="sm"
+                                className="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700"
+                            >
+                                View Campaigns
+                                <ArrowUpRight className="w-3 h-3 ml-1"/>
+                            </Button>
+                        </div>
+                    )
+                }
             </CardContent>
         </Card>
     )

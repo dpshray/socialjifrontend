@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowUpRight, Calendar, Instagram, Twitter, Users, Youtube } from 'lucide-react'
-import { cn } from "@/lib/utils"
+import {Button} from "@/components/ui/button"
+import {Card, CardContent} from "@/components/ui/card"
+import {Badge} from "@/components/ui/badge"
+import {ArrowUpRight, Calendar, Users} from "lucide-react"
+import {cn} from "@/lib/utils"
 
 export type GigInsight = {
     total_sold: number
@@ -19,7 +19,7 @@ export type GigInsight = {
             nick_name: string
             first_name: string
             middle_name?: string
-            last_name: string
+            last: string
             image: string
         }
         total_reviews: number
@@ -49,21 +49,27 @@ export interface Currency {
 
 export type GigInsightCardProps = {
     gigData: GigInsight
-    onApplyAction: (gigId: number) => void
+    onApplyAction?: (gigId: number) => void
     className?: string
 }
 
-export default function GigInsightCard({ gigData, onApplyAction, className }: GigInsightCardProps) {
+export default function GigInsightCard({
+                                           gigData,
+                                           onApplyAction,
+                                           className,
+                                       }: GigInsightCardProps) {
     const getBrandName = () => {
-        if (gigData.gig_name.user?.first_name && gigData.gig_name.user?.last_name) {
-            return `${gigData.gig_name.user.first_name} ${gigData.gig_name.user.last_name}`.trim()
+        if (gigData.gig_name.user?.first_name && gigData.gig_name.user?.last) {
+            return `${gigData.gig_name.user.first_name} ${gigData.gig_name.user.last}`.trim()
         }
         return gigData.gig_name.user?.nick_name || "Unknown"
     }
 
     const getBudget = () => {
         if (gigData.gig_name.pricings && gigData.gig_name.pricings.length > 0) {
-            const prices = gigData.gig_name.pricings.map((p: Pricing) => Number.parseFloat(p.price)).filter((p) => !isNaN(p))
+            const prices = gigData.gig_name.pricings
+                .map((p: Pricing) => Number.parseFloat(p.price))
+                .filter((p) => !isNaN(p))
             if (prices.length === 0) return "Contact for pricing"
             const minPrice = Math.min(...prices)
             const maxPrice = Math.max(...prices)
@@ -83,15 +89,6 @@ export default function GigInsightCard({ gigData, onApplyAction, className }: Gi
         return "Flexible"
     }
 
-    const getPlatforms = () => {
-        const features = gigData.gig_name.features || ""
-        const platformsFromFeatures = features
-            .split(",")
-            .map((f) => f.trim())
-            .filter((f) => ["Instagram", "YouTube", "TikTok", "Twitter"].includes(f))
-        return platformsFromFeatures.length > 0 ? platformsFromFeatures : ["Instagram", "YouTube"]
-    }
-
     const getDeliverables = () => {
         const features = gigData.gig_name.features || ""
         if (features.length) {
@@ -104,14 +101,14 @@ export default function GigInsightCard({ gigData, onApplyAction, className }: Gi
     }
 
     const handleApply = () => {
-        onApplyAction(gigData.gig_name.id)
+        onApplyAction?.(gigData.gig_name.id)
     }
 
     return (
         <Card
             className={cn(
                 "bg-white/80 backdrop-blur-sm border border-white/20 group hover:shadow-xl transition-all duration-300 h-full flex flex-col py-2",
-                className,
+                className
             )}
         >
             <CardContent className="p-4 sm:p-6 flex flex-col h-full">
@@ -121,8 +118,9 @@ export default function GigInsightCard({ gigData, onApplyAction, className }: Gi
                             <h3 className="text-lg sm:text-xl font-bold text-slate-900 line-clamp-2 leading-tight">
                                 {gigData.gig_name.title}
                             </h3>
-                            <Badge
-                                className="bg-green-100 text-green-800 border-green-200 text-xs shrink-0 w-fit">Active</Badge>
+                            <Badge className="bg-green-100 text-green-800 border-green-200 text-xs shrink-0 w-fit">
+                                Active
+                            </Badge>
                         </div>
                         <p className="text-slate-600 text-sm mb-1">
                             by <span className="font-medium truncate">{getBrandName()}</span>
@@ -159,20 +157,6 @@ export default function GigInsightCard({ gigData, onApplyAction, className }: Gi
                         <div className="text-xs text-slate-500">Duration</div>
                     </div>
                 </div>
-                {/*<div className="mb-4">*/}
-                {/*    <h4 className="font-medium text-slate-900 mb-2 text-sm">Platforms</h4>*/}
-                {/*    <div className="flex flex-wrap gap-1">*/}
-                {/*        {getPlatforms().map((platform: string) => (*/}
-                {/*            <Badge key={platform} variant="outline" className="flex items-center space-x-1 text-xs">*/}
-                {/*                {platform === "Instagram" && <Instagram className="w-3 h-3"/>}*/}
-                {/*                {platform === "YouTube" && <Youtube className="w-3 h-3"/>}*/}
-                {/*                {platform === "TikTok" && <div className="w-3 h-3 bg-black rounded-sm"/>}*/}
-                {/*                {platform === "Twitter" && <Twitter className="w-3 h-3"/>}*/}
-                {/*                <span>{platform}</span>*/}
-                {/*            </Badge>*/}
-                {/*        ))}*/}
-                {/*    </div>*/}
-                {/*</div>*/}
                 <div className="mb-4">
                     <h4 className="font-medium text-slate-900 mb-2 text-sm">Deliverables</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
@@ -195,17 +179,19 @@ export default function GigInsightCard({ gigData, onApplyAction, className }: Gi
                         <span>•</span>
                         <span>{gigData.total_sold || 0} sold</span>
                     </div>
-                    <Button
-                        onClick={handleApply}
-                        size="sm"
-                        className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 w-full sm:w-auto"
-                    >
-                        Apply Now
-                        <ArrowUpRight className="w-3 h-3 ml-1"/>
-                    </Button>
+                    {
+                        onApplyAction && (
+                            <Button
+                                onClick={handleApply}
+                                size="sm"
+                                className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 w-full sm:w-auto"
+                            >
+                                Apply Now
+                                <ArrowUpRight className="w-3 h-3 ml-1"/>
+                            </Button>)
+                    }
                 </div>
             </CardContent>
         </Card>
     )
 }
-

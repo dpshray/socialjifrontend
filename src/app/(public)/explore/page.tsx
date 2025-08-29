@@ -43,22 +43,9 @@ export default function ExplorePage() {
         }
 
         fetchData()
-    }, []) // Fixed: Removed state dependencies to prevent infinite re-renders
+    }, [])
 
-    const handleContactInfluencer = (name: string) => {
-        setContactedInfluencer(name)
-        setTimeout(() => setContactedInfluencer(null), 3000)
-    }
 
-    const handleViewBrandCampaigns = (name: string) => {
-        setViewedBrand(name)
-        setTimeout(() => setViewedBrand(null), 3000)
-    }
-
-    const handleApplyToGig = (gigId: number) => {
-        console.log(`Applied to gig ${gigId}`)
-        // Add your application logic here
-    }
 
     if (loading) {
         return (
@@ -137,7 +124,7 @@ export default function ExplorePage() {
                                     <InfluencerInsightsCard
                                         key={influencer.id || index}
                                         {...influencer}
-                                        onContactAction={() => handleContactInfluencer(`${influencer.first_name} ${influencer.last_name}`)}
+
                                     />
                                 ))}
                             </div>
@@ -157,7 +144,7 @@ export default function ExplorePage() {
                                     <BrandInsightsCard
                                         key={brand.id}
                                         brand={brand}
-                                        onViewCampaigns={() => handleViewBrandCampaigns(brand.name)}
+
                                     />
                                 ))}
                             </div>
@@ -174,7 +161,7 @@ export default function ExplorePage() {
                         ) : (
                             <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-6">
                                 {gigs.map((gig, index) => (
-                                    <GigInsightCard key={index} gigData={gig} onApplyAction={handleApplyToGig}/>
+                                    <GigInsightCard key={index} gigData={gig} />
                                 ))}
                             </div>
                         )}

@@ -40,7 +40,7 @@ export default function InfluencerInsightsCard({
                                                    highest_price_gig,
                                                    lowest_price_gig,
                                                    social_profiles,
-                                                   location = 'Unknown',
+                                                   location = 'Location not available',
                                                    onContactAction,
                                                    className,
                                                }: InfluencerInsightsCardProps) {
@@ -124,14 +124,18 @@ export default function InfluencerInsightsCard({
                     </div>
                 </div>
 
-                <div className="mt-auto pt-2">
-                    <Button
-                        onClick={onContactAction}
-                        className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-purple-700 hover:from-blue-700 hover:via-purple-700 hover:to-purple-800 text-white text-sm py-2"
-                    >
-                        Contact Influencer
-                    </Button>
-                </div>
+                {
+                    onContactAction && (
+                        <div className="mt-auto pt-2">
+                            <Button
+                                onClick={onContactAction}
+                                className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-purple-700 hover:from-blue-700 hover:via-purple-700 hover:to-purple-800 text-white text-sm py-2"
+                            >
+                                Contact Influencer
+                            </Button>
+                        </div>
+                    )
+                }
             </CardContent>
         </Card>
     )
