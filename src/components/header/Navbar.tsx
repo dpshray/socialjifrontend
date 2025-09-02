@@ -6,6 +6,7 @@ import {Menu, Sparkles, X} from "lucide-react"
 import {usePathname} from "next/navigation"
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
+import Image from "next/image";
 
 interface NavLink {
     label: string
@@ -76,7 +77,14 @@ export default function Navbar() {
                         onClick={closeMobileMenu}
                         className="flex items-center gap-2 font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-transparent bg-clip-text hover:from-purple-600 hover:to-indigo-700 transition-all"
                     >
-                        <span className="text-sm sm:text-2xl">SocialJi</span>
+                        <Image
+                            src="/logo.png"
+                            width={60}
+                            height={60}
+                            alt="SocialJi Logo"
+                            className="w-3/4 h-16 py-2 "
+                        />
+                        {/*<span className="text-sm sm:text-2xl">SocialJi</span>*/}
                     </Link>
 
                     {/* Desktop Menu */}
