@@ -18,6 +18,7 @@ import {Button} from '@/components/ui/button'
 import HomeHeroSection from '@/components/page/page'
 import {OpportunityCard} from '@/components/page'
 import {motion} from 'framer-motion'
+import {useRouter} from "next/navigation";
 
 
 interface PledgeItemProps {
@@ -119,10 +120,11 @@ const pledge = [
 ]
 
 export default function Home() {
+    const router = useRouter();
     return (
         <main className="font-montserrat">
             {/* Hero Section */}
-            <header>
+            <header aria-label="Hero Section">
                 <HomeHeroSection/>
             </header>
 
@@ -189,7 +191,7 @@ export default function Home() {
 
                             <Button
                                 className="bg-gradient-to-r from-[#6C4EE3] to-[#00B882] hover:from-[#5A3DD1] hover:to-[#00A074] text-white font-semibold px-8 py-3 shadow-lg">
-                                Start Campaign
+                                View Campaign
                                 <ArrowRight className="ml-2 w-4 h-4" aria-hidden="true"/>
                             </Button>
                         </div>

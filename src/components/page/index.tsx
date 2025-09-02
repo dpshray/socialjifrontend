@@ -4,6 +4,7 @@ import Image from 'next/image';
 import {motion} from 'framer-motion';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {LucideIcon} from 'lucide-react';
+import {cn} from "@/lib/utils";
 
 interface BannerSectionProps {
     reverse: boolean;
@@ -172,7 +173,8 @@ export function OpportunityCard({
             viewport={{amount: 0.2}}
         >
             <Card
-                className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-muted/50">
+                className={cn('group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-muted/50',
+                    'h-[300px]')}>
                 <CardHeader className="pb-4">
                     <div
                         className={`w-14 h-14 bg-gradient-to-r ${colorFrom} ${colorTo} rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}
