@@ -22,7 +22,7 @@ export default function Navbar() {
     const navLinks: NavLink[] = [
         {label: "Insights", href: "/insights"},
         {label: "Explore", href: "/explore"},
-        {label:"How it works", href:"/how-it-works"},
+        {label: "How it works", href: "/how-it-works"},
         {label: "Contact", href: "/contact-us"},
         {label: "FAQ", href: "/faq"}
     ]
@@ -75,7 +75,7 @@ export default function Navbar() {
                     <Link
                         href="/"
                         onClick={closeMobileMenu}
-                        className="flex items-center gap-2 font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-transparent bg-clip-text hover:from-purple-600 hover:to-indigo-700 transition-all"
+                        className="flex-shrink-0"
                     >
                         <Image
                             src="/logo.png"
