@@ -6,6 +6,7 @@ import {Menu, Sparkles, X} from "lucide-react"
 import {usePathname} from "next/navigation"
 import {cn} from "@/lib/utils"
 import {Button} from "@/components/ui/button"
+import Image from "next/image";
 
 interface NavLink {
     label: string
@@ -21,7 +22,7 @@ export default function Navbar() {
     const navLinks: NavLink[] = [
         {label: "Insights", href: "/insights"},
         {label: "Explore", href: "/explore"},
-        {label:"How it works", href:"/how-it-works"},
+        {label: "How it works", href: "/how-it-works"},
         {label: "Contact", href: "/contact-us"},
         {label: "FAQ", href: "/faq"}
     ]
@@ -74,9 +75,16 @@ export default function Navbar() {
                     <Link
                         href="/"
                         onClick={closeMobileMenu}
-                        className="flex items-center gap-2 font-bold bg-gradient-to-r from-purple-500 to-indigo-600 text-transparent bg-clip-text hover:from-purple-600 hover:to-indigo-700 transition-all"
+                        className="flex-shrink-0"
                     >
-                        <span className="text-sm sm:text-2xl">SocialJi</span>
+                        <Image
+                            src="/logo.png"
+                            width={2000}
+                            height={60}
+                            alt="SocialJi Logo"
+                            className="w-full object-cover h-36 py-2 "
+                        />
+                        {/*<span className="text-sm sm:text-2xl">SocialJi</span>*/}
                     </Link>
 
                     {/* Desktop Menu */}

@@ -1,177 +1,288 @@
 "use client"
+
 import Link from "next/link"
-import {Facebook, Linkedin, Twitter} from "lucide-react"
 import Image from "next/image"
+import {Facebook, ImageIcon, Linkedin, Twitter, UserPlus, Users} from "lucide-react"
+import {Button} from "@/components/ui/button"
+import {Card, CardContent} from "@/components/ui/card"
+import {Separator} from "@/components/ui/separator"
+import {cn} from "@/lib/utils"
 
-const Footer = () => {
-    const company = [
-        {label: "Explore", link: "/explore"},
-        {label: "Insight", link: "/insight"},
-        {label: "How it works", link: "/how-it-works"},
-        {label: "Faq", link: "/faq"},
+interface LinkItem {
+    label: string
+    href: string
+}
 
+interface CTAButton {
+    label: string
+    href: string
+    icon: React.ComponentType<{ size?: number; className?: string }>
+    variant?: "default" | "secondary" | "outline"
+}
+
+interface SocialLink {
+    href: string
+    label: string
+    icon: React.ComponentType<{ size?: number; className?: string }>
+}
+
+const Footer: React.FC = () => {
+    const companyLinks: LinkItem[] = [
+        {label: "Explore", href: "/explore"},
+        {label: "Insights", href: "/insights"},
+        {label: "How it Works", href: "/how-it-works"},
+        {label: "FAQ", href: "/faq"},
     ]
-    const helpCenter = [
-        {label: "Join our Discord Server", link: "#"},
-        {label: "Twitter", link: "#"},
-        {label: "Facebook", link: "#"},
-        {label: "Contact Us", link: "#"},
+
+    const supportLinks: LinkItem[] = [
+        {label: "Discord Community", href: process.env.NEXT_PUBLIC_DISCORD_URL || "#"},
+        {label: "Help Center", href: "/help"},
+        {label: "Contact Support", href: "/contact"},
+        {label: "Status Page", href: "/status"},
     ]
-    const legal = [
-        {label: "Privacy Policy", link: "/privacy-policy"},
-        {label: "Terms & Conditions", link: "/terms-conditions"},
+
+    const legalLinks: LinkItem[] = [
+        {label: "Privacy Policy", href: "/privacy"},
+        {label: "Terms of Service", href: "/terms"},
+        {label: "Cookie Policy", href: "/cookies"},
     ]
-    const downloads = [
-        {label: "iOS", link: "#"},
-        {label: "Android", link: "#"},
-        {label: "Windows", link: "#"},
-        {label: "MacOS", link: "#"},
+
+    const quickLinks: LinkItem[] = [
+        {label: "Join as Creator", href: "/register?type=creator"},
+        {label: "Hire Influencers", href: "/explore?tab=influencers"},
+        {label: "Image Assets", href: "/assets"},
     ]
-    const socialLinks = [
-        {href: process.env.NEXT_PUBLIC_FACEBOOK_URL, label: "Facebook", Icon: Facebook},
-        {href: process.env.NEXT_PUBLIC_LINKEDIN_URL, label: "LinkedIn", Icon: Linkedin},
-        {href: process.env.NEXT_PUBLIC_TWITTER_URL, label: "Twitter", Icon: Twitter},
+
+    const socialLinks: SocialLink[] = [
+        {href: process.env.NEXT_PUBLIC_FACEBOOK_URL || "#", label: "Facebook", icon: Facebook},
+        {href: process.env.NEXT_PUBLIC_LINKEDIN_URL || "#", label: "LinkedIn", icon: Linkedin},
+        {href: process.env.NEXT_PUBLIC_TWITTER_URL || "#", label: "Twitter", icon: Twitter},
     ]
+
+    const ctaButtons: CTAButton[] = [
+        {
+            label: "Join as Creator",
+            href: "/register?type=creator",
+            icon: UserPlus,
+            variant: "default",
+
+        },
+        {
+            label: "Find Influencers",
+            href: "/explore",
+            icon: Users,
+            variant: "secondary",
+        },
+        {
+            label: "Image Assets",
+            href: "/image-assets",
+            icon: ImageIcon,
+            variant: "outline",
+        },
+    ]
+
+    const FooterLink: React.FC<{ href: string; children: React.ReactNode; className?: string }> = ({
+                                                                                                       href,
+                                                                                                       children,
+                                                                                                       className
+                                                                                                   }) => (
+        <Link
+            href={href}
+            className={cn(
+                "text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm font-medium",
+                className
+            )}
+        >
+            {children}
+        </Link>
+    )
+
     return (
-        <footer className="bg-white border-t border-gray-200 font-montserrat mt-12">
-            <div className="w-full max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Main Footer Content */}
-                <div className="py-8 lg:py-12">
-                    <div className="flex flex-col lg:flex-row items-start justify-between gap-8">
-                        {/* Brand Section */}
-                        <div className="space-y-4">
-                            {/* Removed AnimatedElement wrapper */}
-                            <div className="flex items-center space-x-3">
+        <footer className="bg-background border-t">
+            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+                <div className="py-16">
+                    <div className="text-center mb-12">
+                        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
+                            Ready to Transform Your
+                            <span
+                                className="block bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Creator Journey?
+              </span>
+                        </h2>
+                        <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                            Join thousands of creators and brands building meaningful connections on SocialJi
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                        {ctaButtons.map((button, index) => {
+                            const IconComponent = button.icon
+                            return (
+                                <Button
+                                    key={index}
+                                    asChild
+                                    variant={button.variant}
+                                    size="lg"
+                                    className={cn(
+                                        " font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5",
+                                        button.variant === "default" && "  bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700",
+                                        button.variant === "secondary" && " !text-white bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                                    )}
+                                >
+                                    <Link href={button.href} className="flex items-center justify-center gap-2">
+                                        <IconComponent size={20}/>
+                                        <span>{button.label}</span>
+                                    </Link>
+                                </Button>
+                            )
+                        })}
+                    </div>
+                </div>
+
+                <Separator className="my-8"/>
+
+                <div className="">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+
+                        <div className="lg:col-span-4 w-full space-y-2">
+
+                            <Link href="/" className="flex-shrink-0">
                                 <Image
                                     src="/logo.png"
-                                    width={60}
+                                    width={180}
                                     height={60}
-                                    alt="SocialJi Logo"
-                                    className="w-3/4 h-16 "
+                                    alt="SocialJi"
+                                    className="h-32 w-full object-cover max-w-[200px] "
+                                    priority
                                 />
-                                <span className={'sr-only'}> SocialJi</span>
-                            </div>
-                            {/* Removed AnimatedElement wrapper */}
-                            <p className="text-gray-600 text-sm sm:text-base leading-relaxed max-w-md font-montserrat text-justify">
-                                <span className="font-semibold">SocialJi</span> is a platform for content creators to
-                                showcase their
-                                work and connect with their audience. Whether you&#39;re a professional photographer, a
-                                passionate
-                                writer, or a talented musician, SocialJi is the perfect place to share your creativity
-                                and connect with
-                                like-minded individuals.
+                            </Link>
+
+                            <p className="text-muted-foreground text-base leading-relaxed max-w-sm">
+                                The premier platform connecting creators with brands for authentic collaborations.
+                                Build your influence, grow your audience, and monetize your creativity.
                             </p>
+
+
+                            <div className="flex space-x-3">
+                                {socialLinks.map(({href, label, icon: IconComponent}, index) => (
+                                    <Button
+                                        key={index}
+                                        variant="ghost"
+                                        size="icon"
+                                        asChild
+                                        className="hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-600 hover:text-white transition-all duration-300"
+                                    >
+                                        <Link
+                                            href={href}
+                                            aria-label={`Follow us on ${label}`}
+                                        >
+                                            <IconComponent size={18}/>
+                                        </Link>
+                                    </Button>
+                                ))}
+                            </div>
                         </div>
-                        {/* Links Section */}
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8 w-full md:w-[70%] mt-8 md:mt-0">
-                            {/* Company Section */}
-                            <div>
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Company</h3>
-                                <ul className="space-y-2">
-                                    {company.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.link}
-                                                className="text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-4 transition-colors duration-200 text-sm"
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            {/* Help Center Section */}
-                            <div>
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Help
-                                    Center</h3>
-                                <ul className="space-y-2">
-                                    {helpCenter.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.link}
-                                                className="text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-4 transition-colors duration-200 text-sm"
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            {/* Legal Section */}
-                            <div>
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Legal</h3>
-                                <ul className="space-y-2">
-                                    {legal.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.link}
-                                                className="text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-4 transition-colors duration-200 text-sm"
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                            {/* Download Section */}
-                            <div>
-                                <h3 className="mb-4 text-sm font-semibold text-gray-900 uppercase tracking-wider">Download</h3>
-                                <ul className="space-y-2">
-                                    {downloads.map((item, index) => (
-                                        <li key={index}>
-                                            <Link
-                                                href={item.link}
-                                                className="text-gray-600 hover:text-gray-900 hover:underline hover:underline-offset-4 transition-colors duration-200 text-sm"
-                                            >
-                                                {item.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
+
+                        <div className="lg:col-span-8">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-8">
+
+                                <Card className="border-none shadow-none bg-transparent">
+                                    <CardContent className="p-0">
+                                        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
+                                            Quick Links
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {quickLinks.map((item, index) => (
+                                                <li key={index}>
+                                                    <FooterLink href={item.href}>
+                                                        {item.label}
+                                                    </FooterLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+
+                                <Card className="border-none shadow-none bg-transparent">
+                                    <CardContent className="p-0">
+                                        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
+                                            Company
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {companyLinks.map((item, index) => (
+                                                <li key={index}>
+                                                    <FooterLink href={item.href}>
+                                                        {item.label}
+                                                    </FooterLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+
+                                <Card className="border-none shadow-none bg-transparent">
+                                    <CardContent className="p-0">
+                                        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
+                                            Support
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {supportLinks.map((item, index) => (
+                                                <li key={index}>
+                                                    <FooterLink href={item.href}>
+                                                        {item.label}
+                                                    </FooterLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+
+                                <Card className="border-none shadow-none bg-transparent">
+                                    <CardContent className="p-0">
+                                        <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-4">
+                                            Legal
+                                        </h3>
+                                        <ul className="space-y-3">
+                                            {legalLinks.map((item, index) => (
+                                                <li key={index}>
+                                                    <FooterLink href={item.href}>
+                                                        {item.label}
+                                                    </FooterLink>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </CardContent>
+                                </Card>
+
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* Divider */}
-                <hr className="border-gray-200"/>
-                {/* Footer Bottom */}
-                <div className="py-6">
-                    <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-                        {/* Copyright and Links */}
-                        <div className="text-center sm:text-left">
-                            <p className="text-sm text-gray-600">© 2025 SocialJi, Inc. All rights reserved.</p>
-                            <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-2">
-                                {
-                                    legal.map((item, index) => (
-                                        <Link
-                                            key={index}
-                                            href={item.link}
-                                            className="text-sm text-gray-600 hover:text-gray-900 hover:underline">
-                                            {item.label}
-                                        </Link>
-                                    ))
 
-                                }
+                <Separator/>
+
+                <div className="py-8">
+                    <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6">
+                            <p className="text-sm text-muted-foreground font-medium">
+                                © {new Date().getFullYear()} SocialJi, Inc. All rights reserved.
+                            </p>
+                            <div className="flex flex-wrap justify-center gap-4">
+
                             </div>
                         </div>
 
-                        <div className="flex space-x-3">
-                            {socialLinks.map(({href, label, Icon}, index) => (
-                                <a
-                                    key={index}
-                                    href={href}
-                                    aria-label={`Visit our ${label} page`}
-                                    className="inline-flex items-center justify-center w-10 h-10 bg-purple-50 hover:bg-purple-100 rounded-full transition-colors duration-200 group"
-                                >
-                                    <Icon
-                                        size={18}
-                                        className="text-purple-600 group-hover:text-purple-700 transition-colors duration-200"
-                                    />
-                                </a>
+                        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                            {legalLinks.slice(0, 2).map((item, index) => (
+                                <FooterLink key={index} href={item.href} className="text-xs">
+                                    {item.label}
+                                </FooterLink>
                             ))}
                         </div>
                     </div>
                 </div>
+
             </div>
         </footer>
     )

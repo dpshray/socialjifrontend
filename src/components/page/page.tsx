@@ -76,14 +76,15 @@ export default function HomeHeroSection() {
                 <div className="space-y-1 text-left">
                     <AnimatedElement type='slideRight' delay={0.3} viewport={{once: false}} whileInView={"visible"}>
                         <h1 className="text-4xl md:text-5xl font-bold leading-tight text-[#BE50C8]">
-                            <span className="text-purple-600">AI-Powered</span>
+                            <span className="text-purple-600">Hire Influencers.</span>
                             <br/>
-                            <span className="text-gray-900">Influencer Marketplace</span>
+                            <span className="text-gray-900 mr-2">Scale Faster</span>
+                            Securely
                         </h1>
                     </AnimatedElement>
                     <AnimatedElement type='slideLeft' delay={0.3} viewport={{once: false}} whileInView={"visible"}>
                         <p className="text-gray-700 text-lg md:text-xl max-w-xl">
-                            Connect with the perfect influencers for your brand using our AI-driven platform.
+                            Connect with global creators, launch campaigns in minutes, and manage payments safely with Trustap Vault.
                         </p>
                     </AnimatedElement>
 
@@ -94,8 +95,8 @@ export default function HomeHeroSection() {
                         whileInView={{opacity: 1, y: 0}}
                         transition={{duration: 0.5, ease: "easeOut", delay: 0.2}}
                         className="flex flex-col sm:flex-row gap-4 pt-4">
-                        <Link href="/register" className="btn-gradient">
-                            Join as Brand
+                        <Link href="/register" className="bg-gradient-to-r from-[#BE50C8] to-[#4158D0] text-white p-3 rounded-md text-center font-medium hover:bg-gray-100 transition sm:w-auto w-full">
+                            Start a Campaign
                         </Link>
                         <Link href="/register"
                               className="border border-gray-700 text-gray-900 px-6 py-3 rounded-md text-center font-medium hover:bg-gray-100 transition sm:w-auto w-full">
