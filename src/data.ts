@@ -1,4 +1,5 @@
 import {ReviewType} from "@/types/types";
+import {BarChart3, Clock, CreditCard, Headset, Shield, Wallet, Zap} from "lucide-react";
 
 export const reviews: any = [
     {
@@ -57,128 +58,89 @@ export const reviews: any = [
     },
 
 ];
-
-
-export const UsersImages = [
+export const pledgeData = [
     {
-        src: "https://flowbite.com/docs/images/people/profile-picture-1.jpg",
-        alt: "Jane",
+        Icon: CreditCard,
+        title: "Fair Compensations",
+        description: "Transparent pricing and secure payments for creators",
+        iconColor: "bg-[#be50c8]",
     },
     {
-        src: "https://flowbite.com/docs/images/people/profile-picture-2.jpg",
-        alt: "John",
+        Icon: Headset,
+        title: "24/7 Support",
+        description: "Dedicated support team for both brands and creators",
+        iconColor: "bg-[#4158d0]",
     },
     {
-        src: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
-        alt: "Alice",
+        Icon: Clock,
+        title: "Fast Matching",
+        description: "AI-powered matching within 24 hours",
+        iconColor: "bg-[#c9184a]",
     },
 ];
 
 
+export const opportunityFeatures = [
+    {
+        icon: Zap,
+        title: 'Instant Brand-Creator Matching',
+        description:
+            'AI instantly connects brands with the right influencers based on niche, demographics, and audience engagement.',
+        colorFrom: 'from-[#00B882]',
+        colorTo: 'to-green-400',
+    },
+    {
+        icon: BarChart3,
+        title: 'Smart Campaign Insights',
+        description:
+            'Real-time analytics for brands to optimize ROI and for creators to improve performance and engagement.',
+        colorFrom: 'from-[#6C4EE3]',
+        colorTo: 'to-purple-400',
+    },
+    {
+        icon: Shield,
+        title: 'Secure Trustap Payments',
+        description:
+            'Escrow-protected payments keep collaborations safe, releasing funds only when milestones are achieved.',
+        colorFrom: 'from-blue-500',
+        colorTo: 'to-cyan-400',
+    },
+    {
+        icon: Wallet,
+        title: 'Transparent Pricing & Fast Payouts',
+        description:
+            'Creators enjoy clear pricing and instant payouts, while brands benefit from full cost transparency.',
+        colorFrom: 'from-[#9333EA]',
+        colorTo: 'to-indigo-400',
+    },
+];
 
 
-export const reviewsData: ReviewType[] = [
+export const brandSection = [
     {
-        id: "1",
-        name: "Sarah Johnson",
-        country: "United States",
-        rating: 5,
-        review:
-            "Exceptional work! The campaign exceeded our expectations and delivered amazing results. The content was creative, engaging, and perfectly aligned with our brand values.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "StyleCo",
-        campaign: "Summer Fashion Collection",
-        date: "2024-12-01",
+        title: '🎯 AI-powered influencer discovery & niche matching',
+        desc: 'Find creators that perfectly align with your brand values and target audience using advanced AI algorithms that analyze demographics, engagement, and niche relevance.',
     },
     {
-        id: "2",
-        name: "Michael Chen",
-        country: "Canada",
-        rating: 5,
-        review:
-            "Professional, creative, and delivered on time. The influencer understood our requirements perfectly and created content that resonated with our target audience.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "TechBrand",
-        campaign: "Tech Product Launch",
-        date: "2024-11-15",
+        title: '📊 Campaign management & performance insights',
+        desc: 'Easily plan, launch, and monitor influencer campaigns with real-time dashboards that track engagement, conversions, and overall campaign performance.',
     },
     {
-        id: "3",
-        name: "Emma Wilson",
-        country: "United Kingdom",
-        rating: 4,
-        review:
-            "Great collaboration and excellent content quality. The engagement rates were impressive and the feedback from our customers was overwhelmingly positive.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "RetailPlus",
-        campaign: "Holiday Campaign",
-        date: "2024-10-20",
+        title: '💳 Trustap Vault secure escrow payments',
+        desc: 'Ensure safe and transparent transactions with escrow protection, releasing payments only when campaign milestones are achieved successfully.',
+    },
+];
+export const creatorSection = [
+    {
+        title: '✨ Create gigs & showcase your content style',
+        desc: 'Easily set up personalized gigs, highlight your unique content style, and attract brands that resonate with your creativity and niche.',
     },
     {
-        id: "4",
-        name: "Carlos Rodriguez",
-        country: "Spain",
-        rating: 5,
-        review:
-            "Outstanding creativity and professionalism. The content created was exactly what we were looking for and helped us reach our campaign goals.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "FashionForward",
-        campaign: "Spring Collection",
-        date: "2024-09-10",
+        title: '🤝 Get discovered by premium global brands',
+        desc: 'Expand your reach and connect with top-tier international brands actively searching for creators who match their campaign goals.',
     },
     {
-        id: "5",
-        name: "Lisa Park",
-        country: "South Korea",
-        rating: 4,
-        review:
-            "Very satisfied with the collaboration. The influencer was responsive, professional, and delivered high-quality content that performed well.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "BeautyBrand",
-        campaign: "Skincare Launch",
-        date: "2024-08-25",
+        title: '💰 Transparent pricing & instant payouts',
+        desc: 'Set clear pricing for your collaborations, enjoy upfront transparency, and receive fast payouts once your campaign milestones are completed.',
     },
-    {
-        id: "6",
-        name: "James Thompson",
-        country: "Australia",
-        rating: 5,
-        review:
-            "Incredible results! The campaign generated significant buzz and drove excellent engagement. Would definitely work together again.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "FitnessGear",
-        campaign: "Workout Equipment",
-        date: "2024-07-15",
-    },
-    {
-        id: "7",
-        name: "Marie Dubois",
-        country: "France",
-        rating: 4,
-        review:
-            "Professional approach and great communication throughout the project. The content was well-crafted and aligned with our brand aesthetic.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "LuxuryLifestyle",
-        campaign: "Premium Products",
-        date: "2024-06-30",
-    },
-    {
-        id: "8",
-        name: "Ahmed Hassan",
-        country: "Egypt",
-        rating: 5,
-        review:
-            "Exceptional talent and creativity. The influencer brought fresh ideas to our campaign and helped us connect with a broader audience.",
-        avatar: "/placeholder.svg?height=40&width=40",
-        company: "TravelExplorer",
-        campaign: "Destination Marketing",
-        date: "2024-05-20",
-    },
-]
-export const geographicData: any = [
-    {country: "United States", percentage: 45, flag: "🇺🇸"},
-    {country: "Canada", percentage: 22, flag: "🇨🇦"},
-    {country: "United Kingdom", percentage: 18, flag: "🇬🇧"},
-    {country: "Australia", percentage: 10, flag: "🇦🇺"},
-    {country: "Others", percentage: 5, flag: "🌍"},
-]
+];
