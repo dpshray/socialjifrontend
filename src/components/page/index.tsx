@@ -1,10 +1,10 @@
 'use client';
 
 import Image from 'next/image';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { LucideIcon } from 'lucide-react';
-import { cn } from "@/lib/utils";
+import {motion} from 'framer-motion';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import {LucideIcon} from 'lucide-react';
+import {cn} from "@/lib/utils";
 
 interface BannerSectionProps {
     reverse: boolean;
@@ -29,19 +29,14 @@ interface OpportunityCardProps {
     delay?: number;
 }
 
-interface AnalyticHomeProps {
-    title: string;
-    sub: string;
-    icon: LucideIcon;
-    delay: number;
-}
 
-export const ListCard = ({ title, desc }: { title: string; desc: string }) => (
+
+export const ListCard = ({title, desc}: { title: string; desc: string }) => (
     <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay: 0.5 }}
-        viewport={{ amount: 0.2 }}
+        initial={{opacity: 0, y: 20}}
+        whileInView={{opacity: 1, y: 0}}
+        transition={{duration: 0.5, ease: 'easeOut', delay: 0.5}}
+        viewport={{amount: 0.2}}
         className="bg-white border border-[#e5ecf6] rounded-xl p-4 shadow-sm"
     >
         <h3 className="text-[#0c1f26] text-lg font-medium mb-1">{title}</h3>
@@ -49,15 +44,15 @@ export const ListCard = ({ title, desc }: { title: string; desc: string }) => (
     </motion.div>
 );
 
-export const BannerSection = ({ reverse, data, heading, images }: BannerSectionProps) => (
+export const BannerSection = ({reverse, data, heading, images}: BannerSectionProps) => (
     <div
         className={`max-w-7xl mx-auto flex flex-col-reverse md:flex-row ${reverse ? 'md:flex-row-reverse' : ''} justify-between gap-8`}>
         <div className="relative w-full md:w-1/2 min-h-[600px] flex">
             <motion.div
-                initial={{ opacity: 0, y: -100 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                viewport={{ amount: 0.2 }}
+                initial={{opacity: 0, y: -100}}
+                whileInView={{opacity: 1, y: 0}}
+                transition={{duration: 0.8, ease: 'easeOut'}}
+                viewport={{amount: 0.2}}
                 className="absolute top-0 left-8 h-[250px] z-20"
             >
                 <Image
@@ -69,10 +64,10 @@ export const BannerSection = ({ reverse, data, heading, images }: BannerSectionP
                 />
             </motion.div>
             <motion.div
-                initial={{ opacity: 0, x: -100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                viewport={{ amount: 0.2 }}
+                initial={{opacity: 0, x: -100}}
+                whileInView={{opacity: 1, x: 0}}
+                transition={{duration: 0.8, ease: 'easeOut'}}
+                viewport={{amount: 0.2}}
                 className="absolute top-24 right-[40px] h-[350px] z-10"
             >
                 <Image
@@ -84,10 +79,10 @@ export const BannerSection = ({ reverse, data, heading, images }: BannerSectionP
                 />
             </motion.div>
             <motion.div
-                initial={{ opacity: 0, x: 100 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: 'easeOut' }}
-                viewport={{ amount: 0.2 }}
+                initial={{opacity: 0, x: 100}}
+                whileInView={{opacity: 1, x: 0}}
+                transition={{duration: 0.8, ease: 'easeOut'}}
+                viewport={{amount: 0.2}}
                 className="absolute bottom-[72px] left-0 h-[250px] z-20"
             >
                 <Image
@@ -106,26 +101,26 @@ export const BannerSection = ({ reverse, data, heading, images }: BannerSectionP
                 className="space-y-4"
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ amount: 0.2 }}
+                viewport={{amount: 0.2}}
                 variants={{
-                    hidden: { opacity: 0 },
+                    hidden: {opacity: 0},
                     visible: {
                         opacity: 1,
-                        transition: { staggerChildren: 0.3, delayChildren: 0.3 },
+                        transition: {staggerChildren: 0.3, delayChildren: 0.3},
                     },
                 }}
             >
                 {data.map((item, index) => (
                     <motion.div
                         key={index}
-                        viewport={{ amount: 0.2 }}
+                        viewport={{amount: 0.2}}
                         variants={{
-                            hidden: { opacity: 0, y: 20 },
-                            visible: { opacity: 1, y: 0 },
+                            hidden: {opacity: 0, y: 20},
+                            visible: {opacity: 1, y: 0},
                         }}
-                        transition={{ delay: index * 0.5, duration: 0.5 }}
+                        transition={{delay: index * 0.5, duration: 0.5}}
                     >
-                        <ListCard title={item.title} desc={item.desc} />
+                        <ListCard title={item.title} desc={item.desc}/>
                     </motion.div>
                 ))}
             </motion.div>
@@ -133,13 +128,13 @@ export const BannerSection = ({ reverse, data, heading, images }: BannerSectionP
     </div>
 );
 
-export function PlatformCard({ name, logo, features, delay = 0 }: PlatformCardProps) {
+export function PlatformCard({name, logo, features, delay = 0}: PlatformCardProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: 'easeOut', delay }}
-            viewport={{ amount: 0.2 }}
+            initial={{opacity: 0, y: 20}}
+            whileInView={{opacity: 1, y: 0}}
+            transition={{duration: 0.5, ease: 'easeOut', delay}}
+            viewport={{amount: 0.2}}
             className="bg-white max-w-[250px] rounded-lg p-6 flex flex-col items-center justify-center border border-gray-200 shadow-[0px_10px_60px_0px_#262D7614]"
         >
             <div className="h-20 w-20 relative mb-4 flex items-center justify-center">
@@ -158,7 +153,6 @@ export function PlatformCard({ name, logo, features, delay = 0 }: PlatformCardPr
 }
 
 
-
 interface OpportunityCardProps {
     icon: LucideIcon;
     title: string;
@@ -170,22 +164,23 @@ interface OpportunityCardProps {
 
 
 export function OpportunityCard({
-    icon: Icon,
-    title,
-    description,
-    colorFrom,
-    colorTo,
-    delay = 0,
-}: OpportunityCardProps) {
+                                    icon: Icon,
+                                    title,
+                                    description,
+                                    colorFrom,
+                                    colorTo,
+                                    delay = 0,
+                                }: OpportunityCardProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut", delay }}
-            viewport={{ amount: 0.2 }}
+            initial={{opacity: 0, y: 20}}
+            whileInView={{opacity: 1, y: 0}}
+            transition={{duration: 0.5, ease: "easeOut", delay}}
+            viewport={{amount: 0.2}}
         >
             <Card
-                className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-muted/50">
+                className={cn('group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-muted/50',
+                    "h-[320px]")}>
                 <CardHeader className="pb-4">
                     <div
                         className={cn(
@@ -194,7 +189,7 @@ export function OpportunityCard({
                             `bg-gradient-to-r ${colorFrom} ${colorTo}`
                         )}
                     >
-                        <Icon className="w-7 h-7 text-white" />
+                        <Icon className="w-7 h-7 text-white"/>
                     </div>
                     <CardTitle
                         className={cn(
@@ -223,18 +218,4 @@ export function OpportunityCard({
 }
 
 
-export const AnalyticHomeCard = ({ title, sub, icon: Icon, delay }: AnalyticHomeProps) => (
-    <motion.div
-        initial={{ opacity: 0, x: -50, y: -80 }}
-        whileInView={{ opacity: 1, x: 0, y: 0 }}
-        transition={{ duration: 0.5, ease: 'easeOut', delay }}
-        viewport={{ amount: 0.2 }}
-        className="flex flex-col items-center"
-    >
-        <div className="bg-[#9A9A9A]/20 w-18 h-18 aspect-square rounded-xl flex items-center justify-center mb-2">
-            <Icon className="w-8 h-8 text-gray-800" />
-        </div>
-        <h3 className="text-xl font-medium text-black font-montserrat">{sub}</h3>
-        <p className="text-[#1A202C] text-sm font-normal line-clamp-2">{title}</p>
-    </motion.div>
-);
+

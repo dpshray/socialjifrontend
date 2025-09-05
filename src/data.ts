@@ -1,5 +1,4 @@
-import {ReviewType} from "@/types/types";
-import {BarChart3, Clock, CreditCard, Headset, Shield, Wallet, Zap} from "lucide-react";
+import {BarChart3, CreditCard, Globe2, Handshake, Shield, Wallet, Zap} from "lucide-react";
 
 export const reviews: any = [
     {
@@ -61,21 +60,21 @@ export const reviews: any = [
 export const pledgeData = [
     {
         Icon: CreditCard,
-        title: "Fair Compensations",
-        description: "Transparent pricing and secure payments for creators",
+        title: "Fair & Transparent",
+        description: "Creators get paid fairly, brands enjoy secure and transparent payments.",
         iconColor: "bg-[#be50c8]",
     },
     {
-        Icon: Headset,
-        title: "24/7 Support",
-        description: "Dedicated support team for both brands and creators",
-        iconColor: "bg-[#4158d0]",
+        Icon: Handshake,
+        title: "Promoting Creator Economy",
+        description: "Every campaign fuels creator rights, fair pay, and a stronger global creator community.",
+        iconColor: "bg-[#4caf50]",
     },
     {
-        Icon: Clock,
-        title: "Fast Matching",
-        description: "AI-powered matching within 24 hours",
-        iconColor: "bg-[#c9184a]",
+        Icon: Globe2,
+        title: "One Voice, Global Impact",
+        description: "Uniting creators worldwide to shape the future of influence and opportunity.",
+        iconColor: "bg-[#2196f3]",
     },
 ];
 

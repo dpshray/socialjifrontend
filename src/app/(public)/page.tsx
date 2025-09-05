@@ -7,11 +7,10 @@ import {Button} from '@/components/ui/button'
 import HomeHeroSection from '@/components/page/page'
 import {OpportunityCard} from '@/components/page'
 import {motion} from 'framer-motion'
-<<<<<<< HEAD
+
 import {useRouter} from "next/navigation";
-=======
+
 import {brandSection, creatorSection, opportunityFeatures, pledgeData} from "@/data";
->>>>>>> main
 
 
 interface PledgeItemProps {
@@ -101,11 +100,8 @@ export default function Home() {
 
                             <Button
                                 className="bg-gradient-to-r from-[#6C4EE3] to-[#00B882] hover:from-[#5A3DD1] hover:to-[#00A074] text-white font-semibold px-8 py-3 shadow-lg">
-<<<<<<< HEAD
-                                View Campaign
-=======
                                 Launch Your First Campaign
->>>>>>> main
+
                                 <ArrowRight className="ml-2 w-4 h-4" aria-hidden="true"/>
                             </Button>
                         </div>
@@ -114,11 +110,11 @@ export default function Home() {
                             <div
                                 className="bg-gradient-to-br from-white to-purple-50/50 rounded-3xl p-8 shadow-2xl border border-purple-100/50">
                                 <Image
-                                    src="/land2.jpeg"
+                                    src="/scale-marketing.jpeg"
                                     width={500}
                                     height={400}
-                                    alt="Brand Dashboard"
-                                    className="w-full h-auto rounded-2xl shadow-lg"
+                                    alt="Global influencer marketing illustration showing a young woman selecting influencer profiles on a smartphone, with icons for social media, analytics, and communication, set against a world map to represent global brand reach and campaign scaling."
+                                    className="w-full h-[600px] object-fill rounded-2xl shadow-lg"
                                 />
                             </div>
                             <div
@@ -184,11 +180,11 @@ export default function Home() {
                             <div
                                 className="bg-gradient-to-br from-white to-green-50/50 rounded-3xl p-8 shadow-2xl border border-green-100/50">
                                 <Image
-                                    src="/land1.jpeg"
+                                    src="/socialji-creators-hero (1).webp"
                                     width={500}
                                     height={400}
-                                    alt="Influencer profile monetizing gigs SocialJi"
-                                    className="w-full h-auto object-fill rounded-2xl shadow-lg"
+                                    alt="Flat digital illustration of diverse content creators celebrating earnings, showing a phone with payout notifications, audience icons, and a secure payment symbol, representing global creator monetization opportunities."
+                                    className="w-full h-[600px] object-fill rounded-2xl shadow-lg"
                                 />
                             </div>
                             <div
@@ -230,7 +226,8 @@ export default function Home() {
                             Your <span className="text-[#00B882]">Pledge</span>
                         </h1>
                         <p className="text-lg text-white/90 mb-6">
-                            Join the movement to build a safe and empowering space for creators and brands.
+                            At Social Ji, we pledge to build a fair, safe, and united creator economy where creators and
+                            brands grow together.
                         </p>
                         <div className="space-y-6">
                             {
