@@ -79,11 +79,13 @@ export default function Navbar() {
                     >
                         <Image
                             src="/logo.png"
-                            width={2000}
-                            height={60}
                             alt="SocialJi Logo"
-                            className="w-full object-cover h-36 py-2 "
+                            width={160}
+                            height={40}
+                            priority
+                            className="h-auto w-auto max-h-32 object-fill"
                         />
+
                         {/*<span className="text-sm sm:text-2xl">SocialJi</span>*/}
                     </Link>
 

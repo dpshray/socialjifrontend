@@ -29,12 +29,7 @@ interface OpportunityCardProps {
     delay?: number;
 }
 
-interface AnalyticHomeProps {
-    title: string;
-    sub: string;
-    icon: LucideIcon;
-    delay: number;
-}
+
 
 export const ListCard = ({title, desc}: { title: string; desc: string }) => (
     <motion.div
@@ -158,9 +153,8 @@ export function PlatformCard({name, logo, features, delay = 0}: PlatformCardProp
 }
 
 
-
 interface OpportunityCardProps {
-    icon:  LucideIcon;
+    icon: LucideIcon;
     title: string;
     description: string;
     colorFrom: string;
@@ -179,24 +173,15 @@ export function OpportunityCard({
                                 }: OpportunityCardProps) {
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut", delay }}
-            viewport={{ amount: 0.2 }}
+            initial={{opacity: 0, y: 20}}
+            whileInView={{opacity: 1, y: 0}}
+            transition={{duration: 0.5, ease: "easeOut", delay}}
+            viewport={{amount: 0.2}}
         >
             <Card
-                className={cn(
-                    "group flex flex-col justify-between h-[300px] rounded-2xl border-0 shadow-lg",
-                    "bg-gradient-to-br from-white to-muted/50",
-                    "transition-all duration-300 hover:shadow-2xl",
-                    "gap-2 "
-                )}
-            >
-                <CardHeader
-                    className={cn(
-                        "flex flex-col items-start gap-2 pb-2"
-                    )}
-                >
+                className={cn('group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-muted/50',
+                    "h-[320px]")}>
+                <CardHeader className="pb-4">
                     <div
                         className={cn(
                             "w-14 h-14 rounded-2xl flex items-center justify-center",
@@ -204,7 +189,7 @@ export function OpportunityCard({
                             `bg-gradient-to-r ${colorFrom} ${colorTo}`
                         )}
                     >
-                        <Icon className="w-7 h-7 text-white" />
+                        <Icon className="w-7 h-7 text-white"/>
                     </div>
                     <CardTitle
                         className={cn(
@@ -233,18 +218,4 @@ export function OpportunityCard({
 }
 
 
-export const AnalyticHomeCard = ({title, sub, icon: Icon, delay}: AnalyticHomeProps) => (
-    <motion.div
-        initial={{opacity: 0, x: -50, y: -80}}
-        whileInView={{opacity: 1, x: 0, y: 0}}
-        transition={{duration: 0.5, ease: 'easeOut', delay}}
-        viewport={{amount: 0.2}}
-        className="flex flex-col items-center"
-    >
-        <div className="bg-[#9A9A9A]/20 w-18 h-18 aspect-square rounded-xl flex items-center justify-center mb-2">
-            <Icon className="w-8 h-8 text-gray-800"/>
-        </div>
-        <h3 className="text-xl font-medium text-black font-montserrat">{sub}</h3>
-        <p className="text-[#1A202C] text-sm font-normal line-clamp-2">{title}</p>
-    </motion.div>
-);
+
