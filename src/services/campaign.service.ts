@@ -139,6 +139,19 @@ class CampaignService extends HttpsService {
             throw error
         }
     }
+
+
+   async assignCampaignToInfluencer(id: number) {
+        try {
+            return await this.getRequest({
+                //bids/1/toggle-assignment
+                url: `/bids/${id}/toggle-assignment`,
+                config: {auth: true}
+            })
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 const campaignService = new CampaignService();

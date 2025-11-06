@@ -29,14 +29,27 @@ class InfluencerService extends HttpServices {
             console.error('Error in brandPaymentList:', error);
         }
     }
+
     async influencerDashboard() {
         try {
-           const response = await this.getRequest({
+            const response = await this.getRequest({
                 ///influencer/dashboard
                 url: '/influencer/dashboard',
                 config: {auth: true}
             })
             return response?.data
+        } catch (error) {
+            console.error('Error in brandPaymentList:', error);
+        }
+    }
+
+    async campaignList(params?: { per_page?: number, page?: number }) {
+        try {
+            return await this.getRequest({
+                url: '/influencer/campaign',
+                config: {auth: true, params: params}
+            })
+
         } catch (error) {
             console.error('Error in brandPaymentList:', error);
         }

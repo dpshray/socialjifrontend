@@ -20,7 +20,7 @@ export default function InfluencerLayout({ children }: { children: React.ReactNo
         () => [
             { label: "Dashboard", href: "/influencer/dashboard" },
             { label: "Gigs", href: "/influencer/gigs" },
-            { label: "Payments", href: "/influencer/payments" },
+            { label: "Projects", href: "/influencer/projects" },
             { label: "Profile", href: "/influencer/profile" },
             { label: "Reviews", href: "/influencer/reviews" },
             { label: "campaigns", href: "/influencer/campaigns" },

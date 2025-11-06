@@ -23,6 +23,7 @@ interface Campaign {
     price: string
     tags: Tag[]
     image: string
+    is_assigned?: boolean
 }
 
 interface CampaignCardProps {
@@ -57,6 +58,14 @@ export function CampaignCard({
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"/>
+                    {
+                        campaign.is_assigned && (
+                            <Badge
+                                className={cn('absolute top-2 right-2', campaign.is_assigned ? 'bg-green-500' : 'bg-red-500')}>
+                                {campaign.is_assigned ? "Assigned" : "Not Assigned"}
+                            </Badge>
+                        )
+                    }
                 </div>
             )}
             <CardContent className="p-8">

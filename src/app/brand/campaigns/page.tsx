@@ -9,7 +9,7 @@ import type {Campaign, CampaignFormData} from "@/types/campaigns"
 import {Eye, Loader2, Plus, Search, Sparkles, Target} from "lucide-react"
 import {CampaignForm} from "@/components/form/campaign-form"
 import campaignService from "@/services/campaign.service"
-import {CampaignCard} from "@/components/card/campaigns/campaigns-card"
+import {CampaignCard} from "@/components/campaigns/campaigns-card"
 import {toast} from "sonner"
 import CustomPagination from "@/components/Pagiantion/pagination"
 import {DeleteModal} from "@/components/modal/delete-modal"
@@ -35,6 +35,7 @@ export default function BrandCampaignsPage() {
         try {
             const params = {per_page: 10, page: currentPage}
             const response = await campaignService.getCampaigns(params)
+            console.log('Response', response)
             setCampaigns(response?.data || [])
             setCurrentPage(response?.current_page || 1)
             setTotalPages(response?.last_page || 1)
@@ -89,6 +90,7 @@ export default function BrandCampaignsPage() {
                 ...data,
                 image: data.image instanceof File ? data.image : null,
             }
+            console.log('payload', payload)
             if (editingCampaign) {
                 await campaignService.updateCampaign(editingCampaign.id, payload)
                 toast.success("Successfully updated campaign")

@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle,} from '@/components/ui/card'
 import {Tabs, TabsContent, TabsList, TabsTrigger,} from '@/components/ui/tabs'
 import {Activity, Brain, Briefcase, Eye, PieChart, Sparkles, Star, Tag, TrendingUp, Users, Zap,} from 'lucide-react'
@@ -69,6 +69,7 @@ export default function InsightsPage() {
         const fetchStatsData = async () => {
             try {
                 const response = await dashboardService.getInsightsStats()
+                console.log('response from insights stats', response)
                 const transformed = [
                     {
                         label: 'New Gigs',
