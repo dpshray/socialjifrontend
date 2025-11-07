@@ -1,16 +1,16 @@
 "use client"
 
-import {useMemo, useState} from "react"
-import {ColumnDef, ColumnFiltersState, PaginationState, SortingState, VisibilityState} from "@tanstack/react-table"
-import {format} from "date-fns"
-import {ArrowUpDown, DollarSign, User2} from "lucide-react"
-import {Button} from "@/components/ui/button"
-import {Badge} from "@/components/ui/badge"
-import {useQuery} from "@tanstack/react-query"
-import {DataTable} from "@/components/table/data-table"
+import { useMemo, useState, useCallback } from "react"
+import { ColumnDef, ColumnFiltersState, PaginationState, SortingState, VisibilityState } from "@tanstack/react-table"
+import { format } from "date-fns"
+import { ArrowUpDown, DollarSign, User2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { useQuery } from "@tanstack/react-query"
+import { DataTable } from "@/components/table/data-table"
 import campaignService from "@/services/campaign.service"
 import campaignsPaymentService from "@/services/campaigns-payment.service"
-import {PAYMENT_STATUS} from "@/lib/enum"
+import { PAYMENT_STATUS } from "@/lib/enum"
 
 type StatusType = PAYMENT_STATUS
 
@@ -24,8 +24,8 @@ interface InfluencerCampaignPayment {
     status: StatusType
 }
 
-export default function CampaignTable() {
-    const [pagination, setPagination] = useState<PaginationState>({pageIndex: 0, pageSize: 10})
+export default function InfluencerCampaignTable() {
+    const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 10 })
     const [totalItems, setTotalItems] = useState(0)
     const [sorting, setSorting] = useState<SortingState>([])
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
@@ -33,17 +33,23 @@ export default function CampaignTable() {
     const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
     const [selectedStatuses, setSelectedStatuses] = useState<StatusType[]>([])
     const [loadingActions, setLoadingActions] = useState<Record<number, boolean>>({})
+    const [error, setError] = useState<string | null>(null)
 
-    const {data: campaigns = [], isLoading, refetch} = useQuery({
+    const { data: campaigns = [], isLoading, refetch } = useQuery({
         queryKey: ["campaigns", pagination.pageIndex, pagination.pageSize],
         queryFn: async () => {
-            const response = await campaignService.getInfluencerCampaignPayments({
-                page: pagination.pageIndex + 1,
-                per_page: pagination.pageSize,
-            })
-            setTotalItems(response.data?.total || 0)
-            console.log('Response from', response.data)
-            return response.data || []
+            try {
+                const response = await campaignService.getInfluencerCampaignPayments({
+                    page: pagination.pageIndex + 1,
+                    per_page: pagination.pageSize,
+                })
+                setTotalItems(response.data?.total || 0)
+                return response.data || []
+            } catch (err: any) {
+                console.log("Error fetching campaigns", err.message)
+                setError(`  You need to be TrustApp user to view campaign payments`)
+
+            }
         },
     })
 
@@ -56,81 +62,67 @@ export default function CampaignTable() {
         setSelectedStatuses(prev => (checked ? [...prev, value] : prev.filter(s => s !== value)))
     }
 
-    const handleAcceptDeposit = async (paymentId: number) => {
-        setLoadingActions(prev => ({...prev, [paymentId]: true}))
+    const handleAcceptDeposit = useCallback(async (paymentId: number) => {
+        setLoadingActions(prev => ({ ...prev, [paymentId]: true }))
         try {
-            const res = await campaignsPaymentService.bidderAcceptDepositInfluencer(paymentId)
-            console.log('Deposit accepted:', res)
+            await campaignsPaymentService.bidderAcceptDepositInfluencer(paymentId)
             await refetch()
-        } catch (err) {
-            console.error('Failed to accept deposit:', err)
         } finally {
-            setLoadingActions(prev => ({...prev, [paymentId]: false}))
+            setLoadingActions(prev => ({ ...prev, [paymentId]: false }))
         }
-    }
+    }, [refetch])
 
-
-
-    const handleDeliverCampaign = async (paymentId: number) => {
-        setLoadingActions(prev => ({...prev, [paymentId]: true}))
+    const handleDeliverCampaign = useCallback(async (paymentId: number) => {
+        setLoadingActions(prev => ({ ...prev, [paymentId]: true }))
         try {
-            const res = await campaignsPaymentService.deliverCampaignInfluencer(paymentId)
-            console.log('Campaign delivered:', res)
+            await campaignsPaymentService.deliverCampaignInfluencer(paymentId)
             await refetch()
-        } catch (err) {
-            console.error('Failed to deliver campaign:', err)
         } finally {
-            setLoadingActions(prev => ({...prev, [paymentId]: false}))
+            setLoadingActions(prev => ({ ...prev, [paymentId]: false }))
         }
-    }
+    }, [refetch])
 
     const columns: ColumnDef<InfluencerCampaignPayment>[] = useMemo(() => [
         {
             accessorKey: "payment_id",
             header: () => <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Payment ID</span>,
-            cell: ({row}) => <span className="text-xs sm:text-sm whitespace-nowrap">{row.original.payment_id}</span>,
+            cell: ({ row }) => <span className="text-xs sm:text-sm whitespace-nowrap">{row.original.payment_id}</span>,
         },
         {
             accessorKey: "bid_id",
             header: () => <span className="text-xs sm:text-sm font-medium whitespace-nowrap">Bid ID</span>,
-            cell: ({row}) => <span className="text-xs sm:text-sm whitespace-nowrap">{row.original.bid_id}</span>,
+            cell: ({ row }) => <span className="text-xs sm:text-sm whitespace-nowrap">{row.original.bid_id}</span>,
         },
         {
             accessorKey: "campaign_name",
             header: () => <span className="text-xs sm:text-sm font-medium">Campaign</span>,
-            cell: ({row}) => (
+            cell: ({ row }) => (
                 <span className="text-xs sm:text-sm font-semibold text-foreground block max-w-[120px] sm:max-w-[200px] md:max-w-xs truncate">
-                    {row.original.campaign_name}
-                </span>
+          {row.original.campaign_name}
+        </span>
             ),
         },
         {
             accessorKey: "campaign_brand_name",
             header: () => <span className="text-xs sm:text-sm font-medium">Brand</span>,
-            cell: ({row}) => (
+            cell: ({ row }) => (
                 <div className="flex items-center gap-1">
                     <User2 className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0"/>
                     <span className="text-xs sm:text-sm block max-w-[100px] sm:max-w-[150px] md:max-w-xs truncate">
-                        {row.original.campaign_brand_name}
-                    </span>
+            {row.original.campaign_brand_name}
+          </span>
                 </div>
             ),
         },
         {
             accessorKey: "status",
             header: () => <span className="text-xs sm:text-sm font-medium">Status</span>,
-            cell: ({row}) => {
+            cell: ({ row }) => {
                 const status = row.original.status
                 let variant: "default" | "secondary" | "destructive" | "outline" = "outline"
-
-                if (status === PAYMENT_STATUS.AMOUNT_CLAIMED || status === PAYMENT_STATUS.AMOUNT_PAID) {
-                    variant = "default"
-                } else if (status === PAYMENT_STATUS.DEPOSIT_ACCEPTED || status === PAYMENT_STATUS.DELIVERED) {
-                    variant = "secondary"
-                } else if (status === PAYMENT_STATUS.COMPLAINED) {
-                    variant = "destructive"
-                }
-
+                if (status === PAYMENT_STATUS.AMOUNT_CLAIMED || status === PAYMENT_STATUS.AMOUNT_PAID) variant = "default"
+                else if (status === PAYMENT_STATUS.DEPOSIT_ACCEPTED || status === PAYMENT_STATUS.DELIVERED) variant = "secondary"
+                else if (status === PAYMENT_STATUS.COMPLAINED) variant = "destructive"
                 return (
                     <Badge variant={variant} className="capitalize text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 whitespace-nowrap">
                         {status.replace(/_/g, " ")}
@@ -140,7 +132,7 @@ export default function CampaignTable() {
         },
         {
             accessorKey: "price",
-            header: ({column}) => (
+            header: ({ column }) => (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -151,28 +143,27 @@ export default function CampaignTable() {
                     <ArrowUpDown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground"/>
                 </Button>
             ),
-            cell: ({row}) => (
+            cell: ({ row }) => (
                 <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
-                    NPR {Number(row.original.price).toLocaleString()}
-                </span>
+          NPR {Number(row.original.price).toLocaleString()}
+        </span>
             ),
         },
         {
             accessorKey: "bidded_at",
             header: () => <span className="text-xs sm:text-sm font-medium">Date</span>,
-            cell: ({row}) => (
+            cell: ({ row }) => (
                 <span className="text-xs sm:text-sm whitespace-nowrap">
-                    {format(new Date(row.original.bidded_at), "PP")}
-                </span>
+          {format(new Date(row.original.bidded_at), "PP")}
+        </span>
             ),
         },
         {
             accessorKey: "actions",
             header: () => <span className="text-xs sm:text-sm font-medium">Actions</span>,
-            cell: ({row}) => {
+            cell: ({ row }) => {
                 const status = row.original.status
                 const isLoading = loadingActions[row.original.payment_id]
-
                 if (status === PAYMENT_STATUS.AMOUNT_PAID) {
                     return (
                         <Button
@@ -186,7 +177,6 @@ export default function CampaignTable() {
                         </Button>
                     )
                 }
-
                 if (status === PAYMENT_STATUS.DEPOSIT_ACCEPTED) {
                     return (
                         <Button
@@ -200,15 +190,10 @@ export default function CampaignTable() {
                         </Button>
                     )
                 }
-
-                return (
-                    <span className="text-xs text-muted-foreground">
-                        No action available
-                    </span>
-                )
+                return <span className="text-xs text-muted-foreground">No action available</span>
             },
-        }
-    ], [loadingActions])
+        },
+    ], [loadingActions, handleAcceptDeposit, handleDeliverCampaign])
 
     const statusFilters = [
         PAYMENT_STATUS.AMOUNT_PAID,
@@ -259,6 +244,7 @@ export default function CampaignTable() {
                         onDeleteRows={() => {}}
                         filterColumnId="campaign_name"
                         filterPlaceholder="Filter by campaign"
+                        noResultText={ error as string}
                     />
                 </div>
             </div>

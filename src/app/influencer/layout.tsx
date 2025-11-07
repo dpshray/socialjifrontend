@@ -1,29 +1,23 @@
 'use client'
 
-import React, { useEffect, useMemo, useCallback } from "react"
+import React, {useCallback, useEffect, useMemo} from "react"
 import ProtectedRoutes from "@/components/routes/ProtectedRoutes"
 import useAuth from "@/hooks/useAuth"
-import {
-    Bell,
-    DollarSign,
-    LogOutIcon,
-    PinIcon,
-    Settings2Icon,
-} from "lucide-react"
+import {Bell, DollarSign, LogOutIcon, PinIcon, Settings2Icon,} from "lucide-react"
 import GlobalHeader from "@/components/header/GlobalHeader"
-import { authService } from "@/app/(auth)/auth.service"
+import {authService} from "@/app/(auth)/auth.service"
 
-export default function InfluencerLayout({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth()
+export default function InfluencerLayout({children}: { children: React.ReactNode }) {
+    const {user, loading} = useAuth()
 
     const sidebarItems = useMemo(
         () => [
-            { label: "Dashboard", href: "/influencer/dashboard" },
-            { label: "Gigs", href: "/influencer/gigs" },
-            { label: "Projects", href: "/influencer/projects" },
-            { label: "Profile", href: "/influencer/profile" },
-            { label: "Reviews", href: "/influencer/reviews" },
-            { label: "campaigns", href: "/influencer/campaigns" },
+            {label: "Dashboard", href: "/influencer/dashboard"},
+            {label: "Gigs", href: "/influencer/gigs"},
+            {label: "Projects", href: "/influencer/projects"},
+            {label: "Profile", href: "/influencer/profile"},
+            {label: "Reviews", href: "/influencer/reviews"},
+            {label: "campaigns", href: "/influencer/campaigns"},
         ],
         []
     )
@@ -87,10 +81,10 @@ export default function InfluencerLayout({ children }: { children: React.ReactNo
 
     const dropdownItems = useMemo(
         () => [
-            { icon: DollarSign, label: "Payments", href: "/influencer/payments" },
-            { icon: PinIcon, label: "Pinned", href: "/influencer/pinned", separator: true },
-            { icon: Settings2Icon, label: "Settings", href: "/influencer/profile" },
-            { icon: LogOutIcon, label: "Logout", separator: true, onClick: handleLogout },
+            {icon: DollarSign, label: "Payments", href: "/influencer/projects?tab=payments"},
+            {icon: PinIcon, label: "Pinned", href: "/influencer/pinned", separator: true},
+            {icon: Settings2Icon, label: "Settings", href: "/influencer/profile"},
+            {icon: LogOutIcon, label: "Logout", separator: true, onClick: handleLogout},
         ],
         [handleLogout]
     )
@@ -121,7 +115,7 @@ export default function InfluencerLayout({ children }: { children: React.ReactNo
                     }}
                     iconButtons={[
                         {
-                            icon: <Bell className="h-5 w-5" />,
+                            icon: <Bell className="h-5 w-5"/>,
                             label: "Notifications",
                             notifications,
                         },
