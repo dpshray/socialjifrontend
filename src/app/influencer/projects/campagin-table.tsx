@@ -43,7 +43,9 @@ export default function InfluencerCampaignTable() {
                     page: pagination.pageIndex + 1,
                     per_page: pagination.pageSize,
                 })
-                setTotalItems(response.data?.total || 0)
+                console.log(response)
+                setTotalItems(response.total || 0)
+                console.log(`Total items: ${response.total}`)
                 return response.data || []
             } catch (err: any) {
                 console.log("Error fetching campaigns", err.message)
@@ -98,8 +100,8 @@ export default function InfluencerCampaignTable() {
             header: () => <span className="text-xs sm:text-sm font-medium">Campaign</span>,
             cell: ({ row }) => (
                 <span className="text-xs sm:text-sm font-semibold text-foreground block max-w-[120px] sm:max-w-[200px] md:max-w-xs truncate">
-          {row.original.campaign_name}
-        </span>
+                    {row.original.campaign_name}
+                </span>
             ),
         },
         {
@@ -107,10 +109,10 @@ export default function InfluencerCampaignTable() {
             header: () => <span className="text-xs sm:text-sm font-medium">Brand</span>,
             cell: ({ row }) => (
                 <div className="flex items-center gap-1">
-                    <User2 className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0"/>
+                    <User2 className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground flex-shrink-0" />
                     <span className="text-xs sm:text-sm block max-w-[100px] sm:max-w-[150px] md:max-w-xs truncate">
-            {row.original.campaign_brand_name}
-          </span>
+                        {row.original.campaign_brand_name}
+                    </span>
                 </div>
             ),
         },
@@ -125,7 +127,7 @@ export default function InfluencerCampaignTable() {
                 else if (status === PAYMENT_STATUS.COMPLAINED) variant = "destructive"
                 return (
                     <Badge variant={variant} className="capitalize text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 whitespace-nowrap">
-                        {status.replace(/_/g, " ")}
+                        {status || "Not Created"}
                     </Badge>
                 )
             },
@@ -138,15 +140,15 @@ export default function InfluencerCampaignTable() {
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                     className="flex items-center gap-0.5 sm:gap-1 text-xs sm:text-sm font-medium h-auto p-0 hover:bg-transparent"
                 >
-                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground"/>
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 text-muted-foreground" />
                     <span className="hidden xs:inline">Price</span>
-                    <ArrowUpDown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground"/>
+                    <ArrowUpDown className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-muted-foreground" />
                 </Button>
             ),
             cell: ({ row }) => (
                 <span className="text-xs sm:text-sm font-medium whitespace-nowrap">
-          NPR {Number(row.original.price).toLocaleString()}
-        </span>
+                    NPR {Number(row.original.price).toLocaleString()}
+                </span>
             ),
         },
         {
@@ -154,8 +156,8 @@ export default function InfluencerCampaignTable() {
             header: () => <span className="text-xs sm:text-sm font-medium">Date</span>,
             cell: ({ row }) => (
                 <span className="text-xs sm:text-sm whitespace-nowrap">
-          {format(new Date(row.original.bidded_at), "PP")}
-        </span>
+                    {format(new Date(row.original.bidded_at), "PP")}
+                </span>
             ),
         },
         {
@@ -241,10 +243,10 @@ export default function InfluencerCampaignTable() {
                         setColumnVisibility={setColumnVisibility}
                         rowSelection={rowSelection}
                         setRowSelection={setRowSelection}
-                        onDeleteRows={() => {}}
+                        onDeleteRows={() => { }}
                         filterColumnId="campaign_name"
                         filterPlaceholder="Filter by campaign"
-                        noResultText={ error as string}
+                        noResultText={error as string}
                     />
                 </div>
             </div>
