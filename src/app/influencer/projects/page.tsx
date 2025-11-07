@@ -6,6 +6,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Calendar, DollarSign, Users} from "lucide-react"
 import InfluencerCampaignTable from "@/app/influencer/projects/campagin-table"
 import InfluencerAssignProject from "@/app/influencer/projects/influencer-project"
+import InfluencerPaymentPage from "@/app/influencer/projects/payment-page";
 
 export default function ProjectPaymentPage() {
     const router = useRouter()
@@ -18,7 +19,7 @@ export default function ProjectPaymentPage() {
             label: "Payments",
             value: "campaigns",
             href: "/influencer/projects",
-            component: <InfluencerCampaignTable/>
+            component: <InfluencerPaymentPage/>
         },
         {
             icon: Calendar,
