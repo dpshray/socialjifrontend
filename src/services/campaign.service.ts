@@ -183,6 +183,23 @@ class CampaignService extends HttpsService {
             throw error
         }
     }
+
+    //trustap/campaign/get-brand-transaction-lists-no-trustap-user
+    async getBrandCampaignPaymentsNoTrustapUser(params?: { per_page?: number, page?: number }) {
+        try {
+            const result: any = await this.getRequest({
+                //trustap/campaign/get-brand-transaction-lists-no-trustap-user
+                url: `/trustap/campaign/get-brand-transaction-lists-no-trustap-user`,
+                config: {
+                    auth: true,
+                    params
+                }
+            })
+            return result?.data
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 const campaignService = new CampaignService();

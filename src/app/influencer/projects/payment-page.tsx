@@ -53,16 +53,24 @@ export default function InfluencerPaymentPage() {
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({})
     const [selectedStatuses, setSelectedStatuses] = useState<StatusType[]>([])
+    const [error, setError] = useState<string | null>(null)
 
     const { data: payments = [], isLoading } = useQuery({
         queryKey: ["influencer-transaction", pagination.pageIndex, pagination.pageSize],
         queryFn: async () => {
-            const response = await influencerService.influencerTransactionList({
-                page: pagination.pageIndex + 1,
-                per_page: pagination.pageSize,
-            })
-            setTotalItems(response.data?.total || 0)
-            return response.data?.data || []
+           try {
+               const response = await influencerService.influencerTransactionList({
+                   page: pagination.pageIndex + 1,
+                   per_page: pagination.pageSize,
+               })
+               console.log(response.data)
+               setTotalItems(response.total || 0)
+               return response.data?.data || []
+           }catch (error:any) {
+               console.log("Error fetching payments", error)
+               setError(` You need to be TrustApp user to view campaign payments`)
+               return []
+           }
         },
     })
 

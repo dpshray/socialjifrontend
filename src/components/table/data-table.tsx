@@ -70,6 +70,7 @@ interface DataTableProps<TData, TValue> {
     filterColumnId?: string
     filterPlaceholder?: string
     paginationEnabled?: boolean
+    noResultText?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -92,6 +93,7 @@ export function DataTable<TData, TValue>({
                                              filterColumnId = "title",
                                              filterPlaceholder = "Filter",
                                              paginationEnabled = true,
+                                             noResultText = "No results.",
                                          }: DataTableProps<TData, TValue>) {
     const id = React.useId()
     const inputRef = React.useRef<HTMLInputElement>(null)
@@ -310,7 +312,7 @@ export function DataTable<TData, TValue>({
                             ) : (
                                 <TableRow>
                                     <TableCell colSpan={columns.length} className="h-20 sm:h-24 text-center text-xs sm:text-sm">
-                                        No results.
+                                   {noResultText || "No results."}
                                     </TableCell>
                                 </TableRow>
                             )}
