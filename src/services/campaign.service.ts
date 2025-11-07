@@ -168,6 +168,21 @@ class CampaignService extends HttpsService {
             throw error
         }
     }
+    async getInfluencerCampaignPayments(params?: { per_page?: number, page?: number }) {
+        try {
+            const result: any = await this.getRequest({
+                //trustap/campaign/get-bids-status?
+                url: `/trustap/campaign/get-bids-status`,
+                config: {
+                    auth: true,
+                    params
+                }
+            })
+            return result?.data
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 const campaignService = new CampaignService();

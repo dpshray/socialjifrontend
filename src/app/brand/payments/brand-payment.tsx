@@ -67,6 +67,7 @@ export default function BrandPaymentTable() {
                 setPayments(response.data.data)
                 setTotalRows(response.data.total)
                 setTotalPages(response.data.last_page)
+                console.log('Brand',response)
             } finally {
                 setLoading(false)
             }
