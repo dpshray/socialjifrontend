@@ -139,6 +139,50 @@ class CampaignService extends HttpsService {
             throw error
         }
     }
+
+
+    async assignCampaignToInfluencer(id: number) {
+        try {
+            return await this.getRequest({
+                //bids/1/toggle-assignment
+                url: `/bids/${id}/toggle-assignment`,
+                config: {auth: true}
+            })
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async getBrandCampaignPayments(params?: { per_page?: number, page?: number }) {
+        try {
+            const result: any = await this.getRequest({
+                //trustap/campaign/fetch-transaction-list?per_page=10
+                url: `/trustap/campaign/fetch-transaction-list`,
+                config: {
+                    auth: true,
+                    params
+                }
+            })
+            return result?.data
+        } catch (error) {
+            throw error
+        }
+    }
+    async getInfluencerCampaignPayments(params?: { per_page?: number, page?: number }) {
+        try {
+            const result: any = await this.getRequest({
+                //trustap/campaign/get-bids-status?
+                url: `/trustap/campaign/get-bids-status`,
+                config: {
+                    auth: true,
+                    params
+                }
+            })
+            return result?.data
+        } catch (error) {
+            throw error
+        }
+    }
 }
 
 const campaignService = new CampaignService();
